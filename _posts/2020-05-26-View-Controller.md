@@ -1,10 +1,10 @@
 ---
-title:  "200526_View_Controller"
+title:  "View_Controller"
 layout: post
 ---
-#DAY 29
+# DAY 29
 
-###[오늘 할 내용]
+### [오늘 할 내용]
 
 ###  VO(Value Object) 클래스 생성
 사용자가 입력한 값을 객체에 담을 자료형 [ 사번, 이름, 부서번호 ]

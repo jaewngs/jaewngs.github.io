@@ -1,9 +1,12 @@
 ---
-title:  "200526_Day29"
+title:  "200526_View_Controller"
 layout: post
 ---
+#DAY 29
 
-##  VO(Value Object) 클래스 생성
+###[오늘 할 내용]
+
+###  VO(Value Object) 클래스 생성
 사용자가 입력한 값을 객체에 담을 자료형 [ 사번, 이름, 부서번호 ]
 ~~~ java
 package com.vo;
@@ -55,7 +58,7 @@ public class MyEmpVO {
 }
 ~~~
 
-##DAO 클래스
+### DAO 클래스
 실행할 SQL문을 CRUD에 맞는 Method로 구성
 ~~~ java
 package com.dao;
@@ -163,7 +166,7 @@ public class MyEmpDAO implements MyEmpSql {
 } // end class
 ~~~
 
-## DAO SQL
+### DAO SQL
 ~~~ java
 package com.dao;
 
@@ -180,7 +183,7 @@ public interface MyEmpSql {
 }
 ~~~
 
-## BIZ 클래스
+### BIZ 클래스
 VO로 받은 검증된 데이터를 controller클래스로 받아서
 
 1. 연산 후 처리  2. 연산한 결과를 DB[DAO] 로 리턴   3.  DB호출
@@ -224,7 +227,7 @@ public class MyEmpBIZ {
 }
 ~~~
 
-## JDBC_Connection
+### JDBC_Connection
 ~~~java
 package common;
 
@@ -312,7 +315,7 @@ public class JDBCTemplate {
 - - -
 
 
-## EmpTest.java
+### EmpTest.java
 model은 연산 및 데이터베이스에 데이터를 처리한 결과를 다시 controller한테 리턴하면 view를 선택해서 리턴한다.
 
 ~~~java
@@ -347,7 +350,7 @@ public class EmpTest {
 }
 ~~~
 
-## EmpTest01.java
+### EmpTest01.java
 ~~~java
 package com.view;
 
@@ -378,7 +381,7 @@ public class EmpTest01 {
 }
 ~~~
 
-## EmpTest02.java
+### EmpTest02.java
 ~~~java
 package com.view;
 

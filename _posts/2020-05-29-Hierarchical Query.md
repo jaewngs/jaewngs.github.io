@@ -32,14 +32,14 @@ WHERE conditions
 ~~~
 
 **[방법]**
-1) START WITH 절을 이용한 시작점 지정
+1. START WITH 절을 이용한 시작점 지정
 	ex) START WITH COLUMN1  = VALUE : 시작 행의 위치를 지정 할 수 있다.
     만일 명시하지 않으면 테이블의 모든 ROOT가 NODE 1(LEVEL = 1)이 된다.
-2) CONNECT BY 절을 사용한 트리 진행 방향 설정
-3) LEVEL 의사열의 활용
-4) PRIOR 키워드의 활용
-5) WHERE 절 조건을 활용한 데이터 제거방법
-6) CONNECT BY 절 조건을 이용한 데이터 제거
+2. CONNECT BY 절을 사용한 트리 진행 방향 설정
+3. LEVEL 의사열의 활용
+4. PRIOR 키워드의 활용
+5. WHERE 절 조건을 활용한 데이터 제거방법
+6. CONNECT BY 절 조건을 이용한 데이터 제거
 *계층적 질의는 START WITH와 CONNECT BY에 존재 여부에 따라서 식별된다.
 
 **[사용시점]**
@@ -72,15 +72,61 @@ CONNECT BY PRIOR MGR = EMPNO;
 ![image](https://user-images.githubusercontent.com/52989294/83208426-98414b80-a190-11ea-90b5-add1c45113f9.png)
 
 
-KING (LEVEL1 : ROOT)
-CLARK JONES BLAKE (LEVEL2 : PARENT/CHILD)
-MILLER FORD ALLEN WARD MARTIN TUNNER JAMES (LEVEL3 : PARENT/CHILD/LEAF)
-SMITH
+- KING (LEVEL1 : ROOT)
+- CLARK JONES BLAKE (LEVEL2 : PARENT/CHILD)
+- MILLER FORD ALLEN WARD MARTIN TUNNER JAMES (LEVEL3 : PARENT/CHILD/LEAF)
+- SMITH
+
 
 - ROOT : 최상위 레벨
 - PARENT/CHILD : 부모이자 자식 입장
 - LEAF : 가장 마지막 노드를 말함 
 
+Q3. 가장 높은 레벨을 시작으로 가장 낮은 레벨의 각각의 다음 레벨을 들여 쓰기로 출력하자.
+ex) KING -> CLARK -> MILLER
+~~~ sql
+SELECT LPAD(' ', 4*LEVEL - 4) || ENAME RES, LEVEL, EMPNO, MGR, DEPTNO 
+FROM EMP 
+START WITH MGR IS NULL 
+CONNECT BY PRIOR EMPNO = MGR;
+~~~
+
+Q4. 전체 노드 중에서 'CLARK'의 노드를 제거한 후 출력 해보자.
+
+~~~ sql
+SELECT ENAME ||'의 상사 '|| PRIOR ENAME "WALK" 
+FROM EMP 
+WHERE ENAME != 'CLARK' 
+START WITH ENAME = 'KING' 
+CONNECT BY PRIOR EMPNO = MGR;
+
+SELECT DEPTNO, EMPNO, ENAME, JOB, SAL 
+FROM EMP 
+WHERE ENAME != 'CLARK' 
+START WITH MGR IS NULL 
+CONNECT BY PRIOR EMPNO = MGR;
+
+
+SELECT DEPTNO, EMPNO, ENAME, JOB, SAL 
+FROM EMP 
+START WITH MGR IS NULL 
+CONNECT BY PRIOR EMPNO = MGR;
+~~~
+
+Q5. 'BLAKE'와 그의 라인들을 모두 제거하자.
+~~~ sql
+SELECT DEPTNO, EMPNO, ENAME, JOB, SAL 
+FROM EMP 
+START WITH MGR IS NULL 
+CONNECT BY PRIOR EMPNO = MGR AND ENAME != 'BLAKE';
+~~~
+
+~~~ sql
+SELECT LPAD(' ', 4*LEVEL - 4) || ENAME RES, LEVEL, EMPNO, MGR, DEPTNO 
+FROM EMP 
+START WITH MGR IS NULL 
+CONNECT BY PRIOR EMPNO = MGR AND ENAME != 'BLAKE';
+~~~
 
 
 * 특징

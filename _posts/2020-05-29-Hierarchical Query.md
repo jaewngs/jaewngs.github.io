@@ -75,20 +75,8 @@ CONNECT BY PRIOR MGR = EMPNO;
 
 ![image](https://user-images.githubusercontent.com/52989294/83208426-98414b80-a190-11ea-90b5-add1c45113f9.png)
 
-```mermaid
-graph TD;
-KING --> CLARK;
-KING --> JONES;
-KING --> BLAKE;
-CLARK --> MILLER;
-JONES --> FORD;
-BLAKE --> ALLEN;
-BLAKE --> WARD;
-BLAKE --> MARTIN;
-BLAKE --> TURNER;
-BLAKE --> JAMES;
-FORD --> SMITH;
-```
+![image](https://user-images.githubusercontent.com/52989294/83234778-c85a1000-a1cb-11ea-91fc-19fd5d9cc24f.png)
+
 - KING (LEVEL1 : ROOT)
 - CLARK / JONES / BLAKE (LEVEL2 : PARENT/CHILD)
 - MILLER / FORD / ALLEN WARD MARTIN TUNNER JAMES (LEVEL3 : PARENT/CHILD/LEAF)

@@ -291,7 +291,7 @@ INSERT (T.EMPNO, T.ENAME, T.SAL, T.COMM) VALUES(E.EMPNO, E.ENAME, E.SAL,E.COMM);
 - COMMIT, ROLLBACK, SAVEPOINT 이름
 - 암시적 트랜잭션
 	- 자동 COMMIT 이 발생할 경우 : DDL, DCL이 실행되는 경우, COMMIT, ROLLBACK 명시하지 않고 정상적으로 SQLPLUS를 종료할 경우
-	- 자동 ROLLBACK 이 발생할 경우 : 비정상적으로 SQLPLUS를 종료할 경우, 시스템 장애가 있을 때 ... 
+	- 자동 ROLLBACK 이 발생할 경우 : 비정상적으로 SQLPLUS를 종료할 경우, 시스템 장애가 있을 때
 	
 - 명시적 트랜잭션 제어 
 	- COMMIT : 보류중인 모든 데이터의 변경 내용 영구저장하고 현재의 트랜잭션을 종료 할 때
@@ -299,18 +299,108 @@ INSERT (T.EMPNO, T.ENAME, T.SAL, T.COMM) VALUES(E.EMPNO, E.ENAME, E.SAL,E.COMM);
 	- ROLLBACK : 보류 중인 모든 데이터의 변경 내용을 버리고 현재 트랜잭션을 종료한다.
 	- ROLLBACK TO SAVEPOINT 이름 : 트랜잭션 저장점으로 ROLLBACK 하여 저장점 이후에 생성된 SQL 문장이 있는 내용 및 저장점을 버린다. 
 
+**SAVEPOINT 실습**
+~~~ sql
+CREATE TABLE EMP_RES 
+AS 
+SELECT EMPNO, ENAME 
+FROM EMP;
 
+DELETE FROM EMP_RES;
 
+INSERT INTO EMP_RES VALUES(111,'111');
 
+SAVEPOINT A; -- INSERT 문의 실행까지를 표시
 
+UPDATE EMP_RES 
+SET ENAME = 333 
+WHERE EMPNO = 111;
 
+ROLLBACK TO A;  -- UPDATE 문만 취소가 되고 INSERT TRANSACTION은 유효함
 
+DELETE FROM EMP_RES;
 
+COMMIT; -- SAVEPOINT A 이후에 실행된 INSERT, DELETE 결과가 테이블에 영구적으로 저장됨
+~~~
 
+***
+[형식]
+~~~ sql
+CREATE SEQUENCE customers_seq
+ START WITH     1000   -- 1000부터
+ INCREMENT BY   1   -- 1씩 증가
+ NOCACHE
+ NOCYCLE;
+~~~ 
 
+[예제]
+~~~ sql
+-- 1부터 5씩 증가, 20까지, 20 넘어가면 에러남
+CREATE SEQUENCE MYSC 
+START WITH 1 
+INCREMENT BY 5 
+MAXVALUE 20 
+NOCACHE 
+NOCYCLE;
 
+MYSC.CURRVAL  -- 현재 시퀀스 값 확인
+MYSC.NEXTVAL -- 시퀀스 실행
 
+SELECT MYSC.CURRVAL FROM DUAL; -- 에러남
 
+SELECT MYSC.NEXTVAL FROM DUAL; -- NEXTVAL로 실행시키고
 
+SELECT MYSC.CURRVAL FROM DUAL; -- 실행하기
+
+SELECT MYSC.NEXTVAL FROM DUAL; -- NEXTVAL로 실행시키고
+
+SELECT MYSC.CURRVAL FROM DUAL; -- 실행하기
+
+SELECT MYSC.NEXTVAL FROM DUAL; -- NEXTVAL로 실행시키고
+
+SELECT MYSC.CURRVAL FROM DUAL; -- 실행하기
+
+DROP SEQUENCE MYSC;
+~~~
+
+~~~ sql
+-- 1부터 5씩 증가, 20 넘어가도 처음부터 다시 시작
+CREATE SEQUENCE MYSC 
+START WITH 1 
+INCREMENT BY 5 
+MAXVALUE 20 
+CYCLE 
+NOCACHE; 
+
+SELECT MYSC.NEXTVAL FROM DUAL; -- NEXTVAL로 실행시키고
+
+SELECT MYSC.CURRVAL FROM DUAL; -- 실행하기
+
+DROP SEQUENCE MYSC;
+~~~
+
+~~~ sql
+-- 처음에만 3부터 5씩 증가, 20까지, 20 넘어가면 1부터 5씩 증가 
+CREATE SEQUENCE MYSC 
+START WITH 3
+INCREMENT BY 5 
+MAXVALUE 20 
+MINVALUE 1 
+CYCLE 
+NOCACHE;
+
+SELECT MYSC.NEXTVAL FROM DUAL; -- NEXTVAL로 실행시키고
+
+SELECT MYSC.CURRVAL FROM DUAL; -- 실행하기
+
+DROP SEQUENCE MYSC;
+~~~
+
+~~~ sql
+INSERT INTO EMP_RES VALUES(MTSC.NEXTVAL, '111');
+
+SELECT * FROM EMP_RES;
+-- EMPNO가 5씩 증가하면서 INSERT문 실행됨
+~~~
 
 

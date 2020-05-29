@@ -1,6 +1,6 @@
 ---
 
-title:  "계층적 질의 & PL/SQL"
+title:  "Hierarchical Querry(계층적 질의) & PL/SQL 개념"
 
 layout: post
 
@@ -13,7 +13,6 @@ layout: post
 1. 계층적 질의를 살펴보고 사용 할 수 있다.
 2. PL/SQL을 사용 할 수 있다.
 3. PL/SQL의 구문을 이용해서 기본 문법과 SQL 구문을 접목 할 수 있다.
-4. 함수와 프로시저를 사용 할 수 있다.
 
 
 ## 계층적 질의
@@ -49,10 +48,10 @@ ex) 매니저 직책에 있는 사원이 KING에게 보고할 때 사용
 - 확장된 형태의 recursive PL/SQL이나 CONNECT BY를 이용하여 Hierarchical Query(계층쿼리) 표현이 가능하다.
 - 오라클에서는 CONNECT BY라는 확장된 구문을 통해 계층쿼리를 지원한다.
 - 조직구조, 답글게시판, 디렉터리 구조 등에 주로 이용된다.
-ex) CONNECT BY PRIOR 탑키 = 하위키 : TOP DOWN 방향
-CONNECT BY PRIOR 하위키 = 탑키 : BOTTOM UP 방향
-상위를 부모, 하위를 자식으로 연결 시켜서 열 위치에 의해 의사 결정을 사용한다.
-항상 현재 부모 행에 관련된 CONNECT BY 조건에 의해 자식을 선택한다.
+ ex) CONNECT BY PRIOR 탑키 = 하위키 : TOP DOWN 방향
+ CONNECT BY PRIOR 하위키 = 탑키 : BOTTOM UP 방향
+ 상위를 부모, 하위를 자식으로 연결 시켜서 열 위치에 의해 의사 결정을 사용한다.
+ 항상 현재 부모 행에 관련된 CONNECT BY 조건에 의해 자식을 선택한다.
 
 Q1. 계층적 쿼리를 사용하여 위에서 아래로 사원의 이름과 관리자 이름을 조회하자.
 ~~~ sql
@@ -76,11 +75,24 @@ CONNECT BY PRIOR MGR = EMPNO;
 
 ![image](https://user-images.githubusercontent.com/52989294/83208426-98414b80-a190-11ea-90b5-add1c45113f9.png)
 
-
+```mermaid
+graph TD;
+KING --> CLARK;
+KING --> JONES;
+KING --> BLAKE;
+CLARK --> MILLER;
+JONES --> FORD;
+BLAKE --> ALLEN;
+BLAKE --> WARD;
+BLAKE --> MARTIN;
+BLAKE --> TURNER;
+BLAKE --> JAMES;
+FORD --> SMITH;
+```
 - KING (LEVEL1 : ROOT)
-- CLARK JONES BLAKE (LEVEL2 : PARENT/CHILD)
-- MILLER FORD ALLEN WARD MARTIN TUNNER JAMES (LEVEL3 : PARENT/CHILD/LEAF)
-- SMITH
+- CLARK / JONES / BLAKE (LEVEL2 : PARENT/CHILD)
+- MILLER / FORD / ALLEN WARD MARTIN TUNNER JAMES (LEVEL3 : PARENT/CHILD/LEAF)
+- / SMITH /
 
 
 - ROOT : 최상위 레벨
@@ -324,7 +336,7 @@ COMMIT; -- SAVEPOINT A 이후에 실행된 INSERT, DELETE 결과가 테이블에
 ~~~
 
 ***
-[형식]
+### [형식]
 ~~~ sql
 CREATE SEQUENCE customers_seq
  START WITH     1000   -- 1000부터
@@ -333,7 +345,7 @@ CREATE SEQUENCE customers_seq
  NOCYCLE;
 ~~~ 
 
-[예제]
+### [예제]
 ~~~ sql
 -- 1부터 5씩 증가, 20까지, 20 넘어가면 에러남
 CREATE SEQUENCE MYSC 
@@ -402,5 +414,314 @@ INSERT INTO EMP_RES VALUES(MTSC.NEXTVAL, '111');
 SELECT * FROM EMP_RES;
 -- EMPNO가 5씩 증가하면서 INSERT문 실행됨
 ~~~
+
+*** 
+## Data Type
+###[FLOAT Data Type]
+~~~ sql
+CREATE TABLE test (col1 NUMBER(5,2), col2 FLOAT(5));
+
+INSERT INTO test VALUES (1.23, 1.23);
+INSERT INTO test VALUES (7.89, 7.89);
+INSERT INTO test VALUES (12.79, 12.79);
+INSERT INTO test VALUES (123.45, 123.45);
+INSERT INTO test VALUES (123.45, 125.45);
+INSERT INTO test VALUES (123.45, 125.42);
+~~~
+
+***
+
+## FUNCTION
+### DEREF  .. 참조 정의 
+https://docs.oracle.com/cd/E11882_01/server.112/e41084/functions054.htm#SQLRF00634
+
+*** 
+## CREATE TABLESPACE
+1. sys 계정 : system 계정이 가장 상위 계정. ID 생성, 권한을 설정함
+2. 테이블 영역을 저장 할 수 있는 .dbf 생성
+3. 선언된 ID에게 .dbf 지정(id별 저장소 맵핑)
+4. 기존 서비스 (.dbf) 를 중단하고 새롭게 맵핑된 ID로 접속하는 서비스를 실행한다.
+5. 생성된 ID로 접속한다. 
+
+### [실습]
+
+1. SQLPLUS SYS 계정에서 진행한다.
+2. SYS 계정 접속하기(id : sys , pw : admin1234)
+~~~ sql
+CONN AS SYSDBA
+~~~
+
+3. TABLESPACE 생성하기
+~~~ sql
+CREATE TABLESPACE TS_TEST 
+LOGGING 
+DATAFILE 'c:\Test\ts_test.dbf' 
+size 32m 
+autoextend on 
+next 32m 
+maxsize 2048m 
+extent management local;
+~~~
+
+4. 계정 만들기
+~~~ sql
+ create user testman identified by admin1234 default tablespace ts_test temporary tablespace temp;
+~~~
+
+5. 권한 부여
+~~~ sql
+grant connect, resource to testman;
+~~~
+
+6. testman으로 접속
+~~~ sql
+conn testman/admin1234
+~~~
+
+### 테이블 영역생성을 잘못했을 경우
+1. 재연결
+~~~ sql
+CONN AS SYSDBA 
+~~~
+
+2. 실행하는 .DBF 서비스를 중단 시킨다.
+~~~ sql
+SHUTDOWN immediate;
+~~~
+
+3. 수작업으로 C:\TEST02_1\ 로 ts_test.DBF 파일을 이동시킨다.
+4. 경로 수정한다.
+~~~ sql
+-- 서비스 다시 시작(인스턴스 실행)
+STARTUP MOUNT;
+ALTER DATABASE RENAME FILE 'C:\Test\TS_TEST.DBF' TO 'C:\TEST02_1\TS_TEST.DBF'
+~~~
+
+5. 재시작 후 접속한다.
+~~~ sql
+ALTER DATABASE OPEN;
+~~~
+
+6. 재연결
+~~~ sql
+CONN TESTMAN/admin1234
+~~~
+
+### 권한에 대한 5개의 대표적인 롤
+- connect : 접속 권한
+- resource : 객체 생성, 변경, 삭제 등 시스템에 대한 기본 권한
+- dba : 데이터베이스 관리에 대한 권한
+- sysdba : 데이터베이스 시작과 종료 및 관리 권한
+- sysoper : sysdba + 데이터베이스 생성에 관한 권한
+~~~ sql
+SELECT * FROM DBA_SYS_PRIVS;  -- sys 권한
+SELECT * FROM ROLE_SYS_PRIVS;  -- Role 확인
+~~~
+
+***
+
+## PL / SQL
+https://docs.oracle.com/cd/E11882_01/appdev.112/e25519/toc.htm
+### [형식]
+~~~ sql
+<< label >> (optional)
+DECLARE    -- Declarative part (optional)
+  -- Declarations of local types, variables, & subprograms
+
+BEGIN      -- Executable part (required)
+  -- Statements (which can use items declared in declarative part)
+
+[EXCEPTION -- Exception-handling part (optional)
+  -- Exception handlers for exceptions (errors) raised in executable part]
+END;
+~~~
+### [원리]
+![image](https://user-images.githubusercontent.com/52989294/83228941-081bfa00-a1c2-11ea-97b4-4cc98fc5b0f8.png)
+
+### [연습]
+~~~ sql
+conn big6/admin1234;  -- big6로 접속하기
+
+? set -- 도움말 호출 
+~~~
+~~~ sql
+SET SERVEROUTPUT ON; -- 돌려야 DBMS_OUTPUT.PUT_LINE()출력됨
+~~~
+Q1. 기본 문장을 출력하자.
+
+~~~ sql
+-- 복붙 X, 한줄씩 입력하기
+BEGIN 
+DBMS_OUTPUT.ENABLE; 
+DBMS_OUTPUT.PUT_LINE('1.HELLO ORACLE'); 
+DBMS_OUTPUT.DISABLE; 
+DBMS_OUTPUT.PUT_LINE('2. HELLO JAVA'); 
+END; 
+/     --'/'까지 입력하면 실행됨
+~~~
+![image](https://user-images.githubusercontent.com/52989294/83229705-69909880-a1c3-11ea-9e86-c33940bd28f1.png)
+
+
+Q2. i 라는 변수를 선언하고 20을 대입 후 출력 해보자.
+~~~ sql
+-- 복붙 X, 한줄씩 입력하기
+DECLARE 
+i integer := 20;
+BEGIN
+DBMS_OUTPUT.PUT_LINE('i의 값은 '|| i);
+END;
+/
+~~~
+![image](https://user-images.githubusercontent.com/52989294/83229967-e3288680-a1c3-11ea-8011-9c5e177d0f6b.png)
+
+**데이터 타입**
+https://docs.oracle.com/cd/E11882_01/appdev.112/e25519/datatypes.htm#LNPLS332
+
+Q3. 사칙 연산을 출력해보자.
+~~~ sql
+-- 복붙 X, 한줄씩 입력하기
+DECLARE
+i int := 100;  j int := 200;  hap int := 0;
+sub int := 0; mul int := 0; div int := 0;
+BEGIN
+hap := i + j; sub := j - i;  mul := i*j;  div := j/i;
+DBMS_OUTPUT.PUT_LINE(i || '+' || j || '=' || hap);
+DBMS_OUTPUT.PUT_LINE(j || '-' || i || '=' || sub);
+DBMS_OUTPUT.PUT_LINE(i || '*' || j || '=' || mul);
+DBMS_OUTPUT.PUT_LINE(j || '/' || i || '=' || div);
+END;
+/
+~~~
+![image](https://user-images.githubusercontent.com/52989294/83230435-b45ee000-a1c4-11ea-955a-2409e85ae416.png)
+
+---
+
+**예제**
+https://docs.oracle.com/cd/E11882_01/appdev.112/e25519/controlstatements.htm#LNPLS411
+
+~~~sql
+-- 복붙 X, 한줄씩 입력하기
+DECLARE
+  first_name  CHAR(10 CHAR);
+  last_name   VARCHAR2(10 CHAR);
+BEGIN
+  first_name := 'John ';
+  last_name  := 'Chen ';
+ 
+  DBMS_OUTPUT.PUT_LINE('*' || first_name || '*');
+  DBMS_OUTPUT.PUT_LINE('*' || last_name || '*');
+END;
+/
+~~~
+![image](https://user-images.githubusercontent.com/52989294/83231984-58498b00-a1c7-11ea-8386-a17e385b8881.png)
+
+
+
+
+~~~ sql
+-- 복붙 X, 한줄씩 입력하기
+DECLARE
+  grade CHAR(1);
+BEGIN
+  grade := 'B';
+  
+  IF grade = 'A' THEN
+    DBMS_OUTPUT.PUT_LINE('Excellent');
+  ELSIF grade = 'B' THEN
+    DBMS_OUTPUT.PUT_LINE('Very Good');
+  ELSIF grade = 'C' THEN
+    DBMS_OUTPUT.PUT_LINE('Good');
+  ELSIF grade = 'D' THEN
+    DBMS_OUTPUT. PUT_LINE('Fair');
+  ELSIF grade = 'F' THEN
+    DBMS_OUTPUT.PUT_LINE('Poor');
+  ELSE
+    DBMS_OUTPUT.PUT_LINE('No such grade');
+  END IF;
+END;
+/
+~~~
+![image](https://user-images.githubusercontent.com/52989294/83232059-78794a00-a1c7-11ea-8b1c-66042c93fc22.png)
+
+
+### for문
+~~~ sql
+-- 복붙 X, 한줄씩 입력하기
+BEGIN
+  DBMS_OUTPUT.PUT_LINE ('lower_bound < upper_bound');
+ 
+  FOR i IN 1..3 LOOP
+    DBMS_OUTPUT.PUT_LINE (i);
+  END LOOP;
+ 
+  DBMS_OUTPUT.PUT_LINE ('lower_bound = upper_bound');
+ 
+  FOR i IN 2..2 LOOP
+    DBMS_OUTPUT.PUT_LINE (i);
+  END LOOP;
+ 
+  DBMS_OUTPUT.PUT_LINE ('lower_bound > upper_bound');
+ 
+  FOR i IN 3..1 LOOP
+    DBMS_OUTPUT.PUT_LINE (i);
+  END LOOP;
+END;
+/
+~~~
+![image](https://user-images.githubusercontent.com/52989294/83231569-a742f080-a1c6-11ea-8bab-c6d338ce1d4a.png)
+
+~~~ sql
+BEGIN
+  FOR i IN 1..3 LOOP
+    IF i < 3 THEN
+      DBMS_OUTPUT.PUT_LINE (TO_CHAR(i));
+    ELSE
+        DBMS_OUTPUT.PUT_LINE ('====================');
+      
+    END IF;
+  END LOOP;
+END;
+/
+~~~
+
+![image](https://user-images.githubusercontent.com/52989294/83232319-f0e00b00-a1c7-11ea-9974-467fcff0c44e.png)
+
+Q5. 테이블을 생성하자.
+~~~ sql
+CREATE TABLE TEST01(
+NO NUMBER(3),
+IRUM VARCHAR2(20));
+
+-- 데이터 넣기
+BEGIN
+FOR I IN 1..10 LOOP
+INSERT INTO TEST01 VALUES(I, '홍길동' || I);
+END LOOP;
+END;
+/
+
+SELECT * FROM TEST01; -- 테이블 생성 및 데이터 입력 확인
+
+~~~
+![image](https://user-images.githubusercontent.com/52989294/83232588-61872780-a1c8-11ea-91d9-67d0dfb4493a.png)
+
+Q6. 사원테이블의 10번 부서의 평균 월급을 구하는 구문을 작성하자.
+~~~ sql
+SELECT AVG(SAL) FROM EMP WHERE DEPTNO = 10; -- 결과를 잘 가져오나 확인해보자.
+
+DECLARE
+AVG01 NUMBER(7) := 0;
+DEPTNO01 NUMBER(7) := 10;
+BEGIN 
+SELECT AVG(SAL) INTO AVG01
+FROM EMP 
+WHERE DEPTNO = DEPTNO01
+GROUP BY DEPTNO;
+
+DBMS_OUTPUT.PUT_LINE(DEPTNO01 ||'번 부서의 평균은 [' || AVG01 || ']' );
+END;
+/
+~~~
+![image](https://user-images.githubusercontent.com/52989294/83233363-8d56dd00-a1c9-11ea-8d4b-b5f8068cceb3.png)
 
 

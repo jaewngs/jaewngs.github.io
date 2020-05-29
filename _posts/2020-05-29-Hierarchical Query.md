@@ -60,8 +60,7 @@ FROM EMP
 START WITH ENAME = 'KING' 
 CONNECT BY PRIOR EMPNO = MGR;
 ~~~
-![image](https://user-images.githubusercontent.com/52989294/83211746-e2c6c600-a198-11ea-8f35-ac23cb7b8a93.png)
-
+![image](https://user-images.githubusercontent.com/52989294/83236524-9bf3c300-a1ce-11ea-99a0-36a5940892ad.png)
 
 Q2. 'SMITH'부터 시작하여 아래서 위로 해당 사원의 매니저 정보가 나오게 출력하자.
 ~~~ sql
@@ -70,25 +69,25 @@ FROM EMP
 START WITH ENAME = 'SMITH' 
 CONNECT BY PRIOR MGR = EMPNO;
 ~~~
-![image](https://user-images.githubusercontent.com/52989294/83211807-feca6780-a198-11ea-9c99-75b0943a5c6e.png)
-
+![image](https://user-images.githubusercontent.com/52989294/83236584-b29a1a00-a1ce-11ea-8968-26e071b0a33c.png)
 
 ![image](https://user-images.githubusercontent.com/52989294/83208426-98414b80-a190-11ea-90b5-add1c45113f9.png)
-
-![image](https://user-images.githubusercontent.com/52989294/83234778-c85a1000-a1cb-11ea-91fc-19fd5d9cc24f.png)
-
-- KING (LEVEL1 : ROOT)
-- CLARK / JONES / BLAKE (LEVEL2 : PARENT/CHILD)
-- MILLER / FORD / ALLEN WARD MARTIN TUNNER JAMES (LEVEL3 : PARENT/CHILD/LEAF)
-- / SMITH /
-
 
 - ROOT : 최상위 레벨
 - PARENT/CHILD : 부모이자 자식 입장
 - LEAF : 가장 마지막 노드를 말함 
 
+![image](https://user-images.githubusercontent.com/52989294/83234778-c85a1000-a1cb-11ea-91fc-19fd5d9cc24f.png)
+
+- KING (LEVEL1 : ROOT) -- ROOT : 최상위 레벨
+- CLARK / JONES / BLAKE (LEVEL2 : PARENT/CHILD)
+- MILLER / FORD / ALLEN WARD MARTIN TUNNER JAMES (LEVEL3 : PARENT/CHILD/LEAF)
+- / SMITH /
+
 Q3. 가장 높은 레벨을 시작으로 가장 낮은 레벨의 각각의 다음 레벨을 들여 쓰기로 출력하자.
+
 ex) KING -> CLARK -> MILLER
+
 ~~~ sql
 SELECT LPAD(' ', 4*LEVEL - 4) || ENAME RES, LEVEL, EMPNO, MGR, DEPTNO 
 FROM EMP 
@@ -96,6 +95,8 @@ START WITH MGR IS NULL
 CONNECT BY PRIOR EMPNO = MGR;
 ~~~
 ![image](https://user-images.githubusercontent.com/52989294/83212479-b1e79080-a19a-11ea-9e6d-46245d91c52f.png)
+
+![image](https://user-images.githubusercontent.com/52989294/83238096-e8d89900-a1d0-11ea-8a07-7effc6db72e2.png)
 
 Q4. 전체 노드 중에서 'CLARK'의 노드를 제거한 후 출력 해보자.
 
@@ -114,12 +115,18 @@ WHERE ENAME != 'CLARK'
 START WITH MGR IS NULL 
 CONNECT BY PRIOR EMPNO = MGR;
 ~~~
+
+![image](https://user-images.githubusercontent.com/52989294/83236096-ea549200-a1cd-11ea-9bbe-f7c8a7cfd4b9.png)
+
+
 ~~~ sql
 SELECT DEPTNO, EMPNO, ENAME, JOB, SAL 
 FROM EMP 
 START WITH MGR IS NULL 
 CONNECT BY PRIOR EMPNO = MGR;
 ~~~
+
+![image](https://user-images.githubusercontent.com/52989294/83236166-0bb57e00-a1ce-11ea-8705-fb8e685d740e.png)
 
 
 Q5. 'BLAKE'와 그의 라인들을 모두 제거하자.
@@ -129,6 +136,7 @@ FROM EMP
 START WITH MGR IS NULL 
 CONNECT BY PRIOR EMPNO = MGR AND ENAME != 'BLAKE';
 ~~~
+![image](https://user-images.githubusercontent.com/52989294/83236254-2daf0080-a1ce-11ea-9dfe-e5bdc419bffe.png)
 
 ~~~ sql
 SELECT LPAD(' ', 4*LEVEL - 4) || ENAME RES, LEVEL, EMPNO, MGR, DEPTNO 

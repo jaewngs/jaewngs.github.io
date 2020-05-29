@@ -16,11 +16,11 @@ layout: post
 4. 함수와 프로시저를 사용 할 수 있다.
 
 
-### 계층적 질의
+## 계층적 질의
 
 : 테이블의 행 사이의 계층적 관련성을 바탕으로 데이터를 검색하는 질의
 
-**[형식]**
+### [형식]
 
 ~~~ sql
 SELECT [LEVEL], COLUMN1, COLUMN2 ... 
@@ -31,7 +31,7 @@ WHERE conditions
 
 ~~~
 
-**[방법]**
+### [방법]
 1. START WITH 절을 이용한 시작점 지정
 	ex) START WITH COLUMN1  = VALUE : 시작 행의 위치를 지정 할 수 있다.
     만일 명시하지 않으면 테이블의 모든 ROOT가 NODE 1(LEVEL = 1)이 된다.
@@ -42,7 +42,7 @@ WHERE conditions
 6. CONNECT BY 절 조건을 이용한 데이터 제거
 *계층적 질의는 START WITH와 CONNECT BY에 존재 여부에 따라서 식별된다.
 
-**[사용시점]**
+### [사용시점]
 - 관계형 데이터베이스는 레코드를 계층적인 방법으로 저장하지 않는다. 그러나 계층적 관련성이 단일 테이블의 행 사이에 존재하며 계층적 질의는 하나의 테이블에 있는 행들 사이에 어떤 관련성이 존재할 때 가능하다.
 ex) 매니저 직책에 있는 사원이 KING에게 보고할 때 사용
 - ANSI-SQL에서는 계층관계를 표현하는 Hierarchical Query를 사용하는 것은 불가능하다.
@@ -202,11 +202,115 @@ CONNECT BY PRIOR EMPNO = MGR;
 ~~~
 
 ***
-Q11. 사원테이블의 계층 구조에서 LEAF 노드가 아닌 사원을 보자.
+
+## MERGE
+
+### [형식]
+
 ~~~ sql
-SELECT LPAD(' ', 4*LEVEL - 4) || ENAME RES, JOB 
-FROM EMP 
-WHERE CONNECT_BY_ISLEAF = 0 
-START WITH MGR IS NULL 
-CONNECT BY PRIOR EMPNO = MGR;
+MERGE INTO TABLE_NAME -- 변경 또는 추가할 대상 테이블
+USING (쿼리) -- 변경 추가할 데이터의 원본을 지정, 테이블, 뷰, 서브 쿼리를 사용
+ON(조인 조건) -- MERGE 연산이 변경, 추가 되는 조건
+WHEN MATCHED THEN -- 해당 행이 존재하면 UPDATE
+UPDATE SET 
+WHEN NOT MATCHED THEN -- 존재 하지 않으면 INSERT
+INSERT ..  VALUES ..
 ~~~
+~~~ sql
+CREATE TABLE EMP_MAIN 
+AS 
+SELECT * FROM EMP;
+
+CREATE TABLE EMP_MASTER 
+AS 
+SELECT * FROM EMP WHERE DEPTNO = 30;
+
+INSERT INTO EMP_MASTER(EMPNO) VALUES(111); 
+INSERT INTO EMP_MASTER(EMPNO) VALUES(222); 
+INSERT INTO EMP_MASTER(EMPNO) VALUES(333);
+~~~
+
+Q12. 사원 EMP_MAIN 테이블을 EMP_MASTER 테이블과 비교해서 동일한 사원번호의 데이터가 있으면 EMP_MASTER 테이블의 급여, COMM를 EMP테이블의 값으로 수정하고 해당 사원번호를 가진 사원이 없으면 EMP_MASTER에 EMP테이블의 데이터를 이용해서 입력하는 작업을 수행하자.
+
+~~~ sql
+MERGE INTO EMP_MASTER T 
+USING EMP_MAIN E 
+ON (T.EMPNO = E.EMPNO) 
+WHEN MATCHED THEN 
+UPDATE SET T.SAL = E.SAL, T.COMM = E.COMM 
+WHEN NOT MATCHED THEN 
+INSERT (EMPNO, ENAME, SAL, COMM) VALUES(E.EMPNO, E.ENAME, E.SAL,E.COMM);
+~~~
+
+**EMP_MASTER 테이블의 봉급과 커미션을 0으로 수정 후 실행**
+
+~~~ sql
+UPDATE EMP_MASTER 
+SET SAL = 0, COMM = 0;
+
+MERGE INTO EMP_MASTER T 
+USING EMP_MAIN E 
+ON (T.EMPNO = E.EMPNO) 
+WHEN MATCHED THEN 
+UPDATE SET T.SAL = E.SAL, T.COMM = E.COMM 
+WHEN NOT MATCHED THEN 
+INSERT (EMPNO, ENAME, SAL, COMM) VALUES(E.EMPNO, E.ENAME, E.SAL,E.COMM);
+~~~ 
+
+~~~ sql
+UPDATE EMP_MASTER 
+SET SAL = 0, COMM = 0;
+
+MERGE INTO EMP_MASTER T 
+USING EMP_MAIN E 
+ON (T.EMPNO = E.EMPNO) 
+WHEN MATCHED THEN 
+UPDATE SET T.SAL = E.SAL, T.COMM = E.COMM 
+WHEN NOT MATCHED THEN 
+INSERT (T.EMPNO, T.ENAME, T.SAL, T.COMM) VALUES(E.EMPNO, E.ENAME, E.SAL,E.COMM);
+~~~
+
+***
+
+## 트랜잭션(TRANSACTION)
+: 논리 단위를 형성하는 DML 문의 모음을 말함
+: 하나 또는 두개 이상의 SQL 문으로 이루어진 단위
+: 하나의 트랜잭션 안에 모든 SQL은 동일한 효과를 가짐
+: COMMIT, ROLLBACK 으로 모듈 단위를 실행함
+
+
+
+### [트랜잭션 이벤트(COMMIT, ROLLBACK, SQL 실행종료, 시스템 장애 고장, DDL 발생_CREATE) 발생 원리]
+- 실행 가능한 첫번째 SQL 문이 실행 될 때, 시작되어 다음 이벤트가 발생하면 종료된다.
+- 트랜잭션이 종료 되면 실행 가능한 SQL 구문이 다음 트랜잭션을 자동으로 시작한다.
+	- 데이터 추가(INSERT) -> 데이터 삭제(DELETE) -> COMMIT;  ... 트랜잭션 종료
+	- 트랜잭션 시작 -> 데이터 추가(INSERT) -> 데이터 삭제(DELETE) -> ROLLBACK; ... 트랜잭션 종료
+	- 트랜잭션 시작 -> 데이터 추가(INSERT) -> 데이터 삭제(DELETE) -> CREATE; ... 트랜잭션 종료
+
+### [트랜잭션 명령어]
+- COMMIT, ROLLBACK, SAVEPOINT 이름
+- 암시적 트랜잭션
+	- 자동 COMMIT 이 발생할 경우 : DDL, DCL이 실행되는 경우, COMMIT, ROLLBACK 명시하지 않고 정상적으로 SQLPLUS를 종료할 경우
+	- 자동 ROLLBACK 이 발생할 경우 : 비정상적으로 SQLPLUS를 종료할 경우, 시스템 장애가 있을 때 ... 
+	
+- 명시적 트랜잭션 제어 
+	- COMMIT : 보류중인 모든 데이터의 변경 내용 영구저장하고 현재의 트랜잭션을 종료 할 때
+	- SAVEPOINT 이름 : 현재에 트랜잭션 내에 저장 점을 표시한다.
+	- ROLLBACK : 보류 중인 모든 데이터의 변경 내용을 버리고 현재 트랜잭션을 종료한다.
+	- ROLLBACK TO SAVEPOINT 이름 : 트랜잭션 저장점으로 ROLLBACK 하여 저장점 이후에 생성된 SQL 문장이 있는 내용 및 저장점을 버린다. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

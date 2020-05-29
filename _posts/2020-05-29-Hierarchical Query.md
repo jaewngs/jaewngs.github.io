@@ -95,29 +95,32 @@ FROM EMP
 START WITH MGR IS NULL 
 CONNECT BY PRIOR EMPNO = MGR;
 ~~~
+![image](https://user-images.githubusercontent.com/52989294/83212479-b1e79080-a19a-11ea-9e6d-46245d91c52f.png)
 
 Q4. 전체 노드 중에서 'CLARK'의 노드를 제거한 후 출력 해보자.
 
 ~~~ sql
 SELECT ENAME ||'의 상사 '|| PRIOR ENAME "WALK" 
-
 FROM EMP 
 WHERE ENAME != 'CLARK' 
 START WITH ENAME = 'KING' 
 CONNECT BY PRIOR EMPNO = MGR;
-
+~~~
+![image](https://user-images.githubusercontent.com/52989294/83211849-17d31880-a199-11ea-8360-6d170de39fd5.png)
+~~~ sql
 SELECT DEPTNO, EMPNO, ENAME, JOB, SAL 
 FROM EMP 
 WHERE ENAME != 'CLARK' 
 START WITH MGR IS NULL 
 CONNECT BY PRIOR EMPNO = MGR;
-
+~~~
+~~~ sql
 SELECT DEPTNO, EMPNO, ENAME, JOB, SAL 
 FROM EMP 
 START WITH MGR IS NULL 
 CONNECT BY PRIOR EMPNO = MGR;
 ~~~
-![image](https://user-images.githubusercontent.com/52989294/83211849-17d31880-a199-11ea-8360-6d170de39fd5.png)
+
 
 Q5. 'BLAKE'와 그의 라인들을 모두 제거하자.
 ~~~ sql

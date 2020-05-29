@@ -94,7 +94,6 @@ FROM EMP
 START WITH MGR IS NULL 
 CONNECT BY PRIOR EMPNO = MGR;
 ~~~
-![image](https://user-images.githubusercontent.com/52989294/83212479-b1e79080-a19a-11ea-9e6d-46245d91c52f.png)
 
 ![image](https://user-images.githubusercontent.com/52989294/83238096-e8d89900-a1d0-11ea-8a07-7effc6db72e2.png)
 
@@ -115,9 +114,7 @@ WHERE ENAME != 'CLARK'
 START WITH MGR IS NULL 
 CONNECT BY PRIOR EMPNO = MGR;
 ~~~
-
-![image](https://user-images.githubusercontent.com/52989294/83236096-ea549200-a1cd-11ea-9bbe-f7c8a7cfd4b9.png)
-
+![image](https://user-images.githubusercontent.com/52989294/83238631-b4191180-a1d1-11ea-93bb-52f0285482e1.png)
 
 ~~~ sql
 SELECT DEPTNO, EMPNO, ENAME, JOB, SAL 
@@ -125,9 +122,7 @@ FROM EMP
 START WITH MGR IS NULL 
 CONNECT BY PRIOR EMPNO = MGR;
 ~~~
-
-![image](https://user-images.githubusercontent.com/52989294/83236166-0bb57e00-a1ce-11ea-8705-fb8e685d740e.png)
-
+![image](https://user-images.githubusercontent.com/52989294/83238838-f80c1680-a1d1-11ea-8081-0a9471ee0f8d.png)
 
 Q5. 'BLAKE'와 그의 라인들을 모두 제거하자.
 ~~~ sql
@@ -144,6 +139,7 @@ FROM EMP
 START WITH MGR IS NULL 
 CONNECT BY PRIOR EMPNO = MGR AND ENAME != 'BLAKE';
 ~~~
+![image](https://user-images.githubusercontent.com/52989294/83238969-22f66a80-a1d2-11ea-87dd-adf43e03d276.png)
 
 Q6. LEVEL 정렬을 해보자.
 ~~~ sql
@@ -152,7 +148,10 @@ FROM EMP
 START WITH MGR IS NULL 
 CONNECT BY PRIOR EMPNO = MGR 
 ORDER BY ENAME;
+~~~
+![image](https://user-images.githubusercontent.com/52989294/83239164-6f41aa80-a1d2-11ea-82d6-5e5c0bef9ec6.png)
 
+~~~ sql
 -- Q2에 ORDER BY 주기
 SELECT ENAME, JOB, MGR 
 FROM EMP 
@@ -160,9 +159,10 @@ START WITH ENAME = 'SMITH'
 CONNECT BY PRIOR MGR = EMPNO 
 ORDER BY ENAME;
 ~~~
+![image](https://user-images.githubusercontent.com/52989294/83240062-c98f3b00-a1d3-11ea-8cbd-7d3dcfcad3d8.png)
 
-Q7. Q6의 쿼리를 실행하게 되면 TREE 구조로 만들어 정렬을 하기 때문에 계층이 틀어진다라고 본다. 
-TREE 구조를 만들어서 계층을 두고 대상을 정렬 하려면 ORDER SIBLINGS BY 라는 키워드를 사용한다.(보고서를 작성할 때 유용)
+
+Q7. Q6의 쿼리를 실행하게 되면 TREE 구조로 만들어 정렬을 하기 때문에 계층이 틀어진다라고 본다. TREE 구조를 만들어서 계층을 두고 대상을 정렬 하려면 ORDER SIBLINGS BY 라는 키워드를 사용한다.(보고서를 작성할 때 유용)
 ~~~ sql
 SELECT LPAD(' ', 4*LEVEL - 4) || ENAME RES, LEVEL, EMPNO, MGR, DEPTNO 
 FROM EMP 
@@ -171,14 +171,17 @@ CONNECT BY PRIOR EMPNO = MGR
 ORDER SIBLINGS BY ENAME;
 ~~~
 
+![image](https://user-images.githubusercontent.com/52989294/83239396-c8114300-a1d2-11ea-91a9-6b9522d8363b.png)
+
 Q8. SYS_CONNECT_BY_PATH(대상, '구분자')를 이용해서 EMP의 TREE구조를 출력해보자.
 ~~~ sql
-SELECT LPAD(' ', 4*LEVEL - 4) || ENAME RES, JOB, SYS_CONNECT_BY_PATH(ENAME, '/') 
+SELECT LPAD(' ', 4*LEVEL - 4) || ENAME RES, JOB, SYS_CONNECT_BY_PATH(ENAME, '/') PATH 
 FROM EMP 
 START WITH MGR IS NULL 
 CONNECT BY PRIOR EMPNO = MGR 
 ORDER SIBLINGS BY ENAME;
 ~~~
+![image](https://user-images.githubusercontent.com/52989294/83239837-7ae1a100-a1d3-11ea-9451-6f9939678d6d.png)
 
 Q9. CONNECT_BY_ISLEAF : 마지막 노드의 유무를 찾을 수 있다.
 CONNECT_BY_ISLEAF = 0 : 현재 ROW가 자식노드를 가지고 있을 때(LEAF NODE가 아니다.)
@@ -190,6 +193,8 @@ FROM EMP
 START WITH MGR IS NULL 
 CONNECT BY PRIOR EMPNO = MGR;
 ~~~
+![image](https://user-images.githubusercontent.com/52989294/83240783-d2ccd780-a1d4-11ea-840a-a327b9f30ebb.png)
+
 
 Q10. 사원테이블의 계층 구조에서 LEAF 노드만 보자.
 ~~~ sql
@@ -199,15 +204,19 @@ WHERE CONNECT_BY_ISLEAF = 1
 START WITH MGR IS NULL 
 CONNECT BY PRIOR EMPNO = MGR;
 ~~~
+![image](https://user-images.githubusercontent.com/52989294/83240967-19223680-a1d5-11ea-8ddc-f0ee43577752.png)
+
 
 Q11. 사원테이블의 계층 구조에서 LEAF 노드가 아닌 사원을 보자.
 ~~~ sql
-SELECT LPAD(' ', 4*LEVEL - 4) || ENAME RES, JOB 
+SELECT LPAD(' ', 4 * LEVEL - 4) || ENAME RES, JOB 
 FROM EMP 
 WHERE CONNECT_BY_ISLEAF = 0 
 START WITH MGR IS NULL 
 CONNECT BY PRIOR EMPNO = MGR;
 ~~~
+![image](https://user-images.githubusercontent.com/52989294/83241113-51c21000-a1d5-11ea-9159-0fc28f60caab.png)
+
 
 ***
 
@@ -309,11 +318,13 @@ INSERT (T.EMPNO, T.ENAME, T.SAL, T.COMM) VALUES(E.EMPNO, E.ENAME, E.SAL,E.COMM);
 
 **SAVEPOINT 실습**
 ~~~ sql
+-- EMP_RES 테이블 생성
 CREATE TABLE EMP_RES 
 AS 
 SELECT EMPNO, ENAME 
 FROM EMP;
 
+-- EMP_RES 테이블 컬럼 삭제
 DELETE FROM EMP_RES;
 
 INSERT INTO EMP_RES VALUES(111,'111');
@@ -417,19 +428,20 @@ SELECT * FROM EMP_RES;
 ~~~ sql
 CREATE TABLE test (col1 NUMBER(5,2), col2 FLOAT(5));
 
-INSERT INTO test VALUES (1.23, 1.23);
-INSERT INTO test VALUES (7.89, 7.89);
-INSERT INTO test VALUES (12.79, 12.79);
-INSERT INTO test VALUES (123.45, 123.45);
-INSERT INTO test VALUES (123.45, 125.45);
-INSERT INTO test VALUES (123.45, 125.42);
+INSERT INTO test VALUES (1.23, 1.23); 
+INSERT INTO test VALUES (7.89, 7.89); 
+INSERT INTO test VALUES (12.79, 12.79); 
+INSERT INTO test VALUES (123.45, 123.45); 
+INSERT INTO test VALUES (123.45, 125.45); 
+INSERT INTO test VALUES (123.45, 125.42); 
 ~~~
+![image](https://user-images.githubusercontent.com/52989294/83241824-5cc97000-a1d6-11ea-8654-d4662afbc2b3.png)
 
 ***
 
 ## FUNCTION
 ### DEREF  .. 참조 정의 
-https://docs.oracle.com/cd/E11882_01/server.112/e41084/functions054.htm#SQLRF00634
+<https://docs.oracle.com/cd/E11882_01/server.112/e41084/functions054.htm#SQLRF00634>
 
 *** 
 ## CREATE TABLESPACE
@@ -517,7 +529,7 @@ SELECT * FROM ROLE_SYS_PRIVS;  -- Role 확인
 ***
 
 ## PL / SQL
-https://docs.oracle.com/cd/E11882_01/appdev.112/e25519/toc.htm
+<https://docs.oracle.com/cd/E11882_01/appdev.112/e25519/toc.htm>
 ### [형식]
 ~~~ sql
 << label >> (optional)
@@ -555,8 +567,7 @@ DBMS_OUTPUT.PUT_LINE('2. HELLO JAVA');
 END; 
 /     --'/'까지 입력하면 실행됨
 ~~~
-![image](https://user-images.githubusercontent.com/52989294/83229705-69909880-a1c3-11ea-9e86-c33940bd28f1.png)
-
+![image](https://user-images.githubusercontent.com/52989294/83242682-c4cc8600-a1d7-11ea-9177-b90c8bc94cd0.png)
 
 Q2. i 라는 변수를 선언하고 20을 대입 후 출력 해보자.
 ~~~ sql
@@ -568,10 +579,10 @@ DBMS_OUTPUT.PUT_LINE('i의 값은 '|| i);
 END;
 /
 ~~~
-![image](https://user-images.githubusercontent.com/52989294/83229967-e3288680-a1c3-11ea-8011-9c5e177d0f6b.png)
+![image](https://user-images.githubusercontent.com/52989294/83242844-0826f480-a1d8-11ea-90d8-9beeb79f47bb.png)
 
 **데이터 타입**
-https://docs.oracle.com/cd/E11882_01/appdev.112/e25519/datatypes.htm#LNPLS332
+<https://docs.oracle.com/cd/E11882_01/appdev.112/e25519/datatypes.htm#LNPLS332>
 
 Q3. 사칙 연산을 출력해보자.
 ~~~ sql
@@ -588,12 +599,10 @@ DBMS_OUTPUT.PUT_LINE(j || '/' || i || '=' || div);
 END;
 /
 ~~~
-![image](https://user-images.githubusercontent.com/52989294/83230435-b45ee000-a1c4-11ea-955a-2409e85ae416.png)
+![image](https://user-images.githubusercontent.com/52989294/83243568-0d387380-a1d9-11ea-854c-bb9320c0f841.png)
 
 ---
 
-**예제**
-https://docs.oracle.com/cd/E11882_01/appdev.112/e25519/controlstatements.htm#LNPLS411
 
 ~~~sql
 -- 복붙 X, 한줄씩 입력하기
@@ -609,10 +618,11 @@ BEGIN
 END;
 /
 ~~~
-![image](https://user-images.githubusercontent.com/52989294/83231984-58498b00-a1c7-11ea-8386-a17e385b8881.png)
+![image](https://user-images.githubusercontent.com/52989294/83243986-aebfc500-a1d9-11ea-8948-271af64ff97f.png)
 
 
-
+**예제**
+<https://docs.oracle.com/cd/E11882_01/appdev.112/e25519/controlstatements.htm#LNPLS411>
 
 ~~~ sql
 -- 복붙 X, 한줄씩 입력하기
@@ -637,7 +647,28 @@ BEGIN
 END;
 /
 ~~~
-![image](https://user-images.githubusercontent.com/52989294/83232059-78794a00-a1c7-11ea-8b1c-66042c93fc22.png)
+![image](https://user-images.githubusercontent.com/52989294/83244144-e4fd4480-a1d9-11ea-902e-84bc00d1dbf2.png)
+
+~~~ sql
+DECLARE
+  grade CHAR(1);
+BEGIN
+  grade := 'B';
+  
+  CASE
+    WHEN grade = 'A' THEN DBMS_OUTPUT.PUT_LINE('Excellent');
+    WHEN grade = 'B' THEN DBMS_OUTPUT.PUT_LINE('Very Good');
+    WHEN grade = 'C' THEN DBMS_OUTPUT.PUT_LINE('Good');
+    WHEN grade = 'D' THEN DBMS_OUTPUT.PUT_LINE('Fair');
+    WHEN grade = 'F' THEN DBMS_OUTPUT.PUT_LINE('Poor');
+  END CASE;
+EXCEPTION
+  WHEN CASE_NOT_FOUND THEN
+    DBMS_OUTPUT.PUT_LINE('No such grade');
+END;
+/
+~~~
+![image](https://user-images.githubusercontent.com/52989294/83244283-15dd7980-a1da-11ea-9b54-3779dcd91fa9.png)
 
 
 ### for문
@@ -664,7 +695,7 @@ BEGIN
 END;
 /
 ~~~
-![image](https://user-images.githubusercontent.com/52989294/83231569-a742f080-a1c6-11ea-8bab-c6d338ce1d4a.png)
+![image](https://user-images.githubusercontent.com/52989294/83244395-41606400-a1da-11ea-81f8-864145e55922.png)
 
 ~~~ sql
 BEGIN
@@ -672,15 +703,13 @@ BEGIN
     IF i < 3 THEN
       DBMS_OUTPUT.PUT_LINE (TO_CHAR(i));
     ELSE
-        DBMS_OUTPUT.PUT_LINE ('====================');
-      
+        DBMS_OUTPUT.PUT_LINE ('====================');      
     END IF;
   END LOOP;
 END;
 /
 ~~~
-
-![image](https://user-images.githubusercontent.com/52989294/83232319-f0e00b00-a1c7-11ea-9974-467fcff0c44e.png)
+![image](https://user-images.githubusercontent.com/52989294/83244616-84bad280-a1da-11ea-9631-5ce7ad1b190c.png)
 
 Q5. 테이블을 생성하자.
 ~~~ sql
@@ -697,9 +726,9 @@ END;
 /
 
 SELECT * FROM TEST01; -- 테이블 생성 및 데이터 입력 확인
-
 ~~~
-![image](https://user-images.githubusercontent.com/52989294/83232588-61872780-a1c8-11ea-91d9-67d0dfb4493a.png)
+
+![image](https://user-images.githubusercontent.com/52989294/83245045-30fcb900-a1db-11ea-9847-7350a6dfe6b2.png)
 
 Q6. 사원테이블의 10번 부서의 평균 월급을 구하는 구문을 작성하자.
 ~~~ sql
@@ -718,6 +747,7 @@ DBMS_OUTPUT.PUT_LINE(DEPTNO01 ||'번 부서의 평균은 [' || AVG01 || ']' );
 END;
 /
 ~~~
-![image](https://user-images.githubusercontent.com/52989294/83233363-8d56dd00-a1c9-11ea-8d4b-b5f8068cceb3.png)
+![image](https://user-images.githubusercontent.com/52989294/83244922-027ede00-a1db-11ea-9790-d0ac5a738ccb.png)
+
 
 

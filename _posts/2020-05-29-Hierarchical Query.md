@@ -424,7 +424,7 @@ SELECT * FROM EMP_RES;
 
 *** 
 ## Data Type
-###[FLOAT Data Type]
+### [FLOAT Data Type]
 ~~~ sql
 CREATE TABLE test (col1 NUMBER(5,2), col2 FLOAT(5));
 

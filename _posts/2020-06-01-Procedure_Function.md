@@ -21,14 +21,30 @@ layout: post
 ~~~ sql
 accept a -- a값을 받아 올 수 있게 커서 깜빡임
 
-accept a prompt 'input a :'  -- 다음행 'input a :' 뜨고 값입력해서 a에 대입
+accept a prompt 'input a :'  -- 다음행 'input a :' 에 값 입력하면 a에 대입
 ~~~
+
+### 참조 변수 ###
+#### [형태]
+**변수명**  테이블명.필드명%Type
+
+ex) 
+**empNo** emp.employee_id%TYPE
+- 현재 emp 테이블의 employee_id의 타입을 그대로 가져오겠다.
+- emp 테이블의 employee_id와 동일한 데이터 타입으로 선언한다는 의미.
+
+**emp_name** emp.first_name%TYPE
+- emp 테이블의 first_name과 동일한 데이터 타입으로 선언
+
+**empRow** emp%**ROWTYPE**
+- emp 테이블의 모든 컬럼을 한꺼번에 저장하기 위한 변수로 선언
 
 #### ex) 사원의 이름을 입력받아 출력하는 구문을 만들어보자.
 ~~~ sql
+-- 이름이 'KING'인 사원의 이름과 봉급을 출력해보자.
 SELECT ENAME, SAL
 FROM EMP
-WHERE ENAME = 'KING';
+WHERE ENAME = 'KING'; 
 ~~~
 
 ~~~ sql
@@ -58,7 +74,9 @@ ACCEPT INPUT_NAME
 SQL > 'KING' -- 'KING' 입력하면 INPUT_NAME 에 저장
 
 DECLARE
-EMP_RES EMP%ROWTYPE;
+EMP_RES EMP%ROWTYPE; 
+-- EMP 테이블의 모든 컬럼을 한꺼번에 저장하기 위한 변수로 선언
+
 BEGIN
 SELECT ENAME, SAL INTO EMP_RES.ENAME, EMP_RES.SAL
 FROM EMP
@@ -107,7 +125,7 @@ SELECT * FROM USER_SOURCE;
 ***
 
 ex01) 부서 번호 20번인 사원의 사원번호, 이름, 봉급을 구하는 프로시져를 만들자.
-방법1)
+**방법1)**
 ~~~ sql
 SELECT EMPNO, ENAME, SAL FROM EMP WHERE DEPTNO = 20;
 ~~~
@@ -123,9 +141,9 @@ SET SERVEROUTPUT ON; -- 결과물 출력 안될 시 사용
 
 CREATE OR REPLACE PROCEDURE EMP_EX01
 IS
-  V_EMPNO EMP.EMPNO%TYPE; -- 변수선언
-  V_ENAME EMP.ENAME%TYPE;
-  V_SAL NUMBER(7,2);
+V_EMPNO EMP.EMPNO%TYPE; -- 변수선언
+V_ENAME EMP.ENAME%TYPE;
+V_SAL NUMBER(7,2);
 
 CURSOR EMP_CURSOR IS -- 1. 커서 선언 : 하나 이상의 row를 담을 객체
 SELECT EMPNO,ENAME,SAL FROM EMP WHERE DEPTNO = 20;
@@ -149,13 +167,14 @@ EXEC EMP_EX01; --  실행하기
 
 ![image](https://user-images.githubusercontent.com/52989294/83380218-5c201c00-a418-11ea-959d-128614fdefd3.png)
 
-방법2)
+**방법2)**
 ~~~ sql
 SET SERVEROUTPUT ON; -- 결과물 출력 안될 시 사용
 
 CREATE OR REPLACE PROCEDURE EMP_EX02
 IS
 V_EMP EMP%ROWTYPE;
+
 CURSOR EMP_CURSOR IS
 SELECT EMPNO, ENAME, SAL
 FROM EMP
@@ -163,6 +182,7 @@ WHERE DEPTNO = 20;
 
 BEGIN
 FOR V_EMP IN EMP_CURSOR LOOP
+
 EXIT WHEN EMP_CURSOR%ROWCOUNT > 5 OR EMP_CURSOR%NOTFOUND;
 DBMS_OUTPUT.PUT_LINE(V_EMP.EMPNO||' '||V_EMP.ENAME||' '||V_EMP.SAL);
 END LOOP;
@@ -170,7 +190,7 @@ END EMP_EX02;
 /
 ~~~
 
-~~~ pl/sql
+~~~ sql
 SET SERVEROUTPUT ON; -- 결과물 출력 안될 시 사용
 
 EXEC EMP_EX02; --실행
@@ -225,12 +245,15 @@ SET SERVEROUTPUT ON; -- 결과물 출력 안될 시 사용
 CREATE OR REPLACE PROCEDURE EX_VIEW01
 IS
 R_EMP EMP%ROWTYPE;
+
 CURSOR RES IS
 SELECT ENAME, SAL, COMM FROM EMP WHERE COMM IS NOT NULL;
+
 BEGIN
 OPEN RES;
 LOOP
 FETCH RES INTO R_EMP.ENAME, R_EMP.SAL, R_EMP.COMM;
+
 EXIT WHEN RES%NOTFOUND;
 DBMS_OUTPUT.PUT_LINE(R_EMP.ENAME||' '||R_EMP.SAL||' '||R_EMP.COMM);
 END LOOP;
@@ -269,10 +292,12 @@ CURSOR EMP_CURSOR(V_DEPTNO NUMBER) IS
 SELECT EMPNO, ENAME, SAL
 FROM EMP
 WHERE DEPTNO = V_DEPTNO;
+
 BEGIN
 OPEN EMP_CURSOR(10);
 LOOP
 FETCH EMP_CURSOR INTO V_EMPNO, V_ENAME,V_SAL;
+
 EXIT WHEN EMP_CURSOR%ROWCOUNT > 5 OR EMP_CURSOR%NOTFOUND;
 DBMS_OUTPUT.PUT_LINE(V_EMPNO||' '||V_ENAME||' '||V_SAL);
 END LOOP;
@@ -291,8 +316,7 @@ END EMP_EX03;
 
 ![image](https://user-images.githubusercontent.com/52989294/83383934-1ca9fd80-a421-11ea-87d5-6c9ffbdaeb44.png)
 
-Q4. EXEC EMP_EX04(7369)를 입력하게 되면 해당 번호의 사원을 찾아 봉급을 인상하고 인상된
-사원의 수를 리턴하자.
+Q4. ' EXEC EMP_EX04(7369) '를 입력하게 되면 해당 번호의 사원을 찾아 봉급을 인상하고 인상된 사원의 수를 리턴하자.
 
 ~~~ sql
 SET SERVEROUTPUT ON; -- 결과물 출력 안될 시 사용
@@ -301,6 +325,7 @@ CREATE OR REPLACE PROCEDURE EMP_EX04(P_EMPNO IN EMP.EMPNO%TYPE)
 IS
 V_SAL EMP.SAL%TYPE;
 V_UPDATE_ROW NUMBER;
+
 BEGIN
 SELECT SAL INTO V_SAL
 FROM EMP
@@ -318,7 +343,7 @@ END;
 /
 ~~~
 
-~~~ pl/sql
+~~~ sql
 EXECUTE EMP_EX04(7369);
 ~~~
 
@@ -334,6 +359,7 @@ CURSOR EMP_CURSOR IS
 SELECT EMPNO, ENAME, SAL
 FROM EMP
 WHERE DEPTNO = P_DEPTNO FOR UPDATE;
+
 BEGIN
 FOR ABC IN EMP_CURSOR LOOP
 UPDATE EMP
@@ -361,12 +387,12 @@ SELECT ENAME, SAL FROM EMP WHERE DEPTNO = 30; -- 변경된 값 확인
 ~~~
 ![image](https://user-images.githubusercontent.com/52989294/83386884-bd4eec00-a426-11ea-97d2-f472eb8ea830.png)
 
-**함수**
+### [함수]
 - 보통 값을 계산하고 결과값을 반환하기 위해서 함수를 많이 사용
 - 대부분 구성이 프로시져와 유사하지만 in 파라미터만 사용
 - 반드시 반환될 값의 데이터 타입을 return문에 선언하고 return문을 통해서 반드시 값을 반환
 
-**형식**
+### [형식]
 ~~~ sql
 CREATE FUNCTION 함수명[파라미터] return datatype
 is
@@ -386,9 +412,11 @@ IS
 V_SAL EMP.SAL%TYPE :=0;
 VTOT NUMBER := 0;
 VCOMM EMP.COMM%TYPE;
+
 BEGIN
 SELECT SAL, COMM INTO V_SAL, VCOMM
 FROM EMP WHERE EMPNO = V_ID; -- 받은 사번을 입력한다.
+
 VTOT := V_SAL *12 + NVL(VCOMM,0); -- 정의된 변수를 사용한다.(연산)
 RETURN VTOT; --리턴을 명시한다.
 END;
@@ -447,8 +475,8 @@ END;
 ![image](https://user-images.githubusercontent.com/52989294/83388573-a067e800-a429-11ea-883e-e5a8ef1c1599.png)
 
 ~~~ sql
-var res varchar2(20);
-execute :res := getDept(7900);
+var res varchar2(20); -- varchar2형 res 변수 선언
+execute :res := getDept(7900); -- getDept(7900) 실행 결과를 res에 저장
 ~~~
 
 ~~~ sql
@@ -488,9 +516,11 @@ END;
 
 ~~~ sql
 var res varchar2(50)
-execute ex_getDept(7900,:res);
+execute ex_getDept(7900,:res); -- ex_getDept(7900) 실행한 결과를 res에 저장
 print res;
 ~~~
-![image](https://user-images.githubusercontent.com/52989294/83390589-14f05600-a42d-11ea-92da-b30907ac2b8a.png)
 
 **':res'**  -->  out 변수 호출 해줘야함
+
+![image](https://user-images.githubusercontent.com/52989294/83390589-14f05600-a42d-11ea-92da-b30907ac2b8a.png)
+

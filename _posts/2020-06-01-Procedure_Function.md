@@ -28,16 +28,25 @@ accept a prompt 'input a :'  -- 다음행 'input a :' 에 값 입력하면 a에 
 #### [형태]
 **변수명**  테이블명.필드명%Type
 
-ex) 
-**empNo** emp.employee_id%TYPE
+ex)
+~~~ sql
+empNo emp.employee_id%TYPE
+~~~
 - 현재 emp 테이블의 employee_id의 타입을 그대로 가져오겠다.
 - emp 테이블의 employee_id와 동일한 데이터 타입으로 선언한다는 의미.
 
-**emp_name** emp.first_name%TYPE
+~~~ sql
+emp_name emp.first_name%TYPE
+~~~
 - emp 테이블의 first_name과 동일한 데이터 타입으로 선언
 
-**empRow** emp%**ROWTYPE**
+
+~~~ sql
+empRow emp%ROWTYPE
+~~~
 - emp 테이블의 모든 컬럼을 한꺼번에 저장하기 위한 변수로 선언
+
+***
 
 #### ex) 사원의 이름을 입력받아 출력하는 구문을 만들어보자.
 ~~~ sql
@@ -125,11 +134,11 @@ SELECT * FROM USER_SOURCE;
 ***
 
 ex01) 부서 번호 20번인 사원의 사원번호, 이름, 봉급을 구하는 프로시져를 만들자.
-**방법1)**
+
 ~~~ sql
 SELECT EMPNO, ENAME, SAL FROM EMP WHERE DEPTNO = 20;
 ~~~
-
+**방법1)**
 ~~~ sql
 SELECT EMPNO, ENAME, SAL INTO :a, :b, :c
 FROM EMP

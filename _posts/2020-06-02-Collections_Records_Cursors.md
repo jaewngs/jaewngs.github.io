@@ -1,6 +1,6 @@
 ---
 
-title:  " PROCEDURE 구현 해보기"
+title:  "PL/SQL Collections and Records & Cursors"
 
 layout: post
 
@@ -12,6 +12,11 @@ layout: post
 
 ## [오늘 할 내용]
 1. 프로시져 복습 및 연습문제
+2. PL/SQL Collections and Records
+3. Cursors
+4. Query Result Set Processing
+5. Cursor Variables
+6. CURSOR Expressions
 
 ## PROCEDURE 복습
 
@@ -450,8 +455,9 @@ EXEC :MYRES := FN_VIEW05(7902);
 PRINT MYRES;
 ~~~
 
-## PACKAGE
-### PL/SQL Language Reference
+## PL/SQL Collections and Records
+
+### PACKAGE
 
 <https://docs.oracle.com/cd/E11882_01/appdev.112/e25519/composites.htm#LNPLS99856>
 
@@ -489,7 +495,8 @@ END;
 
 ***
 
-### RECORD TYPE
+
+## RECORD TYPE
 ### [5-34] RECORD Type Definition and Variable Declarations
 ~~~ sql
 DECLARE
@@ -623,7 +630,7 @@ END;
 
 ***
 
-### %ROWTYPE Attribute
+## %ROWTYPE Attribute
 ### [5-38] %ROWTYPE Variable Represents Full Database Table Row
 ~~~ sql
 
@@ -672,7 +679,7 @@ END;
 
 ***
 
-##Record Comparisons
+## Record Comparisons
 
 ### [5-51]
 ~~~ sql
@@ -734,7 +741,9 @@ END;
 SELECT * FROM RES_EMP; -- 결과확인하기
 ~~~
 
+***
 
+## Description of Static SQL
 ### [6-1]
 ~~~ sql
 
@@ -775,7 +784,9 @@ END;
 ![image](https://user-images.githubusercontent.com/52989294/83484561-2b0b1e80-a4e0-11ea-8492-3e8be07e345c.png)
 
 ***
-## Explicit Cursors
+
+## Cursors
+### Explicit Cursors
 <https://docs.oracle.com/cd/E11882_01/appdev.112/e25519/static.htm#LNPLS99956>
 
 ### [6-5]
@@ -829,6 +840,10 @@ END;
 
 ~~~
 
+***
+
+## Query Result Set Processing
+
 ### [6-18]
 ~~~ sql
 
@@ -847,7 +862,7 @@ END;
 ~~~
 
 
-### Q9. 인라인 뷰를 탐색할 수 있다. [6-22]
+Q9. 인라인 뷰를 탐색할 수 있다. [6-22]
 ~~~ sql
 DECLARE
   CURSOR c1 IS
@@ -876,33 +891,108 @@ END;
 
 ~~~
 
+***
+
+## Cursor Variables
+
 ### [6-24] Q5 연관
 ~~~ sql
 
 ~~~
 
-#### Q10. 사용자 RECORD를 선언하고 커서로 참조시켜 참조시킨 커서를 변수로 선언하여 사용자 레코드 멤버에게 값을 전달 후 출력해보자.[6-25] Q5 연관
+Q10. 사용자 RECORD를 선언하고 커서로 참조시켜 참조시킨 커서를 변수로 선언하여 사용자 레코드 멤버에게 값을 전달 후 출력해보자.[6-25] Q5 연관
 
+~~~ sql
+DECLARE
+  TYPE EmpRecTyp IS RECORD (
+    employee_id NUMBER,
+    last_name VARCHAR2(25),
+    salary   NUMBER(8,2)); 
+    
+  TYPE EmpCurTyp IS REF CURSOR RETURN EmpRecTyp; 
+  emp_cv EmpCurTyp; 
+   v_EmpRecTyp emp_cv%ROWTYPE;
+  
+BEGIN
+  open emp_cv for select empno, ename, sal from emp;
+  loop 
+  fetch emp_cv into v_EmpRecTyp;
+  exit when emp_cv%notfound;
+  dbms_output.put_line(v_EmpRecTyp.employee_id||' '||v_EmpRecTyp.last_name||' '||v_EmpRecTyp.salary);
+  end loop;
+END;
+/
+~~~
+
+![image](https://user-images.githubusercontent.com/52989294/83497339-46ccef80-a4f5-11ea-9871-10eebec46889.png)
+
+
+### [6-26]
 ~~~ sql
 
 ~~~
 
-### [6-]
+### [6-27] 중요함
 ~~~ sql
 
 ~~~
 
-### [6-]
+### [6-28]
+~~~ sql
+DECLARE
+  sal           emp.sal%TYPE;
+  sal_multiple  emp.sal%TYPE;
+  factor        INTEGER := 2;
+ 
+  cv SYS_REFCURSOR;
+ 
+BEGIN
+  OPEN cv FOR
+    SELECT sal, sal*factor
+    FROM emp
+    WHERE job LIKE 'CL%';  -- PL/SQL evaluates factor
+ 
+  LOOP
+    FETCH cv INTO sal, sal_multiple;
+    EXIT WHEN cv%NOTFOUND;
+    DBMS_OUTPUT.PUT_LINE('factor = ' || factor);
+    DBMS_OUTPUT.PUT_LINE('sal          = ' || sal);
+    DBMS_OUTPUT.PUT_LINE('sal_multiple = ' || sal_multiple);
+    factor := factor + 1;  -- Does not affect sal_multiple
+  END LOOP;
+ 
+  CLOSE cv;
+END;
+/
+~~~
+
+### [6-30]
 ~~~ sql
 
 ~~~
 
-### [6-]
+### [6-31] 리턴타입이 같을 때
 ~~~ sql
 
 ~~~
 
-### [6-]
+
+### [6-32] 리턴 타입이 다를 때
+~~~ sql
+
+~~~
+
+
+### [6-33]
+~~~ sql
+
+~~~
+
+***
+
+## CURSOR Expressions
+
+### [6-34]
 ~~~ sql
 
 ~~~

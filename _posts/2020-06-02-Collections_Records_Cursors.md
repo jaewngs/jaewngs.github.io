@@ -7,8 +7,6 @@ layout: post
 ---
 
 # DAY 34
-![image](https://user-images.githubusercontent.com/52989294/83466008-bff62380-a4b0-11ea-9c56-932cb79b42fa.png)
-테스트 용 이미지
 
 ## [오늘 할 내용]
 1. 프로시져 복습 및 연습문제
@@ -458,20 +456,20 @@ PRINT MYRES;
 ## PL/SQL Collections and Records
 
 ### PACKAGE
-
 <https://docs.oracle.com/cd/E11882_01/appdev.112/e25519/composites.htm#LNPLS99856>
 
 ### [5-33] Declaring Record Constant
 ~~~ sql
+-- 패키지 생성
 CREATE OR REPLACE PACKAGE My_Types AUTHID DEFINER IS
-  TYPE My_Rec IS RECORD (a NUMBER, b NUMBER, name varchar2(10));
-  FUNCTION Init_My_Rec RETURN My_Rec;
+  TYPE My_Rec IS RECORD (a NUMBER, b NUMBER, name varchar2(10)); -- 레코드 
+  FUNCTION Init_My_Rec RETURN My_Rec; -- FUNCTION 
 END My_Types;
 /
 
 CREATE OR REPLACE PACKAGE BODY My_Types IS
   FUNCTION Init_My_Rec RETURN My_Rec IS
-    Rec My_Rec;
+    Rec My_Rec;  -- My_Rec 타입의 Rec
   BEGIN
     Rec.a := 0;
     Rec.b := 1;
@@ -507,8 +505,9 @@ DECLARE
     loc_id     NUMBER(4)
   );
  
-  dept_rec DeptRecTyp;
-  dept_rec_2 dept_rec%TYPE;
+  dept_rec DeptRecTyp; -- DeptRecTyp 타입의 dept_rec 생성
+  dept_rec_2 dept_rec%TYPE;  -- dept_rec 타입의 dept_rec_2 생성
+  
 BEGIN
   DBMS_OUTPUT.PUT_LINE('dept_rec:');
   DBMS_OUTPUT.PUT_LINE('---------');
@@ -526,7 +525,7 @@ BEGIN
   DBMS_OUTPUT.PUT_LINE('loc_id:    ' || dept_rec_2.loc_id);
 END;
 /
-~~~ 
+~~~
 
 ![image](https://user-images.githubusercontent.com/52989294/83480163-97cceb80-a4d5-11ea-8903-3b9c81710345.png)
 
@@ -534,25 +533,26 @@ END;
 ~~~ sql
 DECLARE
   TYPE name_rec IS RECORD (
-    first  emp.ename%TYPE,
-    last   emp.ename%TYPE
+  	FIRST EMP.ENAME%TYPE,
+    LAST EMP.ENAME%TYPE
   );
  
   TYPE contact IS RECORD (
-    name  name_rec,                    -- nested record
-    emp_no emp.empno%TYPE
-  );
- 
-  friend contact;
+  	NAME NAME_REC,   -- nested record
+    EMP_NO EMP.EMPNO%TYPE
+   );
+   
+  FRIEND CONTACT;  -- contact 타입의 friend 생성
+  
 BEGIN
-  friend.name.first := 'John';
-  friend.name.last := 'Smith';
-  friend.emp_no := '1234';
+  FRIEND.NAME.FIRST := 'JOHN';
+  FRIEND.NAME.LAST := 'SMITH';
+  FRIEND.EMP_NO := 1234;
   
   DBMS_OUTPUT.PUT_LINE (
-    friend.name.first  || ' ' ||
-    friend.name.last   || ', ' ||
-    friend.emp_no
+    FRIEND.NAME.FIRST  || ' ' ||
+    FRIEND.NAME.LAST   || ', ' ||
+    FRIEND.EMP_NO
   );
 END;
 /
@@ -563,21 +563,19 @@ END;
 ### [5-36] RECORD Type with Varray Field
 ~~~ sql
 DECLARE
-  TYPE full_name IS VARRAY(2) OF VARCHAR2(20);
+  TYPE FULL_NAME IS VARRAY(2) OF VARCHAR2(20);
  
-  TYPE contact IS RECORD (
-    name  full_name := full_name('John', 'Smith'),  -- varray field
-    emp_no emp.empno%TYPE
+  TYPE CONTACT IS RECORD (
+    NAME FULL_NAME := FULL_NAME('John', 'Smith'),  -- varray field
+    EMP_NO EMP.EMPNO%TYPE
   );
  
-  friend contact;
+  FRIEND CONTACT;
 BEGIN
-  friend.emp_no := '1234';
+  FRIEND.EMP_NO := 1234;
   
   DBMS_OUTPUT.PUT_LINE (
-    friend.name(1) || ' ' ||
-    friend.name(2) || ', ' ||
-    friend.emp_no 
+    FRIEND.NAME(1) || ' ' ||  FRIEND.NAME(2) || ', ' || FRIEND.EMP_NO 
   );
 END;
 /
@@ -596,14 +594,16 @@ CREATE OR REPLACE PACKAGE pkg AS
   PROCEDURE print_rec_type (rec rec_type);
 END pkg;
 /
+
 CREATE OR REPLACE PACKAGE BODY pkg AS
   PROCEDURE print_rec_type (rec rec_type) IS
   BEGIN
     DBMS_OUTPUT.PUT_LINE(rec.f1);
     DBMS_OUTPUT.PUT_LINE(rec.f2);
-  END; 
+  END;
 END pkg;
 /
+
 DECLARE
   TYPE rec_type IS RECORD (       -- local RECORD type
     f1 INTEGER,
@@ -633,39 +633,215 @@ END;
 ## %ROWTYPE Attribute
 ### [5-38] %ROWTYPE Variable Represents Full Database Table Row
 ~~~ sql
-
+DECLARE
+  dept_rec departments%ROWTYPE;
+BEGIN
+  -- Assign values to fields:
+  
+  dept_rec.department_id   := 10;
+  dept_rec.department_name := 'Administration';
+  dept_rec.manager_id      := 200;
+  dept_rec.location_id     := 1700;
+ 
+  -- Print fields:
+ 
+  DBMS_OUTPUT.PUT_LINE('dept_id:   ' || dept_rec.department_id);
+  DBMS_OUTPUT.PUT_LINE('dept_name: ' || dept_rec.department_name);
+  DBMS_OUTPUT.PUT_LINE('mgr_id:    ' || dept_rec.manager_id);
+  DBMS_OUTPUT.PUT_LINE('loc_id:    ' || dept_rec.location_id);
+END;
+/
 ~~~ 
-### [5-39]
-~~~ sql
 
+~~~ sql
+DECLARE
+  EMP_RES EMP%ROWTYPE;
+
+BEGIN
+  EMP_RES.EMPNO := 111;
+  EMP_RES.ENAME := 'AAA';
+  EMP_RES.JOB := 'BBB';
+  EMP_RES.MGR := 7839;
+  EMP_RES.HIREDATE := '20/04/28';
+  EMP_RES.SAL := 1000;
+  EMP_RES.COMM  := 100;
+  EMP_RES.DEPTNO := 10;
+
+DBMS_OUTPUT.PUT_LINE(EMP_RES.EMPNO || ' ' ||EMP_RES.ENAME || ' ' || EMP_RES.JOB || ' ' || EMP_RES.MGR || ' ' || EMP_RES.HIREDATE || ' ' || EMP_RES.SAL || ' ' || EMP_RES.COMM || ' ' || EMP_RES.DEPTNO);
+  
+END;
+/
+~~~
+
+![image](https://user-images.githubusercontent.com/52989294/83507368-6ec34f80-a503-11ea-9457-06beb50e2ca3.png)
+
+### [5-39] %ROWTYPE Variable Does Not Inherit Initial Values or Constraints
+~~~ sql
+DROP TABLE T1;
+
+CREATE TABLE T1(
+C1 INTEGER DEFAULT 0 NOT NULL,
+C2 INTEGER DEFAULT 1 NOT NULL
+);
+
+DECLARE 
+T1_ROW T1%ROWTYPE;
+BEGIN
+DBMS_OUTPUT.PUT_LINE('T1.C1 = ' || T1_ROW.C1);
+DBMS_OUTPUT.PUT_LINE('T1.C2 = ' || T1_ROW.C2);
+END;
+/
 ~~~ 
+![image](https://user-images.githubusercontent.com/52989294/83508706-463c5500-a505-11ea-8f6b-69ba685986b4.png)
 
-### [5-40]
+값을 입력하지 않았기 때문에 둘다 NULL 값 출력
+
+### [5-40] %ROWTYPE Variable Represents Partial Database Table Row
 ~~~ sql
-
+DECLARE
+  CURSOR C IS
+    SELECT EMPNO, ENAME, JOB
+    FROM EMP;
+ 
+  friend C%ROWTYPE;
+BEGIN
+  friend.EMPNO := 1234;
+  friend.ENAME   := 'John';
+  friend.JOB    := 'PRESIDENT';
+  
+  
+  DBMS_OUTPUT.PUT_LINE (
+    friend.EMPNO  || ' ' ||
+    friend.ENAME   || ' ' ||
+    friend.JOB
+  );
+END;
+/
 ~~~
-### [5-44] 
+![image](https://user-images.githubusercontent.com/52989294/83509195-088bfc00-a506-11ea-8ba2-407637a8d20c.png)
+
+### [5-44] Assigning Record to Another Record of Same RECORD Type
 ~~~ sql
+DECLARE
+  TYPE name_rec IS RECORD (
+    NAME  EMP.ENAME%TYPE DEFAULT 'AAA',
+    JOB   EMP.JOB%TYPE DEFAULT 'KING'
+  );
+ 
+  SARAM1 name_rec;
+  SARAM2 name_rec;
+ 
+BEGIN
+  SARAM1.NAME := 'MOON'; SARAM1.JOB := 'PRESIDENT'; 
 
+  DBMS_OUTPUT.PUT_LINE('SARAM1: ' || SARAM1.NAME || ' ' || SARAM1.JOB);
+  SARAM2 := SARAM1;
+  DBMS_OUTPUT.PUT_LINE('SARAM2: ' || SARAM2.NAME || ' ' || SARAM2.JOB); 
+END;
+/
 ~~~
+![image](https://user-images.githubusercontent.com/52989294/83509693-c9aa7600-a506-11ea-82bb-364cdf15167b.png)
 
-### [5-45]
+### [5-45] Assigning %ROWTYPE Record to RECORD Type Record
 ~~~ sql
-
+DECLARE
+  TYPE name_rec IS RECORD (
+    first  EMP.ENAME%TYPE DEFAULT 'John',
+    last   EMP.JOB%TYPE DEFAULT 'NO_JOB'
+  );
+ 
+  CURSOR c IS
+    SELECT ENAME, JOB
+    FROM EMP;
+ 
+  target name_rec;
+  source c%ROWTYPE;
+ 
+BEGIN
+  source.ENAME := 'Jane'; source.JOB := 'PRESIDENT';
+ 
+  DBMS_OUTPUT.PUT_LINE (
+    'source: ' || source.ENAME || ' ' || source.JOB
+  );
+ 
+ target := source;
+ 
+ DBMS_OUTPUT.PUT_LINE (
+   'target: ' || target.first || ' ' || target.last
+ );
+END;
+/
 ~~~
 
-### [5-47]
+![image](https://user-images.githubusercontent.com/52989294/83510053-55240700-a507-11ea-96c6-1c72b8e066e3.png)
+
+### [5-47] SELECT INTO Assigns Values to Record Variable
 ~~~ sql
+DECLARE
+  TYPE RecordTyp IS RECORD (
+    NAME EMP.ENAME%TYPE,
+    JOB   EMP.JOB%TYPE
+  );
+  rec1 RecordTyp;
+BEGIN
+  SELECT ENAME, JOB INTO rec1
+  FROM EMP
+  WHERE EMPNO = 7900;
 
+  DBMS_OUTPUT.PUT_LINE ('Employee 7900 ' || rec1.NAME || ' is '|| rec1.JOB);
+END;
+/
 ~~~
 
+![image](https://user-images.githubusercontent.com/52989294/83510498-117dcd00-a508-11ea-92ee-d701b77f93e1.png)
 
 
-### [5-48]
+
+### [5-48] FETCH Assigns Values to Record that Function Returns
 ~~~ sql
-
+DECLARE
+  TYPE EmpRecTyp IS RECORD (
+    emp_id  EMP.EMPNO%TYPE,
+    salary  EMP.SAL%TYPE
+  );
+ 
+  CURSOR desc_salary RETURN EmpRecTyp IS
+    SELECT EMPNO, SAL
+    FROM EMP
+    ORDER BY SAL DESC;
+ 
+  highest_paid_emp       EmpRecTyp;
+  next_highest_paid_emp  EmpRecTyp;
+ 
+  FUNCTION nth_highest_salary (n INTEGER) RETURN EmpRecTyp IS
+    emp_rec  EmpRecTyp;
+  BEGIN
+    OPEN desc_salary;
+    FOR i IN 1..n LOOP
+      FETCH desc_salary INTO emp_rec;
+    END LOOP;
+    CLOSE desc_salary;
+    RETURN emp_rec;
+  END nth_highest_salary;
+ 
+BEGIN
+  highest_paid_emp := nth_highest_salary(1);
+  next_highest_paid_emp := nth_highest_salary(2);
+ 
+  DBMS_OUTPUT.PUT_LINE(
+    'Highest Paid: #' ||
+    highest_paid_emp.emp_id || ', $' ||
+    highest_paid_emp.salary 
+  );
+  DBMS_OUTPUT.PUT_LINE(
+    'Next Highest Paid: #' ||
+    next_highest_paid_emp.emp_id || ', $' ||
+    next_highest_paid_emp.salary 
+  );
+END;
+/
 ~~~
-
+![image](https://user-images.githubusercontent.com/52989294/83510894-b8faff80-a508-11ea-98e6-3da1f2425a5e.png)
 
 ### [5-49]
 ~~~ sql
@@ -903,6 +1079,7 @@ END;
 Q10. 사용자 RECORD를 선언하고 커서로 참조시켜 참조시킨 커서를 변수로 선언하여 사용자 레코드 멤버에게 값을 전달 후 출력해보자.[6-25] Q5 연관
 
 ~~~ sql
+-- 방법 1
 DECLARE
   TYPE EmpRecTyp IS RECORD (
     employee_id NUMBER,
@@ -919,6 +1096,29 @@ BEGIN
   fetch emp_cv into v_EmpRecTyp;
   exit when emp_cv%notfound;
   dbms_output.put_line(v_EmpRecTyp.employee_id||' '||v_EmpRecTyp.last_name||' '||v_EmpRecTyp.salary);
+  end loop;
+END;
+/
+~~~
+
+~~~ sql
+-- 방법 2
+DECLARE
+  TYPE EmpRecTyp IS RECORD (
+    employee_id NUMBER,
+    last_name VARCHAR2(25),
+    salary   NUMBER(8,2)); 
+    
+  TYPE EmpCurTyp IS REF CURSOR RETURN EmpRecTyp; 
+  emp_cv EmpCurTyp; 
+   v_emp emp%ROWTYPE;
+  
+BEGIN
+  open emp_cv for select empno, ename, sal from emp;
+  loop 
+  fetch emp_cv into v_emp.empno,v_emp.ename,v_emp.sal;
+  exit when emp_cv%notfound;
+  dbms_output.put_line(v_emp.empno||' '||v_emp.ename||' '||v_emp.sal);
   end loop;
 END;
 /

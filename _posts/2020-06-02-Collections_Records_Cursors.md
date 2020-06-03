@@ -720,6 +720,10 @@ END;
 ~~~
 ![image](https://user-images.githubusercontent.com/52989294/83509195-088bfc00-a506-11ea-8ba2-407637a8d20c.png)
 
+***
+
+<https://docs.oracle.com/cd/E11882_01/appdev.112/e25519/composites.htm#LNPLS00510>
+
 ### [5-44] Assigning Record to Another Record of Same RECORD Type
 ~~~ sql
 DECLARE
@@ -774,6 +778,9 @@ END;
 ~~~
 
 ![image](https://user-images.githubusercontent.com/52989294/83510053-55240700-a507-11ea-96c6-1c72b8e066e3.png)
+
+***
+<https://docs.oracle.com/cd/E11882_01/appdev.112/e25519/composites.htm#LNPLS99909>
 
 ### [5-47] SELECT INTO Assigns Values to Record Variable
 ~~~ sql
@@ -848,10 +855,41 @@ END;
 
 ~~~
 
+***
+<https://docs.oracle.com/cd/E11882_01/appdev.112/e25519/composites.htm#LNPLS460>
+
 ### [5-50]
 ~~~ sql
-
+DECLARE
+  TYPE age_rec IS RECORD (
+    years  INTEGER DEFAULT 35,
+    months INTEGER DEFAULT 6
+  );
+ 
+  TYPE name_rec IS RECORD (
+    first  EMP.ENAME%TYPE DEFAULT 'John',
+    last   EMP.JOB%TYPE DEFAULT 'CLERK',
+    age    age_rec
+  );
+ 
+  name name_rec;
+ 
+  PROCEDURE print_name AS
+  BEGIN
+    DBMS_OUTPUT.PUT(NVL(name.first, 'NULL') || ' '); 
+    DBMS_OUTPUT.PUT(NVL(name.last,  'NULL') || ', ');
+    DBMS_OUTPUT.PUT(NVL(TO_CHAR(name.age.years), 'NULL') || ' yrs ');
+    DBMS_OUTPUT.PUT_LINE(NVL(TO_CHAR(name.age.months), 'NULL') || ' mos');
+  END;
+ 
+BEGIN
+  print_name;
+  name := NULL;
+  print_name;
+END;
+/
 ~~~
+![image](https://user-images.githubusercontent.com/52989294/83581218-2f374a80-a579-11ea-9801-377e0d9f412f.png)
 
 ***
 

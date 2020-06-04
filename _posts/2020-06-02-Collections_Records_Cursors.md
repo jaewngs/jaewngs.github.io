@@ -850,9 +850,35 @@ END;
 ~~~
 ![image](https://user-images.githubusercontent.com/52989294/83510894-b8faff80-a508-11ea-98e6-3da1f2425a5e.png)
 
-### [5-49]
+### [5-49] UPDATE Statement Assigns Values to Record Variable
 ~~~ sql
+DECLARE
+  TYPE EmpRec IS RECORD (
+    ENAME  RES_EMP.ENAME%TYPE,
+    SAL     RES_EMP.SAL%TYPE
+  );
+  emp_info    EmpRec;
+  old_salary  RES_EMP.SAL%TYPE;
+BEGIN
+  SELECT SAL INTO old_salary
+   FROM RES_EMP
+   WHERE EMPNO = 7900;
+ 
+  UPDATE RES_EMP
+    SET SAL = SAL * 1.1
+    WHERE EMPNO = 7900
+    RETURNING ENAME, SAL INTO emp_info;
+ 
+  DBMS_OUTPUT.PUT_LINE (
+    'Salary of ' || emp_info.ENAME || ' raised from ' ||
+    old_salary || ' to ' || emp_info.SAL
+  );
+END;
+/
+~~~
 
+~~~ sql
+SELECT * FROM RES_EMP WHERE EMPNO = 7900;
 ~~~
 
 ***
@@ -897,14 +923,84 @@ END;
 
 ### [5-51]
 ~~~ sql
+DROP TABLE schedule;
 
+-- 테이블 생성
+CREATE TABLE schedule (
+  week  NUMBER,
+  Mon   VARCHAR2(10),
+  Tue   VARCHAR2(10),
+  Wed   VARCHAR2(10),
+  Thu   VARCHAR2(10),
+  Fri   VARCHAR2(10),
+  Sat   VARCHAR2(10),
+  Sun   VARCHAR2(10)
+);
+ 
+DECLARE
+  default_week  schedule%ROWTYPE;
+  i             NUMBER;
+BEGIN
+  default_week.Mon := '0800-1700';
+  default_week.Tue := '0800-1700';
+  default_week.Wed := '0800-1700';
+  default_week.Thu := '0800-1700';
+  default_week.Fri := '0800-1700';
+  default_week.Sat := 'Day Off';
+  default_week.Sun := 'Day Off';
+ 
+  FOR i IN 1..6 LOOP
+    default_week.week    := i;
+    
+    INSERT INTO schedule VALUES default_week;
+  END LOOP;
+END;
+/
+~~~
+
+~~~ sql 
+COLUMN week FORMAT 99
+COLUMN Mon  FORMAT A9
+COLUMN Tue  FORMAT A9
+COLUMN Wed  FORMAT A9
+COLUMN Thu  FORMAT A9
+COLUMN Fri  FORMAT A9
+COLUMN Sat  FORMAT A9
+COLUMN Sun  FORMAT A9
+ 
+SELECT * FROM schedule;
 ~~~
 
 ### [5-52]
 **5-51 테이블 활용함**
 ~~~ sql
-
+DECLARE
+  default_week  schedule%ROWTYPE;
+BEGIN
+  default_week.Mon := 'Day Off';
+  default_week.Tue := '0900-1800';
+  default_week.Wed := '0900-1800';
+  default_week.Thu := '0900-1800';
+  default_week.Fri := '0900-1800';
+  default_week.Sat := '0900-1800';
+  default_week.Sun := 'Day Off';
+ 
+  FOR i IN 1..3 LOOP
+    default_week.week    := i;
+  
+    UPDATE schedule
+    SET ROW = default_week
+    WHERE week = i;
+  END LOOP;
+END;
+/
 ~~~
+
+~~~ sql
+SELECT * FROM schedule;
+~~~
+
+![image](https://user-images.githubusercontent.com/52989294/83705504-19e11f80-a650-11ea-8fc9-b6e023d13f01.png)
 
 Q6. 사원테이블 RES_EMP 테이블에 %ROWTYPE을 이용해서 값을 입력해보자.
 ~~~ sql
@@ -958,10 +1054,43 @@ SELECT * FROM RES_EMP; -- 결과확인하기
 ***
 
 ## Description of Static SQL
+
+<https://docs.oracle.com/cd/E11882_01/appdev.112/e25519/static.htm#LNPLS006>
+
 ### [6-1]
 ~~~ sql
+DROP TABLE employees_temp;
 
+CREATE TABLE employees_temp AS
+  SELECT EMPNO, ENAME, JOB 
+  FROM EMP;
+ 
+DECLARE
+  emp_id          employees_temp.EMPNO%TYPE := 299;
+  emp_NAME  employees_temp.ENAME%TYPE  := 'Bob';
+  emp_JOB   employees_temp.JOB%TYPE   := 'CLERK';
+BEGIN
+  -- INSERT
+  INSERT INTO employees_temp (EMPNO, ENAME, JOB) 
+  VALUES (emp_id, emp_NAME, emp_JOB);
+  
+  -- UPDATE 
+  UPDATE employees_temp
+  SET ENAME = 'Robert'
+  WHERE EMPNO = emp_id;
+ 
+  -- DELETE
+  DELETE FROM employees_temp
+  WHERE EMPNO = emp_id
+  RETURNING ENAME, JOB
+  INTO emp_NAME, emp_JOB;
+ 
+  COMMIT;
+  DBMS_OUTPUT.PUT_LINE (emp_NAME || '  ' || emp_JOB);
+END;
+/
 ~~~
+
 ### [6-2]
 ~~~ sql
 

@@ -1057,7 +1057,7 @@ SELECT * FROM RES_EMP; -- 결과확인하기
 
 <https://docs.oracle.com/cd/E11882_01/appdev.112/e25519/static.htm#LNPLS006>
 
-### [6-1]
+### [6-1] Static SQL Statements
 ~~~ sql
 DROP TABLE employees_temp;
 
@@ -1091,7 +1091,7 @@ END;
 /
 ~~~
 
-### [6-2]
+### [6-2] CURRVAL and NEXTVAL Pseudocolumns
 ~~~ sql
 
 ~~~

@@ -884,7 +884,7 @@ SELECT * FROM RES_EMP WHERE EMPNO = 7900;
 ***
 <https://docs.oracle.com/cd/E11882_01/appdev.112/e25519/composites.htm#LNPLS460>
 
-### [5-50]
+### [5-50] Assigning NULL to Record Variable
 ~~~ sql
 DECLARE
   TYPE age_rec IS RECORD (
@@ -921,7 +921,7 @@ END;
 
 ## Record Comparisons
 
-### [5-51]
+### [5-51] Initializing Table by Inserting Record of Default Values
 ~~~ sql
 DROP TABLE schedule;
 
@@ -971,7 +971,7 @@ COLUMN Sun  FORMAT A9
 SELECT * FROM schedule;
 ~~~
 
-### [5-52]
+### [5-52] Updating Rows with Record
 **5-51 테이블 활용함**
 ~~~ sql
 DECLARE
@@ -1091,11 +1091,6 @@ END;
 /
 ~~~
 
-### [6-2] CURRVAL and NEXTVAL Pseudocolumns
-~~~ sql
-
-~~~
-
 Q8. SQL% 속성을 이용해서 익명 속성 활용을 해보자.[6-3] 활용
 ~~~ sql
 CREATE OR REPLACE PROCEDURE p (
@@ -1132,7 +1127,7 @@ END;
 ### Explicit Cursors
 <https://docs.oracle.com/cd/E11882_01/appdev.112/e25519/static.htm#LNPLS99956>
 
-### [6-5]
+### [6-5] Explicit Cursor Declaration and Definition
 ~~~ sql
 DECLARE
   CURSOR c1 RETURN departments%ROWTYPE;    -- Declare c1
@@ -1156,52 +1151,133 @@ END;
 /
 ~~~
 
-### [6-6]
-~~~ sql
-
-~~~
-
 ### [6-10] Explicit Cursor with Virtual Column that Needs Alias
 반드시 별칭을 줘야할 때
 ~~~ sql
+DECLARE
+  CURSOR c1 IS
+    SELECT EMPNO,
+           (sal * .05) raise
+    FROM RES_EMP
+    WHERE JOB LIKE '%_MAN'
+    ORDER BY EMPNO;
 
+  emp_rec c1%ROWTYPE;
+
+BEGIN
+  OPEN c1;
+  LOOP
+    FETCH c1 INTO emp_rec;
+    EXIT WHEN c1%NOTFOUND;
+    DBMS_OUTPUT.PUT_LINE (
+      'Raise for employee #' || emp_rec.EMPNO ||
+      ' is $' || emp_rec.raise
+    ); 
+  END LOOP;
+  CLOSE c1;
+END;
+/
 ~~~
 
-### [6-11] 
+### [6-11] Explicit Cursor that Accepts Parameters
 ~~~ sql
-
-~~~
-
-### [6-12]
-기본값 줄 수 있다.
-~~~ sql
-
-~~~
-
-### [6-15]
-~~~ sql
-
+-- 직업별 받을 수 있는 최대 봉급 설정 후 오버페이를 구해보자.
+DECLARE
+  CURSOR c (JOB1 VARCHAR2, max_sal NUMBER) IS
+    SELECT ENAME, JOB, (SAL - max_sal) overpayment
+    FROM RES_EMP
+    WHERE JOB = JOB1
+    AND SAL > max_sal
+    ORDER BY SAL;
+ 
+  PROCEDURE print_overpaid IS
+    ENAME_   EMP.ENAME%TYPE;
+    JOB_  EMP.JOB%TYPE;
+    overpayment_      EMP.SAL%TYPE;
+  BEGIN
+    LOOP
+      FETCH c INTO ENAME_, JOB_, overpayment_;
+      EXIT WHEN c%NOTFOUND;
+      DBMS_OUTPUT.PUT_LINE(ENAME_ || ', ' || JOB_ ||
+        ' (by ' || overpayment_ || ')');
+    END LOOP;
+  END print_overpaid;
+ 
+BEGIN
+  DBMS_OUTPUT.PUT_LINE('----------------------');
+  DBMS_OUTPUT.PUT_LINE('Overpaid Clerks:');
+  DBMS_OUTPUT.PUT_LINE('----------------------');
+  OPEN c('CLERK', 1000); -- 직업이 CLERK인 사람의 최대 봉급은 1000
+  print_overpaid; 
+  CLOSE c;
+ 
+  DBMS_OUTPUT.PUT_LINE('-------------------------------');
+  DBMS_OUTPUT.PUT_LINE('Overpaid Salesman');
+  DBMS_OUTPUT.PUT_LINE('-------------------------------');
+  OPEN c('SALESMAN', 1000); -- 직업이 SALESMAN인 사람의 최대 봉급은 1000
+  print_overpaid; 
+  CLOSE c;
+END;
+/
 ~~~
 
 ***
 
 ## Query Result Set Processing
 
-### [6-18]
+### [6-18] Implicit Cursor FOR LOOP Statement
 ~~~ sql
-
+BEGIN
+  FOR item IN (
+    SELECT ENAME, JOB
+    FROM EMP
+    WHERE JOB LIKE '%CLERK%'
+    AND MGR > 120
+    ORDER BY ENAME
+  )
+  LOOP
+    DBMS_OUTPUT.PUT_LINE
+      ('Name = ' || item.ENAME || ', Job = ' || item.JOB);
+  END LOOP;
+END;
+/
 ~~~
 
-### [6-19]
+### [6-19] Explicit Cursor FOR LOOP Statement
 ~~~ sql
+DECLARE
+  CURSOR c1 IS
+    SELECT ENAME, JOB FROM EMP
+    WHERE JOB LIKE '%CLERK%' AND MGR > 120
+    ORDER BY ENAME;
 
+BEGIN
+  FOR item IN c1
+  LOOP
+    DBMS_OUTPUT.PUT_LINE
+      ('Name = ' || item.ENAME || ', Job = ' || item.JOB);
+  END LOOP;
+END;
+/
 ~~~
 
 
-### [6-21]
+### [6-21] Cursor FOR Loop References Virtual Columns
 ~~~ sql
 -- 가상 컬럼 호출 가능하다.
-
+BEGIN
+  FOR item IN (
+    SELECT ENAME AS full_name,
+           SAL * 10  AS dream_salary 
+    FROM EMP
+    WHERE ROWNUM <= 5
+    ORDER BY dream_salary DESC, ENAME ASC
+  ) LOOP
+    DBMS_OUTPUT.PUT_LINE
+      (item.full_name || ' dreams of making ' || item.dream_salary);
+  END LOOP;
+END;
+/
 ~~~
 
 
@@ -1229,19 +1305,32 @@ END;
 ~~~
 ![image](https://user-images.githubusercontent.com/52989294/83487452-04e87d00-a4e6-11ea-9cb3-d9b32e6031d6.png)
 
-### [6-23]
-~~~ sql
+<https://docs.oracle.com/cd/E11882_01/appdev.112/e25519/static.htm#LNPLS00605>
 
+### [6-23] Correlated Subquery
+~~~ sql
+-- 평균 봉급보다 많이 받는 사원이름 출력
+DECLARE
+  CURSOR c1 IS
+    SELECT DEPTNO, ENAME, SAL
+    FROM RES_EMP t
+    WHERE SAL > ( SELECT AVG(SAL)
+                     FROM EMP
+                     WHERE t.DEPTNO = DEPTNO
+                   )
+    ORDER BY DEPTNO, ENAME;
+BEGIN
+  FOR person IN c1
+  LOOP
+    DBMS_OUTPUT.PUT_LINE('Making above-average salary = ' || person.ENAME);
+  END LOOP;
+END;
+/
 ~~~
 
 ***
 
 ## Cursor Variables
-
-### [6-24] Q5 연관
-~~~ sql
-
-~~~
 
 Q10. 사용자 RECORD를 선언하고 커서로 참조시켜 참조시킨 커서를 변수로 선언하여 사용자 레코드 멤버에게 값을 전달 후 출력해보자.[6-25] Q5 연관
 
@@ -1293,18 +1382,35 @@ END;
 
 ![image](https://user-images.githubusercontent.com/52989294/83497339-46ccef80-a4f5-11ea-9871-10eebec46889.png)
 
-
-### [6-26]
+### [6-27] Fetching from Cursor Variable into Collections
 ~~~ sql
+DECLARE
+  TYPE empcurtyp IS REF CURSOR;
+  TYPE namelist IS TABLE OF RES_EMP.ENAME%TYPE;
+  TYPE sallist IS TABLE OF RES_EMP.SAL%TYPE;
+  emp_cv  empcurtyp;  -- empcurtyp 타입인 emp_cv생성
+  names   namelist;
+  sals    sallist;
 
+BEGIN
+  OPEN emp_cv FOR
+    SELECT ENAME, SAL FROM RES_EMP
+    WHERE JOB = 'SALESMAN'
+    ORDER BY SAL DESC;
+
+  FETCH emp_cv BULK COLLECT INTO names, sals;
+  CLOSE emp_cv;
+  -- loop through the names and sals collections
+  FOR i IN names.FIRST .. names.LAST
+  LOOP
+    DBMS_OUTPUT.PUT_LINE
+      ('Name = ' || names(i) || ', salary = ' || sals(i));
+  END LOOP;
+END;
+/
 ~~~
 
-### [6-27] 중요함
-~~~ sql
-
-~~~
-
-### [6-28]
+### [6-28] Variable in Cursor Variable Query—No Result Set Change
 ~~~ sql
 DECLARE
   sal           emp.sal%TYPE;
@@ -1333,35 +1439,113 @@ END;
 /
 ~~~
 
-### [6-30]
+### [6-30] Procedure to Open Cursor Variable for One Query
 ~~~ sql
+CREATE OR REPLACE PACKAGE emp_data AS
+  TYPE empcurtyp IS REF CURSOR RETURN RES_EMP%ROWTYPE;
+  PROCEDURE open_emp_cv (emp_cv IN OUT empcurtyp);
+END emp_data;
+/
 
+CREATE OR REPLACE PACKAGE BODY emp_data AS
+  PROCEDURE open_emp_cv (emp_cv IN OUT EmpCurTyp) IS
+  BEGIN
+    OPEN emp_cv FOR SELECT * FROM RES_EMP;
+  END open_emp_cv;
+END emp_data;
+/
 ~~~
 
-### [6-31] 리턴타입이 같을 때
+### [6-31] Opening Cursor Variable for Chosen Query (Same Return Type)
 ~~~ sql
+CREATE OR REPLACE PACKAGE emp_data AS
+  TYPE empcurtyp IS REF CURSOR RETURN RES_EMP%ROWTYPE;
+  PROCEDURE open_emp_cv (emp_cv IN OUT empcurtyp, choice INT);
+END emp_data;
+/
 
+CREATE OR REPLACE PACKAGE BODY emp_data AS
+  PROCEDURE open_emp_cv (emp_cv IN OUT empcurtyp, choice INT) IS
+  BEGIN
+    IF choice = 1 THEN
+      OPEN emp_cv FOR SELECT *
+      FROM RES_EMP
+      WHERE COMM IS NOT NULL;
+    ELSIF choice = 2 THEN
+      OPEN emp_cv FOR SELECT *
+      FROM RES_EMP
+      WHERE SAL > 2500;
+    ELSIF choice = 3 THEN
+      OPEN emp_cv FOR SELECT *
+      FROM RES_EMP
+      WHERE DEPTNO = 10;
+   END IF;
+  END;
+END emp_data;
+/
 ~~~
 
 
-### [6-32] 리턴 타입이 다를 때
+### [6-32] Opening Cursor Variable for Chosen Query (Different Return Types
 ~~~ sql
+CREATE OR REPLACE PACKAGE admin_data AS
+  TYPE gencurtyp IS REF CURSOR;
+  PROCEDURE open_cv (generic_cv IN OUT gencurtyp, choice INT);
+END admin_data;
+/
 
-~~~
-
-
-### [6-33]
-~~~ sql
-
+CREATE OR REPLACE PACKAGE BODY admin_data AS
+  PROCEDURE open_cv (generic_cv IN OUT gencurtyp, choice INT) IS
+  BEGIN
+    IF choice = 1 THEN
+      OPEN generic_cv FOR SELECT * FROM RES_EMP;
+    ELSIF choice = 2 THEN
+      OPEN generic_cv FOR SELECT * FROM DEPT;
+    ELSIF choice = 3 THEN
+      OPEN generic_cv FOR SELECT * FROM EMP;
+    END IF;
+  END;
+END admin_data;
+/
 ~~~
 
 ***
 
-## CURSOR Expressions
-
-### [6-34]
+### [6-34] CURSOR Expression
 ~~~ sql
-
+DECLARE
+  TYPE emp_cur_typ IS REF CURSOR;
+ 
+  emp_cur    emp_cur_typ;
+  dept_name  DEPT.DNAME%TYPE;
+  emp_name   EMP.ENAME%TYPE;
+ 
+  CURSOR c1 IS
+    SELECT DNAME,
+      CURSOR ( SELECT e.ENAME
+                FROM EMP e
+                WHERE e.DEPTNO = d.DEPTNO
+                ORDER BY e.ENAME
+              ) employees
+    FROM DEPT d
+    WHERE DNAME LIKE 'A%'
+    ORDER BY DNAME;
+BEGIN
+  OPEN c1;
+  LOOP  -- Process each row of query result set
+    FETCH c1 INTO dept_name, emp_cur;
+    EXIT WHEN c1%NOTFOUND;
+    DBMS_OUTPUT.PUT_LINE('Department: ' || dept_name);
+ 
+    LOOP -- Process each row of subquery result set
+      FETCH emp_cur INTO emp_name;
+      EXIT WHEN emp_cur%NOTFOUND;
+      DBMS_OUTPUT.PUT_LINE('-- Employee: ' || emp_name);
+    END LOOP;
+  END LOOP;
+  CLOSE c1;
+END;
+/
 ~~~
 
 

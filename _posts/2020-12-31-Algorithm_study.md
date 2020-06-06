@@ -57,17 +57,17 @@ int[] b = new int[]{1, 2, 3};
 ~~~
 
 - 요소 형이 참조 형인 경우
-Arrays.equals() 는 배열 요소에 equals() 를 호출 해 동일성을 판정. 특히 요소 유형 자체가 배열 유형인 경우 ID 비교가 사용됨. 다차원 배열의 동일성을 비교하려면 다음과 같이 Arrays.deepEquals() 사용
+	- Arrays.equals() 는 배열 요소에 equals() 를 호출 해 동일성을 판정. 특히 요소 유형 자체가 배열 유형인 경우 ID 비교가 사용됨. 다차원 배열의 동일성을 비교하려면 다음과 같이 Arrays.deepEquals() 사용
 
-~~~ java
-int[] a = {1, 2, 3};
-int[] b = {1, 2, 3};
-Object [] aObject = { a };
-Object [] bObject = { b };
+	~~~ java
+    int[] a = {1, 2, 3};
+	int[] b = {1, 2, 3};
+	Object [] aObject = { a };
+	Object [] bObject = { b };
 
-System.out.println(Arrays.equals(aObject, bObject)); // false
-System.out.println(Arrays.deepEquals(aObject, bObject));// true
-~~~
+	System.out.println(Arrays.equals(aObject, bObject)); // false
+	System.out.println(Arrays.deepEquals(aObject, bObject));// true
+    ~~~
 
 ***
 
@@ -84,7 +84,7 @@ public int solution(int n) {
     }
 ~~~
 
-*** 
+***
 
 ### 문자열 char[ ]로 만들기 (java.lang.String) toCharArray()
 ![image](https://user-images.githubusercontent.com/52989294/83852906-75de9d80-a74f-11ea-95d2-a92f19c702ee.png)
@@ -112,6 +112,8 @@ boolean solution(String s) {
 	}
 ~~~
 
+***
+
 ### 문자열 일부 추출 (java.lang.String) substring()
 ![image](https://user-images.githubusercontent.com/52989294/83856304-4aaa7d00-a754-11ea-925a-ce01f7fa1e1b.png)
 
@@ -121,11 +123,13 @@ System.out.println(asd.substring(1)); // BCDE
 System.out.println(asd.substring(1,3)); // BC
 ~~~
 
+***
 
 ### 문자열에서 index값으로 문자 찾기 (java.lang.String) charAt()
 
 ![image](https://user-images.githubusercontent.com/52989294/83857518-11730c80-a756-11ea-9b73-4f8bdf13ee5e.png)
 
+* 가운데 글자 가져오기
 ~~~ java
 public String solution(String s) {
 		String answer = "";
@@ -140,3 +144,90 @@ public String solution(String s) {
 		return answer;
 	}
 ~~~
+
+***
+
+### ArrayList (java.util.ArrayList)
+- 메모리가 허용하는 한 자동으로 ArrayList 크기는 동적으로 변경됨
+
+- 같은 숫자는 싫어
+:배열 arr의 각 원소는 숫자 0부터 9까지로 이루어져 있습니다. 이때, 배열 arr에서 연속적으로 나타나는 숫자는 하나만 남기고 전부 제거하려고 합니다. 단, 제거된 후 남은 수들을 반환할 때는 배열 arr의 원소들의 순서를 유지해야 합니다. 예를 들면,
+
+	arr = [1, 1, 3, 3, 0, 1, 1] 이면 [1, 3, 0, 1] 을 return 합니다.
+	arr = [4, 4, 4, 3, 3] 이면 [4, 3] 을 return 합니다.
+
+	~~~ java
+import java.util.*;
+
+	public class Solution {
+ 	   public int[] solution(int []arr) {
+ 	       int[] answer = {};
+ 	       List<Integer> arrList = new ArrayList<>();
+ 	       int temp = 10;
+
+  	      for(int num : arr){
+  	          if(temp!=num)
+  	              arrList.add(num);
+  	          temp = num;
+  	      }
+
+ 	       answer = new int[arrList.size()];
+      	  for (int i = 0; i < arrList.size(); i++) {
+      	      answer[i] = arrList.get(i);
+     	   }
+    	    return answer;
+  	  }
+	}
+	~~~
+    
+***
+
+### Long (java.lang.Long) valueOF()
+![image](https://user-images.githubusercontent.com/52989294/83936727-52742b00-a801-11ea-83b0-86c4397f7072.png)
+
+- 정수 x와 자연수 n을 입력 받아, x부터 시작해 x씩 증가하는 숫자를 n개 지니는 리스트를 리턴
+
+	~~~ java
+   class Solution {
+   public long[] solution(long x, int n) {
+		long[] answer =  new long[n];
+		
+		for (int i = 0; i < n; i++) {
+			answer[i] = (Long.valueOf(x) * (i+1));
+            // answer[i] = ( x * (i+1));
+		}
+
+		return answer;
+	}
+}
+	~~~
+
+- valueOf(String s, int radix)
+	~~~ java
+    Long aaa = Long.valueOf("1111",2); // 8+4+2+1
+    ~~~
+
+***
+
+### Integer (java.lang.Integer) valueOF()
+
+![image](https://user-images.githubusercontent.com/52989294/83936795-df1ee900-a801-11ea-9b77-ac1e3d8d6e72.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

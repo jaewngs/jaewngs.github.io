@@ -114,6 +114,32 @@ boolean solution(String s) {
 
 ***
 
+### char[]을 String로 바꾸기 (java.lang.String) valueOf(char[] data)
+
+![image](https://user-images.githubusercontent.com/52989294/83968830-dcf28280-a906-11ea-8fd4-773bbde662b3.png)
+
+- 전화번호가 문자열 phone_number로 주어졌을 때, 전화번호의 뒷 4자리를 제외한 나머지 숫자를 전부 *으로 가린 문자열을 리턴하는 함수
+
+	~~~ java
+class Solution {
+   public String solution(String phone_number) {
+		String answer = "";
+
+		char aaa[] = phone_number.toCharArray();
+
+		for (int i = 0; i < phone_number.length() - 4; i++) {
+			aaa[i] = '*';
+		}
+
+		answer = String.valueOf(aaa);
+
+		return answer;
+	}
+}
+	~~~
+    
+***
+
 ### 문자열 일부 추출 (java.lang.String) substring()
 ![image](https://user-images.githubusercontent.com/52989294/83856304-4aaa7d00-a754-11ea-925a-ce01f7fa1e1b.png)
 
@@ -213,7 +239,8 @@ import java.util.*;
 
 ![image](https://user-images.githubusercontent.com/52989294/83936795-df1ee900-a801-11ea-9b77-ac1e3d8d6e72.png)
 
-
+***
+자릿수 더하기
 
 
 

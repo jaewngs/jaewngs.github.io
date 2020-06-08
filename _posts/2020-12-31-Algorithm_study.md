@@ -181,29 +181,29 @@ public String solution(String s) {
 - arr = [1, 1, 3, 3, 0, 1, 1] 이면 [1, 3, 0, 1] 을 return 합니다.
 - arr = [4, 4, 4, 3, 3] 이면 [4, 3] 을 return 합니다.
 
-	~~~ java
-	import java.util.*;
+~~~ java
+import java.util.*;
 
-		public class Solution {
-	 	   public int[] solution(int []arr) {
- 		       int[] answer = {};
- 		       List<Integer> arrList = new ArrayList<>();
- 		       int temp = 10;
+public class Solution {
+	public int[] solution(int[] arr) {
+		int[] answer = {};
+		List<Integer> arrList = new ArrayList<>();
+		int temp = 10;
 
- 	 	      for(int num : arr){
-  	  	        if(temp!=num)
-  	   	           arrList.add(num);
-  	  	        temp = num;
-  	 	     }
-
- 		       answer = new int[arrList.size()];
-    	  	  for (int i = 0; i < arrList.size(); i++) {
-    	  	      answer[i] = arrList.get(i);
-     		   }
-    		    return answer;
-  		  }
+		for (int num : arr) {
+			if (temp != num)
+				arrList.add(num);
+			temp = num;
 		}
-	~~~
+
+		answer = new int[arrList.size()];
+		for (int i = 0; i < arrList.size(); i++) {
+			answer[i] = arrList.get(i);
+		}
+		return answer;
+	}
+}
+~~~
     
 ***
 

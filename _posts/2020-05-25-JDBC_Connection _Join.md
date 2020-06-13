@@ -13,76 +13,76 @@ layout: post
 
 ***
 ## Database 연결하기
+- 더블클릭 또는 마우스 우클릭으로 Connect 하기
 ![image](https://user-images.githubusercontent.com/52989294/84564678-63dbab00-ad9e-11ea-8281-a440829a0343.png)
--- 더블클릭 또는 마우스 우클릭으로 Connect 하기
 
+- 마우스 우클릭 > new > SQL File 생성
 ![image](https://user-images.githubusercontent.com/52989294/84564717-b5843580-ad9e-11ea-879f-1a6c986a5a81.png)
--- 마우스 우클릭 > new > SQL File 생성
 
+- SQL 파일 생성
 ![image](https://user-images.githubusercontent.com/52989294/84564747-0a27b080-ad9f-11ea-96b7-f3ab28865cad.png)
--- SQL 파일 생성
 
-~~~ sql
--- day28.sql 파일에 SQL문 연습하기
+	~~~ sql
+	-- day28.sql 파일에 SQL문 연습하기
 
---사원테이블에서 사원의 이름과 봉급을 출력해 보자.
-SELECT ENAME, SAL
-FROM EMP;
+	--사원테이블에서 사원의 이름과 봉급을 출력해 보자.
+	SELECT ENAME, SAL
+	FROM EMP;
 
---부서테이블의 모든 정보를 출력해보자.
-SELECT * FROM DEPT;
+	--부서테이블의 모든 정보를 출력해보자.
+	SELECT * FROM DEPT;
 
---사원테이블에서 사원 번호, 사원 이름, 부서번호만 추출해서 MY_Emp 테이블을 작성하자
-CREATE TABLE My_Emp
-AS
-SELECT EMPNO, ENAME, DEPTNO
-FROM EMP;
+	--사원테이블에서 사원 번호, 사원 이름, 부서번호만 추출해서 MY_Emp 테이블을 작성하자
+	CREATE TABLE My_Emp
+	AS
+	SELECT EMPNO, ENAME, DEPTNO
+	FROM EMP;
 
-SELECT * FROM My_Emp;
+	SELECT * FROM My_Emp;
 
---부서 테이블의 모든 내용을 MY_DEPT 테이블로 작성하자
-CREATE TABLE MY_DEPT
-AS
-SELECT * FROM DEPT;
+	--부서 테이블의 모든 내용을 MY_DEPT 테이블로 작성하자
+	CREATE TABLE MY_DEPT
+	AS
+	SELECT * FROM DEPT;
 
-SELECT * FROM MY_DEPT;
+	SELECT * FROM MY_DEPT;
 
---원하는 이름을 입력받아 레코드를 출력하자
--- my_emp에서 MARTIN의 정보를 출력하자.
-SELECT *
-FROM MY_EMP
-WHERE ENAME = 'MARTIN';
+	--원하는 이름을 입력받아 레코드를 출력하자
+	-- my_emp에서 MARTIN의 정보를 출력하자.
+	SELECT *
+	FROM MY_EMP
+	WHERE ENAME = 'MARTIN';
 
---사원 번호와 사원 이름을 입력받아 레코드를 출력하자
-SELECT *
-FROM My_Emp
-WHERE ENAME = 'FORD' and EMPNO = 7902;
+	--사원 번호와 사원 이름을 입력받아 레코드를 출력하자
+	SELECT *
+	FROM My_Emp
+	WHERE ENAME = 'FORD' and EMPNO = 7902;
 
-DROP TABLE X,S,M;
+	DROP TABLE X,S,M;
 
-CREATE TABLE M
-(M1 CHAR(6), M2 VARCHAR(10));
+	CREATE TABLE M
+	(M1 CHAR(6), M2 VARCHAR(10));
 
-CREATE TABLE S
-(S1 CHAR(6), S2 VARCHAR(10));
+	CREATE TABLE S
+	(S1 CHAR(6), S2 VARCHAR(10));
 
-CREATE TABLE X
-(X1 CHAR(6), X2 VARCHAR(10));
+	CREATE TABLE X
+	(X1 CHAR(6), X2 VARCHAR(10));
 
-INSERT INTO M VALUES('A', '1');
-INSERT INTO M VALUES('B', '1');
-INSERT INTO M VALUES('C', '3');
-INSERT INTO M VALUES(NULL, '3');
+	INSERT INTO M VALUES('A', '1');
+	INSERT INTO M VALUES('B', '1');
+	INSERT INTO M VALUES('C', '3');
+	INSERT INTO M VALUES(NULL, '3');
 
-INSERT INTO S VALUES('A', 'X');
-INSERT INTO S VALUES('B', 'Y');
-INSERT INTO S VALUES(NULL, 'Z');
+	INSERT INTO S VALUES('A', 'X');
+	INSERT INTO S VALUES('B', 'Y');
+	INSERT INTO S VALUES(NULL, 'Z');
 
-INSERT INTO X VALUES('A', 'DATA');
+	INSERT INTO X VALUES('A', 'DATA');
 
-SELECT M1
-FROM M;
-~~~
+	SELECT M1
+	FROM M;
+	~~~
 
 ***
 
@@ -563,15 +563,15 @@ FROM M,S
 - 두 테이블간에 주, 종관계를 두고 주 테이블의 모든 레코드와 종 테이블에서 조인 조건을 만족하는 레코드만 가져올 때 사용
 - 주 테이블의 위치에 따라서 LEFT OUTER JOIN, RIGHT OUTER JOIN, 그리고 두 개의 결과를 합한 FULL OUTER JOIN으로 구분
 
-~~~ sql
---Ansi JOIN
-SELECT *
-FROM M CROSS JOIN S
+	~~~ sql
+	--Ansi JOIN
+	SELECT *
+	FROM M CROSS JOIN S
 
--- SQL SERVER JOIN
-SELECT *
-FROM M,S
-~~~
+	-- SQL SERVER JOIN
+	SELECT *
+	FROM M,S
+	~~~
 
 - LEFT OUTER JOIN
 	- M 테이블을 주 테이블로 놓고, S 테이블을 종 테이블로 하여 조인을 걸어서 M1 = S1 조건을 만족하는 레코드를 가져오는 LEFT OUTER JOIN을 작성
@@ -639,8 +639,8 @@ FROM M,S
 	~~~
 
 - SELF JOIN
-	- 하나의 테이블 내에서 서로 다른 컬럼 간의 참조 관계가 있을때 걸리는 JOIN
-	사원번호, 이름 출력
+	- 하나의 테이블 내에서 서로 다른 컬럼 간의 참조 관계가 있을때 걸리는 JOIN 사원번호, 이름 출력
+
 	~~~ sql
     --SQL SERVER JOIN
 	SELECT 사원.EMPNO, 사원.ENAME, 관리자.EMPNO, 관리자.ENAME
@@ -655,6 +655,7 @@ FROM M,S
 
 - NON EQUI JOIN
 	- Q1. 각 사원의 이름과 월급, 그리고 그 사원의 급여등급을 출력하라.
+
 	~~~ sql
     SELECT E.ENAME, E.SAL, S.GRADE
 	FROM EMP E, SALGRADE S
@@ -835,7 +836,7 @@ FROM M,S
 11. 해당 부서의 모든 사원에 대한 부서 이름, 위치, 사원 수 평균 급여를 -- 표시하는 정의를 작성한다. 열 이름을 각각 DNAME, LOC, NUMBER OF PEOPLE, SALARY로 한다.
 	~~~ sql
     -- ORACLE
-	SELECT D.DNAME AS DNAME, D.LOC AS LOC, COUNT(*) AS "NUMBER OF PEOPLE", 			AVG(E.SAL) AS SALARY
+	SELECT D.DNAME AS DNAME, D.LOC AS LOC, COUNT(*) AS "NUMBER OF PEOPLE",AVG(E.SAL) AS SALARY
 	FROM EMP E, DEPT D
 	WHERE E.DEPTNO = D.DEPTNO GROUP BY D.DNAME, D.LOC;
 

@@ -577,14 +577,280 @@ class Solution {
 
 ***
 
+### 나누어 떨어지는 숫자 배열
+- array의 각 element 중 divisor로 나누어 떨어지는 값을 오름차순으로 정렬한 배열을 반환하는 함수, solution을 작성해주세요.
+- divisor로 나누어 떨어지는 element가 하나도 없다면 배열에 -1을 담아 반환하세요.
+- 제한사항
+	- arr은 자연수를 담은 배열입니다.
+	- 정수 i, j에 대해 i ≠ j 이면 arr[i] ≠ arr[j] 입니다.
+	- divisor는 자연수입니다.
+	- array는 길이 1 이상인 배열입니다.
 
+	~~~ java
+    public int[] solution(int[] arr, int divisor) {
+		int[] answer = new int[arr.length];
 
+		int cnt = 0;
+		int cnt1 = 0;
 
+		for (int i = 0; i < arr.length; i++) {
+			if (arr[i] % divisor == 0) {
+				// System.out.println(arr[i]);
+				answer[cnt] = arr[i];
+				// System.out.println(answer[cnt]);
+				cnt++;
+			}
 
+		}
+		Arrays.sort(answer);
+		if (cnt != 0) {
+			int[] res = new int[cnt];
+			for (int j = 0; j < answer.length; j++) {
+				if (answer[j] != 0) {
+					res[cnt1] = answer[j];
+					cnt1++;
+				}
+			}
 
+			return res;
+		} else {
+			int[] res = new int[1];
+			res[0] = -1;
+			return res;
+		}
+	}
+    ~~~
 
+***
 
+### 모의고사
+- 수포자는 수학을 포기한 사람의 준말입니다.
+- 수포자 삼인방은 모의고사에 수학 문제를 전부 찍으려 합니다.
+- 수포자는 1번 문제부터 마지막 문제까지 다음과 같이 찍습니다.
+	- 1번 수포자가 찍는 방식: 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, ...
+	- 2번 수포자가 찍는 방식: 2, 1, 2, 3, 2, 4, 2, 5, 2, 1, 2, 3, 2, 4, 2, 5, ...
+	- 3번 수포자가 찍는 방식: 3, 3, 1, 1, 2, 2, 4, 4, 5, 5, 3, 3, 1, 1, 2, 2, 4, 4, 5, 5, ...
+- 제한 조건
+	- 시험은 최대 10,000 문제로 구성되어있습니다.
+	- 문제의 정답은 1, 2, 3, 4, 5중 하나입니다.
+	- 가장 높은 점수를 받은 사람이 여럿일 경우, return하는 값을 오름차순 정렬해주세요.
 
+- 1번 문제부터 마지막 문제까지의 정답이 순서대로 들은 배열 answers가 주어졌을 때, 가장 많은 문제를 맞힌 사람이 누구인지 배열에 담아 return 하도록 solution 함수를 작성해주세요.
 
+	~~~ java
+    public int[] solution(int[] answers) {
+		int[] answer = {};
+		int[] person1 = { 1, 2, 3, 4, 5 }; // 이만큼씩 반복
+		int[] person2 = { 2, 1, 2, 3, 2, 4, 2, 5 };
+		int[] person3 = { 3, 3, 1, 1, 2, 2, 4, 4, 5, 5 };
+		int answer1 = 0, answer2 = 0, answer3 = 0;
 
+		for (int i = 0; i < answers.length; i++) {
+			if (person1[i % person1.length] == answers[i])
+				answer1++;
+			if (person2[i % person2.length] == answers[i])
+				answer2++;
+			if (person3[i % person3.length] == answers[i])
+				answer3++;
+		}
+		int max = Math.max(Math.max(answer1, answer2), answer3); // max값 구하기
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		if (max == answer1)
+			list.add(1); // max값이랑 같으면 넣는다.
+		if (max == answer2)
+			list.add(2);
+		if (max == answer3)
+			list.add(3);
 
+		answer = new int[list.size()];
+
+		for (int i = 0; i < answer.length; i++) {
+			answer[i] = list.get(i);
+		}
+
+		return answer;
+	}
+    ~~~
+
+***
+
+### 완주하지 못한 선수
+- 수많은 마라톤 선수들이 마라톤에 참여하였습니다. 단 한 명의 선수를 제외하고는 모든 선수가 마라톤을 완주하였습니다.
+- 마라톤에 참여한 선수들의 이름이 담긴 배열 participant와 완주한 선수들의 이름이 담긴 배열 completion이 주어질 때, 완주하지 못한 선수의 이름을 return 하도록 solution 함수를 작성해주세요.
+- 제한사항
+	- 마라톤 경기에 참여한 선수의 수는 1명 이상 100,000명 이하입니다.
+	- completion의 길이는 participant의 길이보다 1 작습니다.
+	- 참가자의 이름은 1개 이상 20개 이하의 알파벳 소문자로 이루어져 있습니다.
+	- 참가자 중에는 동명이인이 있을 수 있습니다.
+
+	~~~ java
+    public String solution(String[] participant, String[] completion) {
+		String answer = "";
+
+		for (int i = 0; i < completion.length; i++) {
+			for (int j = 0; j < participant.length; j++) {
+				if (completion[i].equals(participant[j])) {
+
+					participant[j] = "";
+					completion[i] = "";
+				}
+			}
+		}
+		Arrays.sort(participant);
+		answer = participant[participant.length - 1];
+
+		return answer;
+	}
+    ~~~
+
+    ~~~ java
+    public String solution1(String[] participant, String[] completion) {
+		String answer = "";
+		int val = 0;
+
+		Map<String, Integer> hm = new HashMap<>();
+
+		for (String part : participant) {
+			if (hm.get(part) == null)
+				hm.put(part, 1);
+			else {
+				val = hm.get(part) + 1;
+				hm.put(part, val);
+			}
+		}
+
+		for (String comp : completion) {
+			val = hm.get(comp) - 1;
+			hm.put(comp, val);
+		}
+
+		for (String key : hm.keySet()) {
+			if (hm.get(key) == 1)
+				answer = key;
+		}
+
+		return answer;
+	}
+    ~~~
+
+    ~~~ java
+    public String solution2(String[] participant, String[] completion) {
+		Arrays.sort(participant);
+		Arrays.sort(completion);
+		int i;
+		for (i = 0; i < completion.length; i++) {
+
+			if (!participant[i].equals(completion[i])) {
+				return participant[i];
+			}
+		}
+		return participant[i];
+	}
+    ~~~
+
+***
+
+### 2016년
+- 2016년 1월 1일은 금요일입니다. 2016년 a월 b일은 무슨 요일일까요?
+- 두 수 a ,b를 입력받아 2016년 a월 b일이 무슨 요일인지 리턴하는 함수, solution을 완성하세요.
+- 요일의 이름은 일요일부터 토요일까지 각각 SUN,MON,TUE,WED,THU,FRI,SAT 입니다.
+- 예를 들어 a=5, b=24라면 5월 24일은 화요일이므로 문자열 TUE를 반환하세요.
+- 제한 조건
+	- 2016년은 윤년입니다.
+	- 2016년 a월 b일은 실제로 있는 날입니다. (13월 26일이나 2월 45일같은 날짜는 주어지지 않습니다)
+
+	~~~ java
+    public String solution(int a, int b) {
+		String answer = "";
+
+		int month_days[] = { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+		int count = 0;
+
+		if (a == 1) {
+			count = b;
+		} else if (a == 2) {
+			count = month_days[0] + b;
+		} else {
+			for (int i = 0; i <= (a - 2); i++) {
+				count += month_days[i];
+			}
+			count = count + b;
+		}
+
+		if (count % 7 == 0) {
+			answer = "THU";
+		} else if (count % 7 == 1) {
+			answer = "FRI";
+		} else if (count % 7 == 2) {
+			answer = "SAT";
+		} else if (count % 7 == 3) {
+			answer = "SUN";
+		} else if (count % 7 == 4) {
+			answer = "MON";
+		} else if (count % 7 == 5) {
+			answer = "TUE";
+		} else if (count % 7 == 6) {
+			answer = "WED";
+		}
+		return answer;
+	}
+    ~~~
+
+    ~~~ java
+    public String solution1(int a, int b) {
+	      String answer = "";
+
+	      int[] c = {31,29,31,30,31,30,31,31,30,31,30,31};
+	      String[] MM ={"FRI","SAT","SUN","MON","TUE","WED","THU"};
+	      int Adate = 0;
+	      for(int i = 0 ; i< a-1; i++){
+	          Adate += c[i];
+	      }
+	      Adate += b-1;
+	      answer = MM[Adate %7];
+
+	      return answer;
+	  }
+    ~~~
+
+***
+
+### 소수 찾기
+- 1부터 입력받은 숫자 n 사이에 있는 소수의 개수를 반환하는 함수, solution을 만들어 보세요.
+- 소수는 1과 자기 자신으로만 나누어지는 수를 의미합니다.(1은 소수가 아닙니다.)
+- 제한 조건
+	- n은 2이상 1000000이하의 자연수입니다.
+
+	~~~ java
+    public int solution(int n) {
+          int answer = 0;
+
+          int[] number = new int[n+1];
+
+          //2부터 n까지의 수를 배열에 넣는다.
+          for(int i=2; i<=n; i++) {
+              number[i] = i;
+          }
+
+          //2부터 시작해서 그의 배수들을 0으로 만든다.
+          //후에 0이면 넘어가고 아니면 그의 배수들을 다시 0으로 만든다.
+          for(int i=2; i<=n; i++) {
+              if(number[i]==0) continue;
+
+              for(int j= 2*i; j<=n; j += i) {
+                  number[j] = 0;
+              }
+          }
+
+          //배열에서 0이 아닌 것들의 개수를 세준다.
+          for(int i=0; i<number.length; i++) {
+              if(number[i]!=0) {
+                  answer++;
+              }
+          }
+
+          return answer;
+      }
+    ~~~
+
+***

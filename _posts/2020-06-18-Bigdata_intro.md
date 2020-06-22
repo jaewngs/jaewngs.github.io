@@ -2,7 +2,7 @@
 
 
 
-title:  "Bigdata intro"
+title:  "Bigdata intro & HTML 기초"
 
 
 
@@ -16,6 +16,7 @@ layout: post
 ## [오늘 할 내용]
 1. 빅데이터의 특성
 2. Web 시작하기
+3. HTML 기초
 
 ***
 
@@ -128,3 +129,31 @@ layout: post
 - 실제로 적용하기 위해서는 입력부터 출력까지 모든 단계를 거쳐야 됨
 - 이론 뿐만 아니라 각 단계별 사용법과 명령어를 알아야 함
 - 작업 내용의 재활요도 중요
+
+***
+
+## HTML
+
+1. 정적 페이지 연동을 구현할 수 있다.
+2. html 문서를 이용하여 브라우저에서 생성된 코드를 이용하여 탐색할 수 있다.
+3. html 엘리먼트와 속성값을 www.w3c.org에서 확인 할 수 있다.
+
+- html = head[title] + body
+- body (hn, font, div, br, pre...) = .css(tag, id, class)
+- html, 문단 태그, 목록 태그
+- a, img, table, form
+
+~~~ html
+index.html --> <LINK rel="Index" href="index.html">
+test01.html --> <LINK rel="Next" href="Res.jsp">
+Res.jsp --> <LINK rel="Prev" href="test01.html">
+~~~
+
+ex) index.html 찾기 또는 검색어 창에 찾을 단어를 입력하게 되면
+	- index.html -> test01.html -> Res.jsp
+
+ex) 오라클 사이트에서 단어 검색하게 되면 해당 사이트만 보여준다.
+	- 메일 > java 검색 > java 들어있는 메일 추출하고 상단 오른쪽에 > 앞으로 | 목록 | 뒤로
+***
+
+

@@ -14,21 +14,7 @@ layout: post
 
 
 ## [오늘 할 내용]
-1. 자바스크립트
-2. 
-
-***
-
-### 클라이언트에서 서버에 페이지 요청[<**a**>, <**link**>, <**form action**>]
-- 폼 데이터 전송시[submit] get, post 방식이 발생(데이터 사이즈, 보안)
-- get
-	- 페이지 요청시에 쿼리스트링을 통해서 값 전달
-	- 주소창에 132자까지만 들어갈 수 있음
-	- ex) https://search.naver.com/search.naver?sm=top_hty&fbm=0&ie=utf8&query=daum
-	-  name = sm, value = top_hyt
-	-  name = fbm value = 0
-- post
-	- 폼의 데이터를 이진화로 비공개형식으로 전체 전달
+1. Javascript
 
 ***
 
@@ -80,10 +66,274 @@ var a = 100;
 - 대소문자, 숫자, 밑줄(_)만 사용가능
 - 자바스크립트의 예약어는 사용 불가
 
+~~~ html
+<!-- alert prompt -->
+<!DOCTYPE html >
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>alert</title>
+<script type="text/javascript">
+	var res = window.alert("페이지 로딩중");
+	document.write("res = " + res  + "<br>");
+</script>
+</head>
+<body>
+<script type="text/javascript">
+	var res = window.alert("페이지 로딩중222");
+	document.write("res = " + res);
+</script>
+</body>
+</html>
+~~~
+
+![image](https://user-images.githubusercontent.com/52989294/85276801-58cefc00-b4bd-11ea-861f-0a5fc5b26a9c.png)
+![image](https://user-images.githubusercontent.com/52989294/85276869-6d12f900-b4bd-11ea-9514-8b95c0b2af99.png)
+
+~~~ html
+<!-- comfirm prompt -->
+<!DOCTYPE html >
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>alert</title>
+<script type="text/javascript">
+	var res = confirm("현재 페이지를 종료할 까요?");
+	document.write(res); // 확인 누르면 res = true , 취소 누르면  res = false
+</script>
+</head>
+<body>
+</body>
+</html>
+~~~
+
+![image](https://user-images.githubusercontent.com/52989294/85276934-83b95000-b4bd-11ea-8363-8b7e5286953f.png)
+
+
+~~~ html
+<!DOCTYPE html >
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>demo_sec01</title>
+
+</head>
+<body>
+	<h1>이름을 입력 받아 보기</h1>
+	<script type="text/javascript">
+		var name = prompt("input name", "dominica");  // 프롬프트 창 이름입력
+		alert("Input name " + name);  // 경고창에 입력한 이름 출력
+		document.write("입력하신 이름은  " + name + "입니다");
+	</script>
+</body>
+</html>
+~~~
+
+![image](https://user-images.githubusercontent.com/52989294/85277127-dbf05200-b4bd-11ea-995d-c32f42fff9e4.png)
+
+~~~ javascript
+// js01.js
+document.write("First script<br>"); // 문자열 안에 <br> 넣어도 줄바꿈 됨
+document.write("aaa");
+document.write("bbb"+ "<BR>");
+document.write("ccc");
+
+var a = "abcde";
+b = "1234";
+document.write( a + b + "<BR>");
+document.write(100 + 100 + "<BR>");
+~~~
+
+~~~ html
+<!DOCTYPE html >
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>스크립트 인용</title>
+
+<script type="text/javascript" src="../js/js01.js">
+
+</script>
+</head>
+<body>
+	<script type="text/javascript">
+		document.write("<br><br>");
+		document.write("여기부터 Js01.html<br>");
+		document.write("화면에 표시하고자 하는 문자열을 입력합니다<br>");
+		document.write(document.domain + "<br>");
+		var str = " ";
+		str += "document.title = " + document.title + "<BR>";
+		str += "document.charset = " + document.charset + "<BR>";
+		str += "document.defaultCharset = " + document.defaultCharset + "<BR>";
+		str += "document.location = " + document.location + "<BR>";
+		str += "document.vlinkColor = " + document.vlinkColor + "<BR>";
+		str += "document.body.clientWidth = " + document.body.clientWidth
+				+ "<BR>";
+		document.write(str);
+	</script>
+</body>
+</html>
+~~~
+
+~~~ html
+<!DOCTYPE html >
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Prompt</title>
+<script type="text/javascript">
+	var su;
+	su = window.prompt("숫자를 입력하세요", "100");
+	document.write("입력하신 숫자는  : " + su + " 입니다");
+</script>
+</head>
+<body>
+
+</body>
+</html>
+~~~
+
+~~~ javascript
+// js02.js
+document.write("1111");
+~~~
+
+~~~ html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>Insert title here</title>
+<script type="text/javascript" src="../js/js02.js"></script>
+</head>
+<body>
+	<script type="text/javascript" src="../js/js02.js"></script>
+
+	<script type="text/javascript">
+		document.write("2222");
+	</script>
+</body>
+</html>
+~~~
+
+![image](https://user-images.githubusercontent.com/52989294/85277218-fde9d480-b4bd-11ea-9855-4f5aa62bf5dd.png)
+
+***
+
 ###  데이터 형식
 - 기본 형식 : String, Number, Boolean
 - 참조 형식 : Object, Array
 - 특정 형식 : null, undefined
+
+~~~ html
+<!DOCTYPE html >
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Js Data Type</title>
+</head>
+<body>
+	<hr />
+	<h1>자바스크립트 dataType</h1>
+	<hr />
+	<script type="text/javascript">
+		var num1 = 64;
+		num2 = 0100;
+		num3 = 0x40;
+		num4 = 3.2541, num5 = 2e3;
+		name = "홍길동";
+
+		document.write("num1의 값은 " + num1 + " 입니다 <br/>");
+		document.write("num2의 값은 " + num2 + " 입니다 <br/>");
+		document.write("num3의 값은 " + num3 + " 입니다 <br/>");
+		document.write("num4은 " + num4 + "이고 num5는 " + num5 + "입니다 <br/>");
+		document.write("name :" + name + "입니다<br/><br/>");
+
+		num1 = 100;
+		document.write("num1의 값은 " + num1 + " 입니다 <br/>");
+		name = 200;
+		document.write("name :" + name + "입니다<br/><br/>");
+
+	</script>
+</body>
+</html>
+~~~
+
+![image](https://user-images.githubusercontent.com/52989294/85277333-3b4e6200-b4be-11ea-9d8b-24c6d7b9d9cb.png)
+
+~~~ html
+<!DOCTYPE html >
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>demo_sec03</title>
+<script type="text/javascript">
+	var str = prompt("input su: 1~ 4", "");
+	
+	// 형 변환이 자유롭다.
+	document.write("case 1: " + (str == 1) + "<br>");
+	document.write("case 2: " + (str == '1') + "<br>");
+	document.write("case 3: " + (str == "1") + "<br>");
+	document.write("case 4: " + (str + 100) + "<br>");
+
+	var hap = 0;
+
+	document.write("<hr> <h1>if </h1></hr>");
+
+	if (str == 1) {
+		document.write("봄");
+	} else if (str == 2) {
+		document.write("여름");
+	} else if (str == 3) {
+		document.write("가을");
+	} else {
+		document.write("겨울");
+	}
+
+	document.write("<hr> <h1>switch </h1></hr>");
+
+	switch (str) {
+	case 1:
+		document.write("일사분기");
+		break;
+	case '2':
+		document.write("이사분기");
+		break;
+	case '3':
+		document.write("삼사분기");
+		break;
+	case '4':
+		document.write("사사 분기");
+		break;
+	default:
+		document.write(str + "해당 사항 없음");
+	}
+	document.write("<hr> <h1>for </h1></hr>");
+	for (i = 1; i <= str; i++) {
+
+		hap += i; // hap=hap+i; 
+
+		document.write("1~ " + str + "의  합은  :" + hap + "</br>");
+	}
+
+	document.write("<hr> <h1>while </h1></hr>");
+	while (str > 0) {
+		document.write("while 구문입니다<br> ");
+		str--;
+	}
+	document.write("<hr> <h1>do~ while </h1></hr>");
+
+	do {
+		document.write("do~ while 구문입니다 ");
+
+	} while (str > 0);
+</script>
+
+</head>
+<body>
+</body>
+</html>
+~~~
 
 ***
 
@@ -101,12 +351,105 @@ var a = 100;
 var av = new Array(10,20,30,40,"abc");
 ~~~
 
+~~~ html
+<!DOCTYPE html >
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>arraytest</title>
+</head>
+<script type="text/javascript">
+	ar = new Array("홍길동", 80, 90, 100, "가나다", new Array(150, 200, 3, 4));
+	arr = new Array(4);
+	arr[0] = "정길동";
+	arr[1] = 100;
+	arr[2] = 90;
+	arr[3] = 20;
+	document.write(ar[5][1]); // 2
+
+	document.write("<h2> join() : " + ar.join() + "<br>"); // 결합(기본 ','로 연결)
+	document.write("join(+) : " + ar.join("+") + "<br>"); // + 로 결합
+	document.write("reverse()  : " + ar.reverse() + "<br>");
+	document.write("sort():   " + ar.sort() + "<br>");
+	//arr=new Array("정길동",100,90,20);
+	document.write("contcat( arr) :  " + ar.concat(arr) + "<br>");
+</script>
+<body>
+
+</body>
+</html>
+~~~
+
+![image](https://user-images.githubusercontent.com/52989294/85277513-7fd9fd80-b4be-11ea-85fa-c151746dd923.png)
+.
+~~~ html
+<!DOCTYPE html >
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>funtest</title>
+<script type="text/javascript">
+	function callname(name) {
+		document.write("안녕하세요! " + name + "<BR>");
+		alert(name); // alert 창에 이름 뜸
+	}
+	callname("도미니까");
+	callname("도미니꼬");
+</script>
+</head>
+<body>
+	<form>
+		<!-- 확인 1 버튼을 눌렀을 때 -->
+		<input type="button" value="확인1" onclick="callname('AAA');" />
+		<!-- 확인 2 버튼을 눌렀을 때 -->
+		<input type="button" value="확인2" onclick="callname('BBB')">
+	</form>
+</body>
+</html>
+~~~
+
+~~~ html
+<!DOCTYPE html >
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>demo_sec04</title>
+
+<script type="text/javascript">
+	function Result() {
+
+		myTbl = new Array("도미니까의 홈페이지", "도미니꼬 씨의 홈페이지", "폴리오 홈페이지",
+				" 루리의 홈페이지", "루세의 홈페이지", "루오의 홈페이지 ");
+
+		myTblColor = new Array("#DB7093", "#D8BFD8");
+		for (i = 0; i < myTbl.length; i++) {
+			document.write("<tr>");
+			document.write("<td bgcolor='", myTblColor[i % 2], "'>");
+			document.write(myTbl[i]);
+			document.write("</td> ");
+			document.write("</tr>");
+		}
+	}
+</script>
+</head>
+<body>
+	<table border="1">
+		<script type="text/javascript">
+			Result();
+		</script>
+
+	</table>
+</body>
+</html>
+~~~
+
+***
+
 ### 함수
 - 프로그램 내에서 특정 작업 수행을 위해 독립적으로 만들어진 하나의 단위
 - <**head**>와 <**/head**> 태그 사이 정의, 'function'으로 시작
 - 함수의 시작과 끝을 구분하는 기호 : 중괄호({ })
 - 복귀형(return type), 매개 변수(parameter)에 대한 형 명시 생략
-- return 없어도 됨
 
 ### 내장 함수
 - eval(String) : String을 자바스크립트 코드로 실행(수치 연산 가능)
@@ -121,7 +464,129 @@ var av = new Array(10,20,30,40,"abc");
 - Slice(인덱스1, 인덱스2) : [인덱스1]에서 [인덱스2]사이의 문자열을 문장 중에서 리턴
 - Split(구분문자, 개수) : 문자열에서 구분문자를 이용하여 개수 만큼 문장을 나눔
 
+~~~ html
+<!DOCTYPE html >
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Date</title>
+<script type="text/javascript">
+	var day, week;
+	var today = new Date();
+	week = new Array("일", "월", "화", "수", "목", "금", "토");
+	day = week[today.getDay()];
+	document.write("오늘은 : " + today.getFullYear() + "년 "
+			+ (today.getMonth() + 1) + "월 " + today.getDate() + "일 " + day
+			+ "요일");
+</script>
+</head>
+<body>
+
+</body>
+</html>
+~~~
+
+![image](https://user-images.githubusercontent.com/52989294/85278089-69807180-b4bf-11ea-8f09-077cd85db8b8.png)
+
 ***
+
+~~~ html
+<!DOCTYPE html >
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Insert title here</title>
+<script type="text/javascript">
+	var acnt = "4/0";
+	var acnt1 = "4/0 + 1";
+	var acnt2 = "1.5 + 1";
+	// eval(String) 문자열 연산하기
+	document.write(acnt + " = " + eval(acnt) + "입니다.<br>");
+	document.write(acnt1 + " = " + eval(acnt1) + "입니다.<br>");
+	document.write(acnt2 + " = " + eval(acnt2) + "입니다.<br>");
+
+	document.write("한글: escape('대한민국') ====> " + escape('대한민국') + "<p>");
+
+	document.write("unescape('%uB300%uD55C%uBBFC%uAD6D') ====> " +
+
+	unescape('%uB300%uD55C%uBBFC%uAD6D') + "<p>");
+
+	document.write("unescape('%21%23%24') ====> " + unescape('%21%23%24')
+			+ "<p>");
+</script>
+</head>
+<body>
+
+</body>
+</html>
+~~~
+
+~~~ html
+<!DOCTYPE html >
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Insert title here</title>
+<script type="text/javascript">
+	var acnt = "4/0";
+	var acnt1 = "4/0 + 1";
+	var acnt2 = "1.5 + 1";
+	// eval(String) 문자열 연산하기
+	document.write(acnt + " = " + eval(acnt) + "입니다.<br>");
+	document.write(acnt1 + " = " + eval(acnt1) + "입니다.<br>");
+	document.write(acnt2 + " = " + eval(acnt2) + "입니다.<br>");
+
+	document.write("한글: escape('대한민국') ====> " + escape('대한민국') + "<p>");
+
+	document.write("unescape('%uB300%uD55C%uBBFC%uAD6D') ====> " +
+
+	unescape('%uB300%uD55C%uBBFC%uAD6D') + "<p>");
+
+	document.write("unescape('%21%23%24') ====> " + unescape('%21%23%24')
+			+ "<p>");
+</script>
+</head>
+<body>
+
+</body>
+</html>
+~~~
+
+![image](https://user-images.githubusercontent.com/52989294/85278729-46a28d00-b4c0-11ea-982c-9d8054731c7a.png)
+
+***
+
+~~~ html
+<!DOCTYPE html >
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Insert title here</title>
+
+<script type="text/javascript">
+	document.write("<H2> [1] 최대값 :" + Math.max(10, 20) + "<BR>");
+	document.write(" [2] 최소값 : " + Math.min(10, 20) + "<BR>");
+	document.write(" [3] 올  림 : " + Math.ceil(7.8) + "<BR>");
+	document.write(" [4] 내  림 : " + Math.floor(7.8) + "<BR>");
+	document.write(" [5] 절대값 : " + Math.abs(-7) + "</H2>");
+</script>
+</head>
+<body>
+
+</body>
+</html>
+~~~
+
+![image](https://user-images.githubusercontent.com/52989294/85278849-78b3ef00-b4c0-11ea-9274-595bf0ca8084.png)
+
+***
+demo_sec05.html 하기 
+여기여기여기여기여기여기여
+
+
+***
+
+sec06
 
 ### 객체 개념
 - 추상화, 상속, 다형성
@@ -228,7 +693,32 @@ function 함수명( 매개변수1, 매개변수2, ...)
 - 객체 지향 모델로써 구조화된 문서를 표현하는 방식
 - 플랫폼/언어 중립적으로 구조화된 문서를 표현하는 W3C의 공식 표준
 - <http://www.w3.org/DOM/DOMTR>
+- document : DOM의 최고 상위 객체, html 문서
+- element : html 문서에 사용되는 모든 태그, 요소
+- attribute : 엘리먼트가 가진 속성
+- node : 객체를 지칭, 요소, 속성, 텍스트 노드
 
+### JS Node DOM.Properties
+- nodeName : 노드의 이름을 리턴, 텍스트 노드의 경우 #text를 리턴
+- nodeType : 노드의 유형을 정수로 리턴(1 : 요소, 2 : 속성, 3 : 텍스트, 8 : 주석)
+- nodeValue : 노드의 값을 리턴. 요소는 값이 없으므로 null 리턴
+- childNodes : 노드의 자식 노드들을 노드 리스트(배열)로 리턴
+- firstChild : 노드의 첫번째 자식노드를 리턴
+- lastChild : 노드의 마지막 자식노드를 리턴
+- previousSibling : 노드의 이전 위치에 자리한 형제노드를 리턴
+- nextSibiling : 노드의 다음 위치에 자리한 형제노드를 리턴
+- parentNode : 노드의 부모노드(요소)를 리턴
+
+### JS document 객체 메소드
+- Createattribute( ) : 속성 노드를 생성
+- createElement( ) : 엘리먼트를 생성
+- appendChild( ) : 하위 엘리먼트를 추가
+- execCommand( ) : 문서에서 사용 가능한 명령을 실행
+- getElementsById( ) : id 속성이 일치하는 엘리먼트를 리턴
+- getElementsByName( ) : name 속성이 일치하는 엘리먼트를 리턴
+- getElementsByTagName( ) : 태그 네임이 일치하는 엘리먼트를 리턴
+
+***
 
 
 

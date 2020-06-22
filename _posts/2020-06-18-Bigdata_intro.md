@@ -154,6 +154,18 @@ ex) index.html 찾기 또는 검색어 창에 찾을 단어를 입력하게 되�
 
 ex) 오라클 사이트에서 단어 검색하게 되면 해당 사이트만 보여준다.
 	- 메일 > java 검색 > java 들어있는 메일 추출하고 상단 오른쪽에 > 앞으로 | 목록 | 뒤로
+
 ***
+
+### 클라이언트에서 서버에 페이지 요청[<**a**>, <**link**>, <**form action**>]
+- 폼 데이터 전송시[submit] get, post 방식이 발생(데이터 사이즈, 보안)
+- get
+	- 페이지 요청시에 쿼리스트링을 통해서 값 전달
+	- 주소창에 132자까지만 들어갈 수 있음
+	- ex) https://search.naver.com/search.naver?sm=top_hty&fbm=0&ie=utf8&query=daum
+	-  name = sm, value = top_hyt
+	-  name = fbm value = 0
+- post
+	- 폼의 데이터를 이진화로 비공개형식으로 전체 전달
 
 

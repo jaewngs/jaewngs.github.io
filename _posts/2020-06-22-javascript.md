@@ -168,7 +168,7 @@ function 함수명( 매개변수1, 매개변수2, ...)
 - Tags : 문서 안에 정의된 모든 태그의 정보를 가지고 있음
 - Top : 최상위의 window 객체를 가리킬 때 사용
 
-### Javascript  window 주요 메소드
+### Javascript window 주요 메소드
 - Back( ) : 이전 화면으로 이동
 - Close( ) : Open( ) 메소드로 연 창을 닫음
 - Find( ) : 문자열에서 특정 문자열을 찾음
@@ -178,10 +178,56 @@ function 함수명( 매개변수1, 매개변수2, ...)
 - open( ) : 새로운 창을 열어줌
 - print( ) : 화면에 있는 내용을 프린터로 출력
 
+***
 
+### Day47 sec07/index.html 예제
+(https://dev.w3.org/html5/pf-summary/Overview#dom-window)
+![image](https://user-images.githubusercontent.com/52989294/85253960-2d86e580-b49a-11ea-9ded-53ad5cdeaf69.png)
 
+~~~ html
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Insert title here</title>
+<script type="text/javascript">
+	function win_open() {
+		window.open("demo_sec07.html", "open_win1",
+				"toolbar=yes,  status = yes, resizable = yes");
+	}
+</script>
+</head>
+<body>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<p align="center">
+		<INPUT TYPE="button" VALUE="새로운 창 열기" onClick="win_open()"> </font><br>
+	</p>
+	<script type="text/javascript">
+		document.write("<center><font color=#0000ff size=4 >브라우저 :"
+				+ navigator.appName + "</br>");
+		document.write("에이전트 :" + navigator.userAgent + "</br> ");
+		document.write("버전 :" + navigator.appVersion + "</br>");
+		document.write("코드 명 :" + navigator.appCodeName + "</br>");
+		document.write("플랫폼 :" + navigator.platform + "</font></br>");
+	</script>
+</body>
+</html>
+~~~
 
+***
 
+### JS DOM
+- 문서 객체 모델(Document Object Model)
+- HTML, XML 문서에 대한 프로그래밍 인터페이스
+- 객체 지향 모델로써 구조화된 문서를 표현하는 방식
+- 플랫폼/언어 중립적으로 구조화된 문서를 표현하는 W3C의 공식 표준
+- http://www.w3.org/DOM/DOMTR
 
 
 

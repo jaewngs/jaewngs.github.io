@@ -181,7 +181,7 @@ function 함수명( 매개변수1, 매개변수2, ...)
 ***
 
 ### Day47 sec07/index.html 예제
-(https://dev.w3.org/html5/pf-summary/Overview#dom-window)
+<https://dev.w3.org/html5/pf-summary/Overview#dom-window>
 ![image](https://user-images.githubusercontent.com/52989294/85253960-2d86e580-b49a-11ea-9ded-53ad5cdeaf69.png)
 
 ~~~ html
@@ -227,7 +227,7 @@ function 함수명( 매개변수1, 매개변수2, ...)
 - HTML, XML 문서에 대한 프로그래밍 인터페이스
 - 객체 지향 모델로써 구조화된 문서를 표현하는 방식
 - 플랫폼/언어 중립적으로 구조화된 문서를 표현하는 W3C의 공식 표준
-- http://www.w3.org/DOM/DOMTR
+- <http://www.w3.org/DOM/DOMTR>
 
 
 

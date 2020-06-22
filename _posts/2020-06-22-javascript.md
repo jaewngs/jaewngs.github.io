@@ -108,9 +108,75 @@ var av = new Array(10,20,30,40,"abc");
 - 복귀형(return type), 매개 변수(parameter)에 대한 형 명시 생략
 - return 없어도 됨
 
+### 내장 함수
+- eval(String) : String을 자바스크립트 코드로 실행(수치 연산 가능)
+- isFinite(number) : number의 무한값의 여부
+- isNan(number) : Number의 NaN인지 여부
+- parseInt(Stirng, 진수) : String을 정수로 변환
+- parseFloat(String) : String을 유리수로 변환
+- escape( ) : 인코딩으로 변환
+- unescape( ) : 디코딩으로 변환
+- encodeURI(uri) : 최소한의 문자만 인코딩
+- decodeURI(encodedURI) : 최소한의 문자만 디코딩
+- Slice(인덱스1, 인덱스2) : [인덱스1]에서 [인덱스2]사이의 문자열을 문장 중에서 리턴
+- Split(구분문자, 개수) : 문자열에서 구분문자를 이용하여 개수 만큼 문장을 나눔
 
+***
 
+### 객체 개념
+- 추상화, 상속, 다형성
+- 객체 : 기본적인 형태와 정보를 가진 단위
+- 객체 = property + message
+- 인스턴스 객체 : new를 이용한 생성한 객체
+- 내장 객체, 사용자 정의 객체
 
+### 사용자 객체
+- 사용자가 원하는 고유의 개체를 정의하여 생성
+- 객체 생성자 기능 함수를 정의, 속성과 메소드를 정의
+- this 키워드로 현재 객체를 참조
+- new 연산자를 이용한 인스턴스 생성
+- 객체 이름으로 속성과 메소드를 호출
+- [선언]
+~~~ javascript
+function 함수명( 매개변수1, 매개변수2, ...)
+{
+	this.이름1 = 매개변수1;
+    this.이름2 = 매개변수2;
+}
+~~~
+
+- [객체 생성]
+~~~ javascript
+객체이름 = new 함수명(매개변수1의 값, 매개변수2의 값, ...)
+~~~
+
+### 객체 제어문
+- for_in : 하나 이상의 나열형 값을 가진 객체의 배열형식을 표시할 때 사용
+- with : 객체에 포함된 속성이나 메소드를 여러 번 사용할 때 with 문으로 객체를 한 번 선언한 후 with 문 안에서 객체를 생략하고 속성이나 메소드명만 가지고 사용
+- typeof : 변수의 데이터형을 알아내기 위해 사용
+
+***
+
+### Javascript window 객체
+- Classes : CSS 클래스들의 정보를 가짐
+- defaultsStats : 상태바에 초기 문자열을 설정
+- Frames : Windows 객체 안의 프레임들의 배열 정보를 가짐
+- Opener : Open( ) 메소드를 이용하여 연 문서를 말함
+- Parent : 상위의 Window 객체
+- Self : 현재 활성중인 창의 자신 객체
+- Status : 브라우저의 상태바에 문자열을 출력하는 경우에 사용
+- Tags : 문서 안에 정의된 모든 태그의 정보를 가지고 있음
+- Top : 최상위의 window 객체를 가리킬 때 사용
+
+### Javascript  window 주요 메소드
+- Back( ) : 이전 화면으로 이동
+- Close( ) : Open( ) 메소드로 연 창을 닫음
+- Find( ) : 문자열에서 특정 문자열을 찾음
+- forward( ) : 다음 화면으로 이동
+- moveBy( ) : 상대적인 좌표로 이동
+- moveto( ) : 절대적인 좌표로 이동
+- open( ) : 새로운 창을 열어줌
+- print( ) : 화면에 있는 내용을 프린터로 출력
 
 
 

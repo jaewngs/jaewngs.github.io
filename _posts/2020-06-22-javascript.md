@@ -90,6 +90,8 @@ var a = 100;
 ![image](https://user-images.githubusercontent.com/52989294/85276801-58cefc00-b4bd-11ea-861f-0a5fc5b26a9c.png)
 ![image](https://user-images.githubusercontent.com/52989294/85276869-6d12f900-b4bd-11ea-9514-8b95c0b2af99.png)
 
+***
+
 ~~~ html
 <!-- comfirm prompt -->
 <!DOCTYPE html >
@@ -109,6 +111,7 @@ var a = 100;
 
 ![image](https://user-images.githubusercontent.com/52989294/85276934-83b95000-b4bd-11ea-8363-8b7e5286953f.png)
 
+***
 
 ~~~ html
 <!DOCTYPE html >
@@ -130,6 +133,8 @@ var a = 100;
 ~~~
 
 ![image](https://user-images.githubusercontent.com/52989294/85277127-dbf05200-b4bd-11ea-995d-c32f42fff9e4.png)
+
+***
 
 ~~~ javascript
 // js01.js
@@ -261,6 +266,8 @@ document.write("1111");
 
 ![image](https://user-images.githubusercontent.com/52989294/85277333-3b4e6200-b4be-11ea-9d8b-24c6d7b9d9cb.png)
 
+***
+
 ~~~ html
 <!DOCTYPE html >
 <html>
@@ -382,6 +389,8 @@ var av = new Array(10,20,30,40,"abc");
 
 ![image](https://user-images.githubusercontent.com/52989294/85277513-7fd9fd80-b4be-11ea-85fa-c151746dd923.png)
 .
+***
+
 ~~~ html
 <!DOCTYPE html >
 <html>

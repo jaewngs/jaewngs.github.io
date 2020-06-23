@@ -1280,7 +1280,7 @@ var av = new Array(10,20,30,40,"abc");
 ### Js Style Object _ position
 - 객체의 위치 지정
 - static : default, 흐름에 위치지정
-- absolute : left **|** right **|** top **|** bottom
+- absolute : left / right / top / bottom
 - relative : 엘리먼트 내부에 absolute에 기준
 
 ### Js Style Object _ float

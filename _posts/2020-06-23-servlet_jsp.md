@@ -233,3 +233,52 @@ public class UTest02 extends HttpServlet {
 }
 
 ~~~
+
+***
+
+~~~ xml
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+	id="WebApp_ID" version="3.1">
+	<display-name>Day49</display-name>
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+
+	<!-- 1. 선언된 서블릿 클래스를 등록한다. -->
+	<servlet>
+		<servlet-name>myServlet</servlet-name>
+		<servlet-class>com.test.MyTest</servlet-class>
+	</servlet>
+
+	<!-- 2. 등록된 서블릿 클래스를 url 맵핑한다. -->
+	<servlet-mapping>
+		<servlet-name>myServlet</servlet-name>
+		<url-pattern>/test</url-pattern>
+	</servlet-mapping>
+
+	<!-- 1. 선언된 서블릿 클래스를 등록한다. -->
+	<servlet>
+		<servlet-name>UServlet</servlet-name>
+		<servlet-class>com.test.UTest</servlet-class>
+	</servlet>
+	<!-- 2. 등록된 서블릿 클래스를 url 맵핑한다. -->
+	<servlet-mapping>
+		<servlet-name>UServlet</servlet-name>
+		<url-pattern>/utest</url-pattern>
+	</servlet-mapping>
+
+	<!-- 1. 선언된 서블릿 클래스를 등록한다. -->
+	<servlet>
+		<servlet-name>Test02</servlet-name>
+		<servlet-class>com.test.UTest02</servlet-class>
+	</servlet>
+	<!-- 2. 등록된 서블릿 클래스를 url 맵핑한다. -->
+	<servlet-mapping>
+		<servlet-name>Test02</servlet-name>
+		<url-pattern>/test02</url-pattern>
+	</servlet-mapping>
+</web-app>
+~~~

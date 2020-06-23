@@ -15,6 +15,8 @@ layout: post
 
 ## [오늘 할 내용]
 1. Javascript
+2. Javascript Style Object
+3. Javascript 폼객체
 
 ***
 
@@ -728,6 +730,107 @@ function 함수명( 매개변수1, 매개변수2, ...)
 - getElementsByTagName( ) : 태그 네임이 일치하는 엘리먼트를 리턴
 
 ***
+
+
+sec09 demo
+
+## JavaScript Object
+- 엘리먼트의 style 속성 객체
+- css 속성을 지정할 수 있는 객체
+- 나열해서 여러 개의 속성을 대입
+- 인라인, 외부 스타일 적용
+
+### JavaScript Object 적용
+- 인라인 스타일
+	- element.style.color = "red"
+
+- 외부 스타일
+	- document.styleSheets[0].rules[0].style.color = "red"
+
+### Js Style Object _ position
+- 객체의 위치 지정
+- static : default, 흐름에 위치지정
+- absolute : left **|** right **|** top **|** bottom
+- relative : 엘리먼트 내부에 absolute에 기준
+
+### Js Style Object _ float
+- Js : styleFloat(cssFloat)
+- none : default
+- left : 왼쪽 끝부터 정렬
+- right : 오른쪽 끝부터 정렬
+
+***
+
+## Js Form 객체
+- <FORM> 태그는 독립적으로 사용하지 않는다.
+- <FORM> 태그 안에는 여러 가지 입력 양식을 사용
+- DOM(Document Object Model)로 접근하여 제어
+- Form 객체를 액세스 하여 제어
+
+### Form 객체 속성
+- action : <FORM> 태그의 ACTION 속성과 동일 적용
+- elements : <FORM> 태그 안에 있는 양식을 배열로 저장
+- Encoding : <FORM> 태그의 ENCTYPE 속성과 동일하게 적용
+- length : <FORM> 태그 안에 있는 양식의 수를 리턴
+- name : <FORM> 태그의 NAME 속성과 동일하게 적용
+- method : <FORM> 태그의 METHOD 속성과 동일하게 적용
+- target : <FORM> 태그의 TARGET 속성과 동일하게 적용
+
+### Form 객체의 메소드와 이벤트
+- 메소드
+	- blur( ) : 커서를 제거
+	- reset( ) : 양식을 초기화
+	- submit( ) : 입력된 양식 내용을 서버에 전송
+- 이벤트
+	- onReset : 리셋 버튼을 누를 때 발생
+	- onSubmit : 서브밋 버튼을 누를 때 발생
+
+### Js Form 객체 액세스
+- 태그의 name 속성 : document.폼명.요소명
+- forms/elements 배열
+	- document.fm.name.value
+	- document.forms[0].elements[0].value
+	- document.forms['fm'].elements['name'].value
+	- document.forms['fm']['name'].value
+
+sec10.demo_sec10.html
+
+***
+
+## JS TABLE OBJECT
+
+### Table Object 속성
+- border : 테이블의 테두리 너비를 설정하거나 리턴
+- caption : 테이블의 제목을 설정하거나 리턴
+- cellPadding : 셀 테두리와 셀 내용 사이의 공간 크기를 설정하거나 리턴
+- cellSpacing : 테이블 셀 사이의 공간 크기를 설정하거나 리턴
+- frame : 테이블 테두리를 설정하거나 리턴
+- rules : 테이블에 테두리를 설정하거나 리턴
+- summary : 테이블의 설명을 설정하거나 리턴
+- tFoot : 테이블 TFoot 개체를 리턴
+- tHead : 테이블 THead 개체를 리턴
+- width : 테이블의 너비를 설정하거나 리턴
+
+### TableRow_메소드
+- 열(셀)에 있는 객체에 접근하는 방법
+	- mytable.rows[0].cells[0].childNodes.item(0).value
+	- mytable.rows[0].cells[0].innerHTML
+
+### TableCell 개체
+- TableCell 개체는 HTML 테이블의 셀을 나타냄
+- HTML 문서의 각 <**td**> 태그에 대해 tableCell 개체가 만들어짐
+
+
+sec11.demo_sec11.html
+
+***
+
+## Js Event Handler 정의
+- 이벤트(event) : 사용자에 의한 특정 행위의 결과로 발생하는 사용자와 프로그램 사이의 상호작용 처리의 요인
+- 이벤트 객체는 이벤트가 발생한 요소, 키보드 키의 상태, 마우스의 위치와 마우스 버튼의 상태 등과 같은 이벤트 상태를 나타냄
+- 이벤트 핸들러(Event Handler) : 함수, 메소드 등으로 이벤트를 처리하는 기능을 말함
+
+sec12.demo_sec12.html
 
 
 

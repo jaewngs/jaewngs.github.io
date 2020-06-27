@@ -36,14 +36,14 @@ public long solution(int a, int b) {
 ~~~ java
 public String solution(String[] seoul) {
         String answer = "";
-	    	
+
 	        for(int i = 0; i< seoul.length ;i++) {
 	        	if (seoul[i].equals("Kim")) {
 	        		answer = "김서방은 " + i + "에 있다";
                     break;
 	        	}
-	        }        
-	    	
+	        }
+
 	        return answer;
 	    }
 ~~~
@@ -79,7 +79,7 @@ public int solution(int n) {
             if(n % i == 0){
                 answer += i;
             }
-        }       
+        }
         return answer;
     }
 ~~~
@@ -137,7 +137,7 @@ class Solution {
 	}
 }
 	~~~
-    
+
 ***
 
 ### 문자열 일부 추출 (java.lang.String) substring()
@@ -204,7 +204,7 @@ public class Solution {
 	}
 }
 ~~~
-    
+
 ***
 
 ### Long (java.lang.Long) valueOF()
@@ -851,6 +851,103 @@ class Solution {
 
           return answer;
       }
+    ~~~
+
+***
+
+### 예산
+- S사에서는 각 부서에 필요한 물품을 지원해 주기 위해 부서별로 물품을 구매하는데 필요한 금액을 조사했습니다. 그러나, 전체 예산이 정해져 있기 때문에 모든 부서의 물품을 구매해 줄 수는 없습니다. 그래서 최대한 많은 부서의 물품을 구매해 줄 수 있도록 하려고 합니다.
+
+- 물품을 구매해 줄 때는 각 부서가 신청한 금액만큼을 모두 지원해 줘야 합니다. 예를 들어 1,000원을 신청한 부서에는 정확히 1,000원을 지원해야 하며, 1,000원보다 적은 금액을 지원해 줄 수는 없습니다.
+
+- 부서별로 신청한 금액이 들어있는 배열 d와 예산 budget이 매개변수로 주어질 때, 최대 몇 개의 부서에 물품을 지원할 수 있는지 return 하도록 solution 함수를 완성해주세요.
+
+![image](https://user-images.githubusercontent.com/52989294/85914668-3cdfa780-b87b-11ea-8258-d0be7e531778.png)
+
+- 입출력 예 #1
+	- 각 부서에서 [1원, 3원, 2원, 5원, 4원]만큼의 금액을 신청했습니다. 만약에, 1원, 2원, 4원을 신청한 부서의 물품을 구매해주면 예산 9원에서 7원이 소비되어 2원이 남습니다. 항상 정확히 신청한 금액만큼 지원해 줘야 하므로 남은 2원으로 나머지 부서를 지원해 주지 않습니다. 위 방법 외에 3개 부서를 지원해 줄 방법들은 다음과 같습니다.
+
+	- 1원, 2원, 3원을 신청한 부서의 물품을 구매해주려면 6원이 필요합니다.
+    - 1원, 2원, 5원을 신청한 부서의 물품을 구매해주려면 8원이 필요합니다.
+    - 1원, 3원, 4원을 신청한 부서의 물품을 구매해주려면 8원이 필요합니다.
+    - 1원, 3원, 5원을 신청한 부서의 물품을 구매해주려면 9원이 필요합니다.
+    - 3개 부서보다 더 많은 부서의 물품을 구매해 줄 수는 없으므로 최대 3개 부서의 물품을 구매해 줄 수 있습니다.
+
+- 입출력 예 #2
+	- 모든 부서의 물품을 구매해주면 10원이 됩니다. 따라서 최대 4개 부서의 물품을 구매해 줄 수 있습니다.
+
+    ~~~ java
+    public int solution(int[] d, int budget) {
+            int answer = 0;
+            int result = 0;
+            Arrays.sort(d);
+            for (int i = 0; i < d.length; i++) {
+                result += d[i];
+                if (result > budget) {
+                    answer = i;
+                    break;
+                }
+            }
+            if (result <= budget) {
+                answer = d.length;
+            }
+            return answer;
+        }
+    ~~~
+
+    ~~~ java
+    public int solution1(int[] d, int budget) {
+            int answer = 0;
+            Arrays.sort(d);
+            for (int i = 0; i < d.length; i++) {
+                budget -= d[i];
+                if (budget < 0)
+                    break;
+                answer++;
+            }
+            return answer;
+        }
+    ~~~
+
+    ~~~ java
+    public int solution2(int[] d, int budget) {
+            int answer = 0;
+            int[] dept = Arrays.copyOf(d, d.length);
+            Arrays.sort(dept);
+            int sum = 0;
+            for (int inx=0; inx<dept.length; inx++) {
+                sum += dept[inx];
+                if (sum<=budget) {
+                    answer++;
+                }
+            }
+            return answer;
+        }
+    ~~~
+
+***
+
+### 시저암호
+- 어떤 문장의 각 알파벳을 일정한 거리만큼 밀어서 다른 알파벳으로 바꾸는 암호화 방식을 시저 암호라고 합니다. 예를 들어 AB는 1만큼 밀면 BC가 되고, 3만큼 밀면 DE가 됩니다. z는 1만큼 밀면 a가 됩니다. 문자열 s와 거리 n을 입력받아 s를 n만큼 민 암호문을 만드는 함수, solution을 완성해 보세요.
+
+![image](https://user-images.githubusercontent.com/52989294/85914731-c3948480-b87b-11ea-8ec2-251325ec8f80.png)
+
+    ~~~ java
+    public static String solution(String s, int n) {
+            String answer = "";
+            int len = s.length();
+            char alpha;
+            char start;
+            for (int i = 0; i < len; i++) {
+                alpha = s.charAt(i);
+                if (alpha != ' ') {
+                    start = Character.isLowerCase(alpha) ? 'a' : 'A';
+                    alpha = (char) (start + (alpha + n - start) % 26);
+                }
+                answer += alpha;
+            }
+            return answer;
+        }
     ~~~
 
 ***

@@ -19,10 +19,9 @@ layout: post
 2. 동적 페이지, 정적 페이지에서 파일 업로드를 할 수 있다. (java.* / servlet.jar에서 제공하는 추가 라이브러리 사용)
 	- cos.jar [Servlet/JSP] 에서 주로 사용 <http://www.servlets.com/cos/>
 	- common.jar [Spring] 에서 주로 사용(WEB-INF/lib에 cos.jar)
-	- - HttpServletResource
+	- HttpServletResource
 		- ServletOutputStream getOutputStream( ) : 음악, 이미지, 배너, 그래프
 		- java.io.PrintWriter getWriter( ) : text 로딩
-3. gui 연동 / 그래프 연동
 	- javax.servlet.ServletContext
 		- java.net.URL	getResource(java.lang.String path)
 			: Returns a URL to the resource that is mapped to a specified path.
@@ -30,6 +29,10 @@ layout: post
 			: Returns the resource located at the named path as an InputStream object.
 		- java.util.Set<java.lang.String>	getResourcePathsgetResourcePathsgetResourcePaths(java.lang.String path)
 			: Returns a directory-like listing of all the paths to resources within the web application whose longest sub-path matches the supplied path argument.
+
+3. gui 연동 / 그래프 연동 (JFreeChart) <www.jfree.org/jfreechart>
+	- Java, Spring [ Mongo :  분산스토리지, 복제, 샤딩 가능 ] / Python[ 데이터 + 수치연산[ SciPy ] + 테이블[ Pandas(SQL) ]
+	- (Python + Spark [ MR을 SQL로 ] + hive) + Hadoop(저장소) = 실시간 일괄 데이터 처리.png + d3.js로 그래프 가져오기
 
 4. jstl, el를 이용해서 사용자 태그를 작성할 수 있다.
 
@@ -174,6 +177,8 @@ layout: post
     </html>
     ~~~
 
+***
+
 ### java.io.BufferedInputStream
 ![image](https://user-images.githubusercontent.com/52989294/86075208-7524f700-bac2-11ea-9c90-7b41f4134a8a.png)
 
@@ -181,6 +186,7 @@ layout: post
 
 ### 파일 관리
 - historyView.jsp
+
     ~~~ jsp
     <%@ page language="java" contentType="text/html; charset=EUC-KR"
         pageEncoding="EUC-KR"%>
@@ -199,7 +205,10 @@ layout: post
     </html>
     ~~~
 
+***
+
 - PDF 로 뽑아보기
+
     ~~~ jsp
     <%@ page contentType="application/pdf; charset=EUC-KR" %>
     <!DOCTYPE html>
@@ -231,7 +240,10 @@ layout: post
     </html>
     ~~~
 
+***
+
 - EXCEL 로 뽑아보기
+
     ~~~ jsp
     <%@ page contentType="application/vnd.ms-excel; charset=KSC5601" %>
     <!DOCTYPE html>
@@ -267,8 +279,11 @@ layout: post
     </html>
     ~~~
 
+***
+
 - WORD 로 뽑아보기
-    ~~~ jsp
+
+   ~~~ jsp
     <%@ page contentType="application/msword; charset=EUC-KR" %>
     <!DOCTYPE html>
     <html>
@@ -418,6 +433,64 @@ layout: post
 
 ***
 
+### GUI / 그래프 연동하기
+
+- JFreeChart 1.5.0 다운로드 ( jfreechart-1.5.0.jar )
+<https://repo1.maven.org/maven2/org/jfree/jfreechart/1.5.0/>
+
+- JFreeChart
+	- ChartFactory의 객체를 이용해서 그래프를 선택해서 생성한다. ( org.jfree.chart Class ChartFactory )
+	- JFreeChart로 리턴받아 데이터, 타이틀, 범례 등을 메소드 또는 객체가 가진 메소드의 매개인자로 전달해서 생성한다.
+	- ChartUtils로 저장할 대상을 선택한다.
+
+- META-INF / context.xml
+    ~~~ xml
+    <?xml version="1.0" encoding="UTF-8"?>
+    <!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor
+        license agreements. See the NOTICE file distributed with this work for additional
+        information regarding copyright ownership. The ASF licenses this file to
+        You under the Apache License, Version 2.0 (the "License"); you may not use
+        this file except in compliance with the License. You may obtain a copy of
+        the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required
+        by applicable law or agreed to in writing, software distributed under the
+        License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS
+        OF ANY KIND, either express or implied. See the License for the specific
+        language governing permissions and limitations under the License. --><!-- The contents of this file will be loaded for each web application -->
+    <Context>
+
+        <!-- Default set of monitored resources. If one of these changes, the -->
+        <!-- web application will be reloaded. -->
+        <WatchedResource>WEB-INF/web.xml</WatchedResource>
+        <WatchedResource>${catalina.base}/conf/web.xml</WatchedResource>
+
+        <!-- Uncomment this to disable session persistence across Tomcat restarts -->
+        <!-- <Manager pathname="" /> -->
+
+        <Resource auth="Container"
+            driverClassName="oracle.jdbc.OracleDriver" maxIdle="10" maxTotal="20"
+            maxWaitMillis="-1" name="jdbc/myoracle" password="admin1234"
+            type="javax.sql.DataSource" url="jdbc:oracle:thin:@127.0.0.1:1521:xe"
+            username="big5" />
+    </Context>
+    ~~~
+
+    ~~~ sql
+    drop table Score;
+
+    create table Score(
+        name varchar2(20) not null,
+        kor number(4),
+        eng number(4),
+        mat number(4));
+
+    insert into Score values('Dominico', 100,70,80);
+    insert into Score values('Dominica', 100,50,60);
+    insert into Score values('Dell', 90, 80, 100);
+    insert into Score values('Ben', 100, 70, 80);
+    insert into Score values('Su', 100, 70, 80);
+
+    select * from Score;
+    ~~~
 
 
 

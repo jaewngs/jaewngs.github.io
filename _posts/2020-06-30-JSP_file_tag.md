@@ -31,10 +31,11 @@ layout: post
 			: Returns a directory-like listing of all the paths to resources within the web application whose longest sub-path matches the supplied path argument.
 
 3. gui 연동 / 그래프 연동 (JFreeChart) <www.jfree.org/jfreechart>
-	- Java, Spring [ Mongo :  분산스토리지, 복제, 샤딩 가능 ] / Python[ 데이터 + 수치연산[ SciPy ] + 테이블[ Pandas(SQL) ]
-	- (Python + Spark [ MR을 SQL로 ] + hive) + Hadoop(저장소) = 실시간 일괄 데이터 처리.png + d3.js로 그래프 가져오기
+	- 집계 연산 후 결과를 시각화( WAS log 데이터 : 클라이언트 패턴, 객체 대상화 집계 패턴 / 웹사이트에서 크롤링 집계 패턴 / Hadoop 머신에 대한 연동 시각화 / 데이터 잔량 측정 )
+		1) Java, Spring [ Mongo :  분산스토리지, 복제, 샤딩 가능 ]
+		2) Python[ 데이터 + 수치연산[ SciPy ] + 테이블[ Pandas(SQL) ]
+		3) (Python + Spark [ MR을 SQL로 ] + hive) + Hadoop(저장소) = 실시간 일괄 데이터 처리.png + d3.js로 그래프 가져오기
 
-4. jstl, el를 이용해서 사용자 태그를 작성할 수 있다.
 
 ***
 
@@ -434,6 +435,8 @@ layout: post
 ***
 
 ### GUI / 그래프 연동하기
+
+<http://www.jfree.org/jfreechart/api/javadoc/index.html>
 
 - JFreeChart 1.5.0 다운로드 ( jfreechart-1.5.0.jar )
 <https://repo1.maven.org/maven2/org/jfree/jfreechart/1.5.0/>

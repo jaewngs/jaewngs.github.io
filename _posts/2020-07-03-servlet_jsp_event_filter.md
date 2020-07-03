@@ -20,13 +20,14 @@ layout: post
 2. Context의 Filter를 이용해서 페이지 요청에 가로채기를 할 수 있다.
 	- 설정파일에 선언하는 방법 : web.xml, 주석으로 선언하는 방법 @
 	- 웹 보안을 처리하는 객체
-		1) Authentication Filters : 서버 -> 웹서버 -> 웹어플리케이션 -> 페이지 연동
-		2) Logging and Auditing Filters : 인증값이 1)번을 통해 페이지 권한을 받고 다른페이지 요청을 할 경우 유효성 검사
+		- Authentication Filters : 서버 -> 웹서버 -> 웹어플리케이션 -> 페이지 연동
+		- Logging and Auditing Filters : 인증값이 Authentication Filters을 통해 페이지 권한을 받고 다른페이지 요청을 할 경우 유효성 검사
 			- php -> html -> (전페이지의 인증값을 검증) -> jsp
-		3) Image conversion Filters
+		- Image conversion Filters
+			- 보안인증 코드 등 페이지 요청 보안(QR코드)
 		- Data compression Filters
-		- Encryption Filters
-		- Tokenizing Filters
+		- Encryption Filters : 툴을 이용해서 필터를 기반으로 연동하는 프로그램을 호출
+		- Tokenizing Filters : 페이지 요청 get/post 방식으로 폼 데이터가 전송되거나 URL에 데이터가 Param값을 가지고 전송될 때 사용하는 필터
 		- Filters that trigger resource access events
 		- XSL/T filters
 		- Mime-type chain Filter

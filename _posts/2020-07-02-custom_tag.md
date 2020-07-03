@@ -17,11 +17,12 @@ layout: post
 1. 커스텀 태그를 작성할 수 있다.
 2. Servlet의 필터링을 할 수 있다.
 3. ServletContext, ServletConfig
+
 ***
 
 ## 커스텀 태그
 - ver 1.2
-	- javax.servlet.jsp.tagext.* 중 상속을 받아 메소드를 재정의한다.
+	- " javax.servlet.jsp.tagext.* " 중 상속을 받아 메소드를 재정의한다.
 	- 태그가 생성되면 /WebContent/WEB-INF/tld 폴더를 만든 다음 생성된 태그를 호출해서 사용한다.
 - ver 2.0
 	- SimpleTagSupport 상속 받아 메소드 정의

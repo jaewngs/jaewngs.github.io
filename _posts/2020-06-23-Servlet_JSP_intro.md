@@ -86,6 +86,8 @@ layout: post
 4. http:// 프로토콜을 통해 페이지 요청 응답할 준비를 한다.(servlet)
 5. 원형
 	- Servlet = java 코드 안에 html 코드 들어있음
+	- Servlet 이란?
+		- A servlet is a Java programming language class used to extend the capabilities of servers that host applications accessed by means of a request-response programming model
 	- Jsp : html 코드 안에 java 코드 들어있음
 
 ***

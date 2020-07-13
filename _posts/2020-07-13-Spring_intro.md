@@ -319,60 +319,59 @@ layout: post
 ## src/sample1
 - MessageBean.java
 
-~~~ java
-package sample1;
+    ~~~ java
+    package sample1;
 
-public interface MessageBean {
-	public void sayHello();
-}
-
-~~~
+    public interface MessageBean {
+        public void sayHello();
+    }
+    ~~~
 
 - MessageBeanImpl.java
 
-~~~ java
-package sample1;
+    ~~~ java
+    package sample1;
 
-public class MessageBeanImpl implements MessageBean {
-	private String fruit;
-	private int cost;
+    public class MessageBeanImpl implements MessageBean {
+        private String fruit;
+        private int cost;
 
-	public MessageBeanImpl() {
-		super();
-		this.fruit = "strawberry";
-		this.cost = 5000;
-	}
-	public MessageBeanImpl(String fruit, int cost) {
-		super();
-		this.fruit = fruit;
-		this.cost = cost;
-	}
-	@Override
-	public void sayHello() {
-		System.out.println(fruit + "\t" + cost);
-	}
-}
-~~~
+        public MessageBeanImpl() {
+            super();
+            this.fruit = "strawberry";
+            this.cost = 5000;
+        }
+        public MessageBeanImpl(String fruit, int cost) {
+            super();
+            this.fruit = fruit;
+            this.cost = cost;
+        }
+        @Override
+        public void sayHello() {
+            System.out.println(fruit + "\t" + cost);
+        }
+    }
+    ~~~
 
 - MTest.java
 
-~~~ java
-package sample1;
+    ~~~ java
+    package sample1;
 
-public class MTest {
-	public static void main(String[] args) {
-		// java 형식의 코드
-		// 객체를 생성한 다음 생성된 객체의 주소로 메소드를 호출하는 방식
-		// 1. 기본 생성자 객체 생성
-		MessageBeanImpl mi = new MessageBeanImpl();
-		mi.sayHello();
+    public class MTest {
+        public static void main(String[] args) {
+            // java 형식의 코드
+            // 객체를 생성한 다음 생성된 객체의 주소로 메소드를 호출하는 방식
+            // 1. 기본 생성자 객체 생성
+            MessageBeanImpl mi = new MessageBeanImpl();
+            mi.sayHello();
 
-		// 2. 매개 인자 전달 생성자로 객체 생성
-		MessageBeanImpl mi02 = new MessageBeanImpl("melon", 7000);
-		mi02.sayHello();
-	}
-}
-~~~
+            // 2. 매개 인자 전달 생성자로 객체 생성
+            MessageBeanImpl mi02 = new MessageBeanImpl("melon", 7000);
+            mi02.sayHello();
+        }
+    }
+    ~~~
 
 ***
 
@@ -389,54 +388,55 @@ public class MTest {
 
 - MyBean.xml
 
-~~~ xml
-<?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans-4.3.xsd
-		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context-4.3.xsd">
+    ~~~ xml
+    <?xml version="1.0" encoding="UTF-8"?>
+    <beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+            http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context-4.3.xsd">
 
-	<!-- 메인을 먼저 만들지 않아도 메모리에 먼저 올라감 -->
-	<!-- 스프링은 빈즈를 메모리에 자동으로 올려줌 생성자가 private라도 상관없음 -->
-	<bean id="mi" class="sample1.MessageBeanImpl"></bean>
-	<bean id="mi02" class="sample1.MessageBeanImpl">
-		<constructor-arg index="0" value="melon"></constructor-arg>
-		<constructor-arg index="1" value="7000"></constructor-arg>
-	</bean>
-</beans>
-~~~
+        <!-- 메인을 먼저 만들지 않아도 메모리에 먼저 올라감 -->
+        <!-- 스프링은 빈즈를 메모리에 자동으로 올려줌 생성자가 private라도 상관없음 -->
+        <bean id="mi" class="sample1.MessageBeanImpl"></bean>
+        <bean id="mi02" class="sample1.MessageBeanImpl">
+            <constructor-arg index="0" value="melon"></constructor-arg>
+            <constructor-arg index="1" value="7000"></constructor-arg>
+        </bean>
+    </beans>
+    ~~~
 
 - MTest02.java
 
-~~~ java
-package sample1;
+    ~~~ java
+    package sample1;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+    import org.springframework.context.ApplicationContext;
+    import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-public class MTest02 {
+    public class MTest02 {
 
-	// spring 선언한 Bean을 호출한 다음 메소드 호출
-	public static void main(String[] args) {
+        // spring 선언한 Bean을 호출한 다음 메소드 호출
+        public static void main(String[] args) {
 
-		// 1. 클래스를 작성
-		// 2. MyBean.xml에 id로 bean을 등록
-		// 3. ClassPathXmlApplicationContext로 2번을 찾아온다.
+            // 1. 클래스를 작성
+            // 2. MyBean.xml에 id로 bean을 등록
+            // 3. ClassPathXmlApplicationContext로 2번을 찾아온다.
 
-		ApplicationContext ac = new ClassPathXmlApplicationContext("sample1/MyBean.xml");
+            ApplicationContext ac = new ClassPathXmlApplicationContext("sample1/MyBean.xml");
 
-		//방법1) MessageBean bean = (MessageBean) ac.getBean("mi");
-		// or
-		// 방법2) getBean(String name, Class<T> requiredType)
-		MessageBean bean = ac.getBean("mi",MessageBeanImpl.class);
-		bean.sayHello();
+            // 방법1) MessageBean bean = (MessageBean) ac.getBean("mi");
+            // 방법2) getBean(String name, Class<T> requiredType)
+            MessageBean bean = ac.getBean("mi",MessageBeanImpl.class);
+            bean.sayHello();
 
-		bean = (MessageBean) ac.getBean("mi02");
-		bean.sayHello();
-	}
-}
-~~~
+            bean = (MessageBean) ac.getBean("mi02");
+            bean.sayHello();
+        }
+    }
+    ~~~
+
+	![image](https://user-images.githubusercontent.com/52989294/87290808-7120bc80-c539-11ea-8a6a-f7efabae7f41.png)
 
 ***
 
@@ -444,172 +444,172 @@ public class MTest02 {
 - Address.java
 
 ~~~ java
-package sample2;
+    package sample2;
 
-public class Address {
-	private String name;
-	private String addr;
-	private String tel;
+    public class Address {
+        private String name;
+        private String addr;
+        private String tel;
 
-	public Address(String name, String addr, String tel) {
-		super();
-		this.name = name;
-		this.addr = addr;
-		this.tel = tel;
-	}
+        public Address(String name, String addr, String tel) {
+            super();
+            this.name = name;
+            this.addr = addr;
+            this.tel = tel;
+        }
 
-	public Address() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+        public Address() {
+            super();
+        }
 
-	public String getName() {
-		return name;
-	}
+        /*
+         * public String getName() { return name; }
+         */
 
-	public void setName(String name) {
-		this.name = name;
-	}
+        public void setName(String name) {
+            this.name = name;
+        }
 
-	public String getAddr() {
-		return addr;
-	}
+        /*
+         * public String getAddr() { return addr; }
+         */
 
-	public void setAddr(String addr) {
-		this.addr = addr;
-	}
+        public void setAddr(String addr) {
+            this.addr = addr;
+        }
 
-	public String getTel() {
-		return tel;
-	}
+        /*
+         * public String getTel() { return tel; }
+         */
 
-	public void setTel(String tel) {
-		this.tel = tel;
-	}
+        public void setTel(String tel) {
+            this.tel = tel;
+        }
 
-	@Override
-	public String toString() {
-		return "Address [name=" + name + ", addr=" + addr + ", tel=" + tel + "]";
-	}
-}
+        @Override
+        public String toString() {
+            return "Address [name=" + name + ", addr=" + addr + ", tel=" + tel + "]";
+        }
+    }
 ~~~
 
 - ListAddress.java
 
-~~~ java
-package sample2;
+    ~~~ java
+    package sample2;
 
-// has a 관계 [생성자, setter]로 값 전달 및 변경
-public class ListAddress {
-	private Address addr;
+    // has a 관계 [생성자, setter]로 값 전달 및 변경
+    public class ListAddress {
+        private Address addr;
 
-	public ListAddress() {
-		super();
-		// addr = new Address("111", "111", "111"); 결합도 높다.
-	}
+        public ListAddress() {
+            super();
+            // addr = new Address("111", "111", "111"); 결합도 높다.
+        }
 
-	public ListAddress(Address addr) {
-		super();
-		this.addr = addr;
-	}
+        public ListAddress(Address addr) {
+            super();
+            this.addr = addr;
+        }
 
-	public Address getAddr() {
-		return addr; // addr.toString();
-	}
+        public Address getAddr() {
+            return addr; // addr.toString();
+        }
 
-	public void setAddr(Address addr) {
-		this.addr = addr;
-	}
-}
-~~~
+        public void setAddr(Address addr) {
+            this.addr = addr;
+        }
+    }
+    ~~~
 
 - applicationContext.xml
 
-~~~ xml
-<?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    ~~~ xml
+    <?xml version="1.0" encoding="UTF-8"?>
+    <beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<!-- 1. 단일 클래스인 Address의 객체를 선언 -->
-	<bean id="myaddr01" class="sample2.Address" />
+        <!-- 1. 단일 클래스인 Address의 객체를 선언 -->
+        <bean id="myaddr01" class="sample2.Address" />
 
-	<!-- 2. 단일 클래스인 Address의 생성자로 값 전달 -->
-	<bean id="myaddr02" class="sample2.Address">
-		<constructor-arg index="0" value="홍길동" type="String" />
-		<constructor-arg index="1" value="서울"
-			type="java.lang.String" />
-		<constructor-arg index="2" value="02-000" />
-	</bean>
+        <!-- 2. 단일 클래스인 Address의 생성자로 값 전달 -->
+        <bean id="myaddr02" class="sample2.Address">
+            <constructor-arg index="0" value="홍길동" type="String" />
+            <constructor-arg index="1" value="서울" type="java.lang.String" />
+            <constructor-arg index="2" value="02-000" />
+        </bean>
 
-	<!-- 3. 단일 클래스인 Address의 setter로 값 전달 -->
-	<bean id="myaddr03" class="sample2.Address">
-		<property name="name" value="최길동" />
-		<property name="addr" value="서초구" />
-		<property name="tel" value="02-777-7777" />
-	</bean>
+        <!-- 3. 단일 클래스인 Address의 setter로 값 전달 -->
+        <bean id="myaddr03" class="sample2.Address">
+            <property name="name" value="최길동" />
+            <property name="addr" value="서초구" />
+            <property name="tel" value="02-777-7777" />
+        </bean>
 
-	<!-- 4. ListAddress의 기본 생성자로 객체를 선언 -->
-	<bean id="mylist01" class="sample2.ListAddress" />
+        <!-- 4. ListAddress의 기본 생성자로 객체를 선언 -->
+        <bean id="mylist01" class="sample2.ListAddress" />
 
-	<!-- 5. ListAddress의 매개인자 생성자로 객체를 선언 -->
-	<bean id="mylist02" class="sample2.ListAddress">
-		<constructor-arg ref="myaddr02"></constructor-arg>
-	</bean>
+        <!-- 5. ListAddress의 매개인자 생성자로 객체를 선언 -->
+        <bean id="mylist02" class="sample2.ListAddress">
+            <constructor-arg ref="myaddr02"></constructor-arg>
+        </bean>
 
-	<!-- 6. ListAddress의 setter로 Address 값을 전달 후 선언 -->
-	<bean id="mylist03" class="sample2.ListAddress">
-		<property name="addr" ref="myaddr03"></property>
-	</bean>
+        <!-- 6. ListAddress의 setter로 Address 값을 전달 후 선언 -->
+        <bean id="mylist03" class="sample2.ListAddress">
+            <property name="addr" ref="myaddr03"></property>
+        </bean>
 
-	<!-- 7. ListAddress의 생성자로 Address 값을 내부 선언 후 전달 -->
-	<bean id="mylist04" class="sample2.ListAddress">
-		<constructor-arg>
-			<bean id="myaddr04" class="sample2.Address">
-				<property name="name" value="777" />
-				<property name="addr" value="777" />
-				<property name="tel" value="777" />
-			</bean>
-		</constructor-arg>
-	</bean>
-</beans>
-~~~
+        <!-- 7. ListAddress의 생성자로 Address 값을 내부 선언 후 전달 -->
+        <bean id="mylist04" class="sample2.ListAddress">
+            <constructor-arg>
+                <bean id="myaddr04" class="sample2.Address">
+                    <property name="name" value="777" />
+                    <property name="addr" value="777" />
+                    <property name="tel" value="777" />
+                </bean>
+            </constructor-arg>
+        </bean>
+    </beans>
+    ~~~
 
 - MTest.java
 
-~~~ java
-package sample2;
+    ~~~ java
+    package sample2;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+    import org.springframework.context.ApplicationContext;
+    import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-public class MTest {
-	public static void main(String[] args) {
-		ApplicationContext ac = new ClassPathXmlApplicationContext("sample2/applicationContext.xml");
+    public class MTest {
+        public static void main(String[] args) {
+            ApplicationContext ac = new ClassPathXmlApplicationContext("sample2/applicationContext.xml");
 
-		Address myaddr01 = ac.getBean("myaddr01", Address.class);
-		System.out.println(myaddr01);
+            Address myaddr01 = ac.getBean("myaddr01", Address.class);
+            System.out.println(myaddr01);
 
-		Address myaddr02 = ac.getBean("myaddr02", Address.class);
-		System.out.println(myaddr02); // 홍길동, 서울, 02-000
+            Address myaddr02 = ac.getBean("myaddr02", Address.class);
+            System.out.println(myaddr02); // 홍길동, 서울, 02-000
 
-		Address myaddr03 = ac.getBean("myaddr03", Address.class);
-		System.out.println(myaddr03);
+            Address myaddr03 = ac.getBean("myaddr03", Address.class);
+            System.out.println(myaddr03);
 
-		ListAddress li = ac.getBean("mylist01", ListAddress.class);
-		System.out.println(li.getAddr());
+            ListAddress li = ac.getBean("mylist01", ListAddress.class);
+            System.out.println(li.getAddr());
 
-		ListAddress li02 = ac.getBean("mylist02", ListAddress.class);
-		System.out.println(li02.getAddr());
+            ListAddress li02 = ac.getBean("mylist02", ListAddress.class);
+            System.out.println(li02.getAddr());
 
-		ListAddress li03 = ac.getBean("mylist03", ListAddress.class);
-		System.out.println(li03.getAddr());
+            ListAddress li03 = ac.getBean("mylist03", ListAddress.class);
+            System.out.println(li03.getAddr());
 
-		ListAddress li04 = ac.getBean("mylist04", ListAddress.class);
-		System.out.println(li04.getAddr());
-	}
-}
-~~~
+            ListAddress li04 = ac.getBean("mylist04", ListAddress.class);
+            System.out.println(li04.getAddr());
+        }
+    }
+    ~~~
+
+	![image](https://user-images.githubusercontent.com/52989294/87292056-30c23e00-c53b-11ea-897d-c0bf1e517b0e.png)
 
 ***
 
@@ -617,220 +617,223 @@ public class MTest {
 
 - UserService.java
 
-~~~ java
-package sample3;
+    ~~~ java
+    package sample3;
 
-public interface UserService {
-	public void addUser(UserVo vo);
-}
-~~~
+    public interface UserService {
+        public void addUser(UserVo vo);
+    }
+    ~~~
 
 - UserServiceImpl.java
 
-~~~ java
-package sample3;
+    ~~~ java
+    package sample3;
 
-public class UserServiceImpl implements UserService {
+    public class UserServiceImpl implements UserService {
 
-	public UserServiceImpl() {
-		super();
-		System.out.println("UserService 생성자 호출");
-	}
+        public UserServiceImpl() {
+            super();
+            System.out.println("UserService 생성자 호출");
+        }
 
-	@Override
-	public void addUser(UserVo vo) {
-		System.out.println("UserService : addUser() 메소드 호출");
-		System.out.println("이름 : " + vo.getUserName());
-	}
-}
-~~~
+        @Override
+        public void addUser(UserVo vo) {
+            System.out.println("UserService : addUser() 메소드 호출");
+            System.out.println("이름 : " + vo.getUserName());
+        }
+    }
+    ~~~
 
 - UserVo.java
 
-~~~ java
-package sample3;
+    ~~~ java
+    package sample3;
 
-import java.util.Date;
-import java.util.Properties;
+    import java.util.Date;
+    import java.util.Properties;
 
-public class UserVo {
-	private String userName;
-	private Properties per;
-	private Date my_date = new Date();
+    public class UserVo {
+        private String userName;
+        private Properties per;
+        private Date my_date = new Date();
 
-	public UserVo() {
-		super();
-	}
+        public UserVo() {
+            super();
+        }
 
-	public UserVo(String userName) {
-		super();
-		this.userName = userName;
-	}
+        public UserVo(String userName) {
+            super();
+            this.userName = userName;
+        }
 
-	public String getUserName() {
-		return userName;
-	}
+        public String getUserName() {
+            return userName;
+        }
 
-	public Properties getPer() {
-		return per;
-	}
+        public Properties getPer() {
+            return per;
+        }
 
-	public void setPer(Properties per) {
-		this.per = per;
-	}
+        public void setPer(Properties per) {
+            this.per = per;
+        }
 
-	public Date getMy_date() {
-		return my_date;
-	}
+        public Date getMy_date() {
+            return my_date;
+        }
 
-	public void setMy_date(Date my_date) {
-		this.my_date = my_date;
-	}
+        public void setMy_date(Date my_date) {
+            this.my_date = my_date;
+        }
 
-	@Override
-	public String toString() {
-		return "UserVo [userName=" + userName + ", per=" + per + ", my_date=" + my_date + "]";
-	}
-}
-~~~
+        @Override
+        public String toString() {
+            return "UserVo [userName=" + userName + ", per=" + per + ", my_date=" + my_date + "]";
+        }
+    }
+    ~~~
 
 - applicationContext.xml
 
-~~~ xml
-<?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    ~~~ xml
+    <?xml version="1.0" encoding="UTF-8"?>
+    <beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean id="userService" class="sample3.UserServiceImpl" />
+        <bean id="userService" class="sample3.UserServiceImpl" />
 
-	<bean id="mdate" class="java.util.Date">
-		<constructor-arg value="2020" />
-		<constructor-arg value="12" />
-		<constructor-arg value="23" />
-	</bean>
+        <bean id="mdate" class="java.util.Date">
+            <constructor-arg value="2020" />
+            <constructor-arg value="12" />
+            <constructor-arg value="23" />
+        </bean>
 
-	<bean id="mvo" class="sample3.UserVo">
-		<property name="my_date" ref="mdate" />
-		<property name="per">
-			<value>
-				a=1, b=2, c=3
-			</value>
-		</property>
-	</bean>
-</beans>
-~~~
+        <bean id="mvo" class="sample3.UserVo">
+            <property name="my_date" ref="mdate" />
+            <property name="per">
+                <value>
+                    a=1, b=2, c=3
+                </value>
+            </property>
+        </bean>
+    </beans>
+    ~~~
 
 - MTest.java
 
-~~~ java
-package sample3;
+    ~~~ java
+    package sample3;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+    import org.springframework.context.ApplicationContext;
+    import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import sample2.Address;
+    import sample2.Address;
 
-public class MTest {
-	public static void main(String[] args) {
-		ApplicationContext factory =
-				new ClassPathXmlApplicationContext("sample3/applicationContext.xml");
+    public class MTest {
+        public static void main(String[] args) {
+            ApplicationContext factory =
+                    new ClassPathXmlApplicationContext("sample3/applicationContext.xml");
 
-		UserVo res = (UserVo) factory.getBean("mvo");
-		System.out.println(res.getMy_date());
-		System.out.println(res.getPer());
-	}
-}
-~~~
+            UserVo res = (UserVo) factory.getBean("mvo");
+            System.out.println(res.getMy_date());
+            System.out.println(res.getPer());
+        }
+    }
+    ~~~
+
+	![image](https://user-images.githubusercontent.com/52989294/87292180-65ce9080-c53b-11ea-928d-bb615e34bcb3.png)
 
 ***
 
 ## src/sample4
 - AbstractTest.java
 
-~~~ java
-package sample4;
+    ~~~ java
+    package sample4;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+    import java.util.Calendar;
+    import java.util.GregorianCalendar;
 
-public abstract class AbstractTest { // 싱글톤 패턴을 구현
-	public abstract String dayInfo(); // 추상 메소드
+    public abstract class AbstractTest { // 싱글톤 패턴을 구현
+        public abstract String dayInfo(); // 추상 메소드
 
-	public static AbstractTest getInstance() {
-		// 싱글톤 : 현재 클래스를 객체를 생성한 다음 static으로 리턴한다.
+        public static AbstractTest getInstance() {
+            // 싱글톤 : 현재 클래스를 객체를 생성한 다음 static으로 리턴한다.
 
-		GregorianCalendar cal = new GregorianCalendar();
-		int day = cal.get(Calendar.DAY_OF_WEEK);
-		switch(day) {
+            GregorianCalendar cal = new GregorianCalendar();
+            int day = cal.get(Calendar.DAY_OF_WEEK);
+            switch(day) {
 
-		case 1: return new Sunday();
-		case 2: return new Monday();
-		case 3: return new Tuesday();
-		case 4: return new Wednesday();
-		case 5: return new Thursday();
-		case 6: return new Friday();
-		case 7: return new Saturday();
-		}
-		return null;
-	}
+            case 1: return new Sunday();
+            case 2: return new Monday();
+            case 3: return new Tuesday();
+            case 4: return new Wednesday();
+            case 5: return new Thursday();
+            case 6: return new Friday();
+            case 7: return new Saturday();
+            }
+            return null;
+        }
 
-	public AbstractTest() {
-		super();
-	}
-}
-~~~
+        public AbstractTest() {
+            super();
+        }
+    }
+    ~~~
 
-- Monday.java ~ Sunday.java
-	- 월~일 양식 똑같음
+- Monday.java ~ Sunday.java(월요일~일요일 양식 똑같음)
 
-~~~ java
-package sample4;
+    ~~~ java
+    package sample4;
 
-public class Monday extends AbstractTest {
+    public class Monday extends AbstractTest {
 
-	@Override
-	public String dayInfo() {
-		return "월요일입니다";
-	}
-}
-~~~
+        @Override
+        public String dayInfo() {
+            return "월요일입니다";
+        }
+    }
+    ~~~
 
 - app.xml
 
-~~~ xml
-<?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    ~~~ xml
+    <?xml version="1.0" encoding="UTF-8"?>
+    <beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean id="test" class="sample4.AbstractTest"
-		factory-method="getInstance" />
-</beans>
-~~~
+        <bean id="test" class="sample4.AbstractTest"
+            factory-method="getInstance" />
+    </beans>
+    ~~~
 
 - TestApp.java
 
-~~~ java
-package sample4;
+    ~~~ java
+    package sample4;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+    import org.springframework.context.ApplicationContext;
+    import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-public class TestApp {
+    public class TestApp {
 
-	public static void main(String[] args) {
-		ApplicationContext factory = new ClassPathXmlApplicationContext("sample4/app.xml");
+        public static void main(String[] args) {
+            ApplicationContext factory = new ClassPathXmlApplicationContext("sample4/app.xml");
 
-		AbstractTest bean = (AbstractTest) factory.getBean("test");
+            AbstractTest bean = (AbstractTest) factory.getBean("test");
 
-		System.out.println("오늘은 " + bean.dayInfo());
+            System.out.println("오늘은 " + bean.dayInfo());
 
-		// beans 객체를 소멸하는 메소드
-		((ClassPathXmlApplicationContext) factory).close();
-	}
-}
-~~~
+            // beans 객체를 소멸하는 메소드
+            ((ClassPathXmlApplicationContext) factory).close();
+        }
+    }
+    ~~~
+
+	![image](https://user-images.githubusercontent.com/52989294/87292753-3ec48e80-c53c-11ea-9841-314b36a86134.png)
 
 ***
 
@@ -838,202 +841,206 @@ public class TestApp {
 
 - DataVo.java
 
-~~~ java
-package sample5;
+    ~~~ java
+    package sample5;
 
-// xml에 <constructor-arg>가 없어서 get필요 없음
-public class DateVo {
-	private String name;
-	private String birth;
+    public class DateVo {
+        private String name;
+        private String birth;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+        public void setName(String name) {
+            this.name = name;
+        }
 
-	public void setBirth(String birth) {
-		this.birth = birth;
-	}
+        public void setBirth(String birth) {
+            this.birth = birth;
+        }
 
-	@Override
-	public String toString() {
-		return name + "의 생일은 " + birth + " 입니다.";
-	}
+        @Override
+        public String toString() {
+            return name + "의 생일은 " + birth + " 입니다.";
+        }
 
-}
-~~~
+    }
+    ~~~
 
 - data.xml
 
-~~~ xml
-<?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    ~~~ xml
+    <?xml version="1.0" encoding="UTF-8"?>
+    <beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean id="hong" class="sample5.DateVo">
-		<property name="name" value="홍길동" />
-		<property name="birth" value="1991-10-21" />
-	</bean>
+        <bean id="hong" class="sample5.DateVo">
+            <property name="name" value="홍길동" />
+            <property name="birth" value="1991-10-21" />
+        </bean>
 
-	<bean id="lee" class="sample5.DateVo">
-		<property name="name" value="이길동" />
-		<property name="birth" value="1992-05-15" />
-	</bean>
+        <bean id="lee" class="sample5.DateVo">
+            <property name="name" value="이길동" />
+            <property name="birth" value="1992-05-15" />
+        </bean>
 
-</beans>
-~~~
+    </beans>
+    ~~~
 
 - Sample5Main.java
 
-~~~ java
-package sample5;
+    ~~~ java
+    package sample5;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+    import org.springframework.context.ApplicationContext;
+    import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-public class Sample5Main {
-	public static void main(String[] args) {
-		ApplicationContext factory = new ClassPathXmlApplicationContext("sample5/data.xml");
+    public class Sample5Main {
+        public static void main(String[] args) {
+            ApplicationContext factory = new ClassPathXmlApplicationContext("sample5/data.xml");
 
-		DateVo res = (DateVo) factory.getBean("hong");
-		System.out.println(res.toString());
+            DateVo res = (DateVo) factory.getBean("hong");
+            System.out.println(res.toString());
 
-		DateVo res2 = factory.getBean("lee", DateVo.class);
-		System.out.println(res2.toString());
+            DateVo res2 = factory.getBean("lee", DateVo.class);
+            System.out.println(res2.toString());
 
-		((ClassPathXmlApplicationContext) factory).close();
-	}
-}
-~~~
+            ((ClassPathXmlApplicationContext) factory).close();
+        }
+    }
+    ~~~
+
+	![image](https://user-images.githubusercontent.com/52989294/87292870-6f0c2d00-c53c-11ea-8325-b698d1386098.png)
+
 
 ***
 
 ## src/sample6
 - Emp.java
 
-~~~ java
-package sample6;
+    ~~~ java
+    package sample6;
 
-public class Emp {
-	private String name;
-	private int salary;
+    public class Emp {
+        private String name;
+        private int salary;
 
-	public Emp() {
-		super();
-	}
+        public Emp() {
+            super();
+        }
 
-	public Emp(String name, int salary) {
-		super();
-		this.name = name;
-		this.salary = salary;
-	}
+        public Emp(String name, int salary) {
+            super();
+            this.name = name;
+            this.salary = salary;
+        }
 
-	@Override
-	public String toString() {
-		return "이름 : " + name + ", 급여 : " + salary;
-	}
-}
-~~~
+        @Override
+        public String toString() {
+            return "이름 : " + name + ", 급여 : " + salary;
+        }
+    }
+    ~~~
 
 - Developer.java
 
-~~~ java
-package sample6;
+    ~~~ java
+    package sample6;
 
-public class Developer extends Emp {
-	private String dept;
+    public class Developer extends Emp {
+        private String dept;
 
-	public Developer() {
-		super();
-	}
+        public Developer() {
+            super();
+        }
 
-	public Developer(String name, int salary) {
-		super(name, salary);
-	}
+        public Developer(String name, int salary) {
+            super(name, salary);
+        }
 
-	public void setDept(String dept) {
-		this.dept = dept;
-	}
+        public void setDept(String dept) {
+            this.dept = dept;
+        }
 
-	@Override
-	public String toString() {
-		return super.toString() + " 부서 : " + dept + "(개발부)";
-	}
-}
-~~~
+        @Override
+        public String toString() {
+            return super.toString() + " 부서 : " + dept + "(개발부)";
+        }
+    }
+    ~~~
 
 - Engineer.java
 
-~~~ java
-package sample6;
+    ~~~ java
+    package sample6;
 
-public class Engineer extends Emp {
+    public class Engineer extends Emp {
 
-	private String dept;
+        private String dept;
 
-	public Engineer() {
-		super();
-	}
+        public Engineer() {
+            super();
+        }
 
-	public Engineer(String name, int salary) {
-		super(name, salary);
-	}
+        public Engineer(String name, int salary) {
+            super(name, salary);
+        }
 
-	public void setDept(String dept) {
-		this.dept = dept;
-	}
+        public void setDept(String dept) {
+            this.dept = dept;
+        }
 
-	@Override
-	public String toString() {
-		return super.toString() + " 부서 : " + dept + "(기술부)";
-	}
-}
-~~~
+        @Override
+        public String toString() {
+            return super.toString() + " 부서 : " + dept + "(기술부)";
+        }
+    }
+    ~~~
 
 - beans.xml
 
-~~~ xml
-<?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    ~~~ xml
+    <?xml version="1.0" encoding="UTF-8"?>
+    <beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean id="developer" class="sample6.Developer">
-		<constructor-arg index ="0" value="강호동" />
-		<constructor-arg  index ="1" value="1500000" />
-		<property name = "dept" value = "개발1팀"/>
-	</bean>
+        <bean id="developer" class="sample6.Developer">
+            <constructor-arg index ="0" value="강호동" />
+            <constructor-arg  index ="1" value="1500000" />
+            <property name = "dept" value = "개발1팀"/>
+        </bean>
 
-	<bean id="engineer" class="sample6.Engineer">
-		<constructor-arg index ="0" value="이순신" />
-		<constructor-arg  index ="1" value="2500000" />
-		<property name = "dept" value = "기술1팀"/>
-	</bean>
-</beans>
-~~~
+        <bean id="engineer" class="sample6.Engineer">
+            <constructor-arg index ="0" value="이순신" />
+            <constructor-arg  index ="1" value="2500000" />
+            <property name = "dept" value = "기술1팀"/>
+        </bean>
+    </beans>
+    ~~~
 
 - EmpMain.java
 
-~~~ java
-package sample6;
+    ~~~ java
+    package sample6;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+    import org.springframework.context.ApplicationContext;
+    import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-public class EmpMain {
-	public static void main(String[] args) {
-		ApplicationContext factory = new ClassPathXmlApplicationContext("sample6/beans.xml");
+    public class EmpMain {
+        public static void main(String[] args) {
+            ApplicationContext factory = new ClassPathXmlApplicationContext("sample6/beans.xml");
 
-		Emp res = (Emp) factory.getBean("developer");
-		System.out.println(res.toString());
+            Emp res = (Emp) factory.getBean("developer");
+            System.out.println(res.toString());
 
-		Engineer res2 = factory.getBean("engineer", Engineer.class);
-		System.out.println(res2.toString());
+            Engineer res2 = factory.getBean("engineer", Engineer.class);
+            System.out.println(res2.toString());
 
-		((ClassPathXmlApplicationContext) factory).close();
-	}
-}
-~~~
+            ((ClassPathXmlApplicationContext) factory).close();
+        }
+    }
+    ~~~
+
+	![image](https://user-images.githubusercontent.com/52989294/87293003-a11d8f00-c53c-11ea-9bfd-9aa743ee96f0.png)
 
 ***
 
@@ -1041,296 +1048,304 @@ public class EmpMain {
 
 - Outputter.java(interface)
 
-~~~ java
-package sample7;
+    ~~~ java
+    package sample7;
 
-import java.io.IOException;
+    import java.io.IOException;
 
-// 인터페이스, 추상클래스, 선조클래스를
-// 상속 받는 후손 클래스는 메소드 재정의시 선조의 접근제한자와 같거나
-// 영역이 더 넓어야 한다.
-public interface Outputter {
-	// public abstract void output(String message) throws IOException;
-	void output(String message) throws IOException;
-}
-~~~
+    // 인터페이스, 추상클래스, 선조클래스를
+    // 상속 받는 후손 클래스는 메소드 재정의시 선조의 접근제한자와 같거나
+    // 영역이 더 넓어야 한다.
+    public interface Outputter {
+        // public abstract void output(String message) throws IOException;
+        void output(String message) throws IOException;
+    }
+    ~~~
 
 - FileOutput.java
 
-~~~ java
-package sample7;
+    ~~~ java
+    package sample7;
 
-import java.io.FileWriter;
-import java.io.IOException;
+    import java.io.FileWriter;
+    import java.io.IOException;
 
-public class FileOutput implements Outputter {
-	private String filePath; // 출력파일에 대한 경로와 파일 이름을 저장할 필드
+    public class FileOutput implements Outputter {
+        private String filePath; // 출력파일에 대한 경로와 파일 이름을 저장할 필드
 
-	private FileOutput() {
-		System.out.println("기본 생성자야~~");
-	}
+        private FileOutput() {
+            System.out.println("기본 생성자야~~");
+        }
 
-	public void setFilePath(String filePath) {
-		this.filePath = filePath;
-		System.out.println("2. 파일 경로와 파일 이름 설정");
-	}
+        public void setFilePath(String filePath) {
+            this.filePath = filePath;
+            System.out.println("2. 파일 경로와 파일 이름 설정");
+        }
 
-	@Override
-	public void output(String message) throws IOException {
-		FileWriter out = new FileWriter(filePath);
-		out.write(message);
-		out.close();
-		System.out.println("5.파일 전송 성공");
-	}
-}
-~~~
+        @Override
+        public void output(String message) throws IOException {
+            FileWriter out = new FileWriter(filePath);
+            out.write(message);
+            out.close();
+            System.out.println("5.파일 전송 성공");
+        }
+    }
+    ~~~
 
 - MessageBean.java(interface)
 
-~~~ java
-package sample7;
+    ~~~ java
+    package sample7;
 
-public interface MessageBean {
-	public void helloCall();
-}
-~~~
+    public interface MessageBean {
+        public void helloCall();
+    }
+    ~~~
 
 - MessageBeanImpl.java
 
-~~~ java
-package sample7;
+    ~~~ java
+    package sample7;
 
-import java.io.IOException;
+    import java.io.IOException;
 
-public class MessageBeanImpl implements MessageBean {
-	private String name;
-	private String phone;
-	private Outputter outputter; // has ~ a
+    public class MessageBeanImpl implements MessageBean {
+        private String name;
+        private String phone;
+        private Outputter outputter; // has ~ a
 
-	// 생성자로 name을 입력받음
-	public MessageBeanImpl(String name) {
-		super();
-		this.name = name;
-		System.out.println("1. Bean의 생성자 호출");
-	}
+        // 생성자로 name을 입력받음
+        public MessageBeanImpl(String name) {
+            super();
+            this.name = name;
+            System.out.println("1. Bean의 생성자 호출");
+        }
 
-	// setter를 통해서 phone과 outputter를 입력받음
-	public void setPhone(String phone) {
-		this.phone = phone;
-		System.out.println("3. phone 입력받음");
-	}
+        // setter를 통해서 phone과 outputter를 입력받음
+        public void setPhone(String phone) {
+            this.phone = phone;
+            System.out.println("3. phone 입력받음");
+        }
 
-	public void setOutputter(Outputter outputter) {
-		this.outputter = outputter;
-		System.out.println("4. outputter를 입력 받음");
-	}
+        public void setOutputter(Outputter outputter) {
+            this.outputter = outputter;
+            System.out.println("4. outputter를 입력 받음");
+        }
 
-	@Override
-	public void helloCall() {
-		String message = name + " : " + phone;
-		System.out.println(message);
-		try {
-			outputter.output(message);
-			System.out.println("6.작업 끝");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-}
-~~~
+        @Override
+        public void helloCall() {
+            String message = name + " : " + phone;
+            System.out.println(message);
+            try {
+                outputter.output(message);
+                System.out.println("6.작업 끝");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    ~~~
 
 - applicationContext.xml
-~~~ xml
-<?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<!-- xml파일이 여러개일 때 방법1) import하기 -->
-	<import resource="app.xml" />
-	<bean id="messageBean" class="sample7.MessageBeanImpl">
-		<constructor-arg value="이순신" />
-		<property name="phone" value="123-4567" />
-		<property name="outputter" ref="outputRef" />
-	</bean>
-</beans>
-~~~
+    ~~~ xml
+    <?xml version="1.0" encoding="UTF-8"?>
+    <beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+        <!-- xml파일이 여러개일 때 방법1) import하기 -->
+        <import resource="app.xml" />
+        <bean id="messageBean" class="sample7.MessageBeanImpl">
+            <constructor-arg value="이순신" />
+            <property name="phone" value="123-4567" />
+            <property name="outputter" ref="outputRef" />
+        </bean>
+    </beans>
+    ~~~
 
 - app.xml
-~~~ xml
-<?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean id="outputRef02" class="sample7.FileOutput" />
+    ~~~ xml
+    <?xml version="1.0" encoding="UTF-8"?>
+    <beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean id="outputRef" class="sample7.FileOutput">
-		<property name="filePath">
-			<value>data.txt</value>
-		</property>
-	</bean>
+        <bean id="outputRef02" class="sample7.FileOutput" />
 
-</beans>
-~~~
+        <bean id="outputRef" class="sample7.FileOutput">
+            <property name="filePath">
+                <value>data.txt</value>
+            </property>
+        </bean>
+
+    </beans>
+    ~~~
 
 - HelloSpring.java
-~~~ java
-package sample7;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+    ~~~ java
+    package sample7;
 
-public class HelloSpring {
-	public static void main(String[] args) {
-		ApplicationContext factory
-		= new ClassPathXmlApplicationContext("sample7/applicationContext.xml");
+    import org.springframework.context.ApplicationContext;
+    import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-		// xml파일이 여러개일 때 방법2) , 로 나열하기
-		//ApplicationContext factory
-		//= new ClassPathXmlApplicationContext("sample7/app.xml","sample7/applicationContext.xml");
+    public class HelloSpring {
+        public static void main(String[] args) {
+            ApplicationContext factory
+            = new ClassPathXmlApplicationContext("sample7/applicationContext.xml");
 
-		System.out.println("*** End ***");
+            // xml파일이 여러개일 때 방법2) , 로 나열하기
+            //ApplicationContext factory
+            //= new ClassPathXmlApplicationContext("sample7/app.xml","sample7/applicationContext.xml");
 
-		MessageBean bean = (MessageBean) factory.getBean("messageBean");
-		bean.helloCall();
+            System.out.println("*** End ***");
 
-		((ClassPathXmlApplicationContext) factory).close();
-	}
-}
-~~~
+            MessageBean bean = (MessageBean) factory.getBean("messageBean");
+            bean.helloCall();
+
+            ((ClassPathXmlApplicationContext) factory).close();
+        }
+    }
+    ~~~
+
+	![image](https://user-images.githubusercontent.com/52989294/87295031-8f89b680-c53f-11ea-8644-fb7e3bb7c786.png)
+
 ***
 
 ## src/sample8
 
 - Emp.java
 
-~~~ java
-package sample8;
+    ~~~ java
+    package sample8;
 
-public class Emp {
-	private String name;
-	private int salary;
+    public class Emp {
+        private String name;
+        private int salary;
 
-	public Emp() {
-		super();
-	}
+        public Emp() {
+            super();
+        }
 
-	public Emp(String name, int salary) {
-		super();
-		this.name = name;
-		this.salary = salary;
-	}
+        public Emp(String name, int salary) {
+            super();
+            this.name = name;
+            this.salary = salary;
+        }
 
-	@Override
-	public String toString() {
-		return "이름 : " + name + " / 급여 : " + salary;
-	}
-}
-~~~
+        @Override
+        public String toString() {
+            return "이름 : " + name + " / 급여 : " + salary;
+        }
+    }
+    ~~~
 
 - Developer.java
 
-~~~ java
-package sample8;
+    ~~~ java
+    package sample8;
 
-public class Developer {
-	private Emp emp;
-	private String dept;
+    public class Developer {
+        private Emp emp;
+        private String dept;
 
-	public Developer() {
-		super();
-	}
+        public Developer() {
+            super();
+        }
 
-	public Developer(Emp emp, String dept) {
-		this.emp = emp;
-		this.dept = dept;
-	}
+        public Developer(Emp emp, String dept) {
+            this.emp = emp;
+            this.dept = dept;
+        }
 
-	@Override
-	public String toString() {
-		return emp.toString() + " / 부서 : " + dept + "(개발부)";
-	}
-}
-~~~
+        @Override
+        public String toString() {
+            return emp.toString() + " / 부서 : " + dept + "(개발부)";
+        }
+    }
+    ~~~
 
 - Engineer.java
 
-~~~ java
-package sample8;
+    ~~~ java
+    package sample8;
 
-public class Engineer {
-	private Emp emp;
-	private String dept;
+    public class Engineer {
+        private Emp emp;
+        private String dept;
 
-	public Engineer() {
-		super();
-	}
+        public Engineer() {
+            super();
+        }
 
-	public Engineer(Emp emp, String dept) {
-		this.emp = emp;
-		this.dept = dept;
-	}
+        public Engineer(Emp emp, String dept) {
+            this.emp = emp;
+            this.dept = dept;
+        }
 
-	@Override
-	public String toString() {
-		return emp.toString() + " / 부서 : " + dept + "(기술부)";
-	}
-}
-~~~
+        @Override
+        public String toString() {
+            return emp.toString() + " / 부서 : " + dept + "(기술부)";
+        }
+    }
+    ~~~
 
 - beans.xml
 
-~~~ xml
-<?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    ~~~ xml
+    <?xml version="1.0" encoding="UTF-8"?>
+    <beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean id="developer" class="sample8.Developer">
-		<constructor-arg name="emp" ref="emp1" />
-		<constructor-arg name="dept" value="개발1팀" />
-	</bean>
+        <bean id="developer" class="sample8.Developer">
+            <constructor-arg name="emp" ref="emp1" />
+            <constructor-arg name="dept" value="개발1팀" />
+        </bean>
 
-	<bean id="engineer" class="sample8.Engineer">
-		<constructor-arg name="emp" ref="emp2" />
-		<constructor-arg name="dept" value="기술1팀" />
-	</bean>
+        <bean id="engineer" class="sample8.Engineer">
+            <constructor-arg name="emp" ref="emp2" />
+            <constructor-arg name="dept" value="기술1팀" />
+        </bean>
 
-	<bean id="emp1" class="sample8.Emp">
-		<constructor-arg name="name" value="강호동" />
-		<constructor-arg name="salary" value="1500000" />
-	</bean>
+        <bean id="emp1" class="sample8.Emp">
+            <constructor-arg name="name" value="강호동" />
+            <constructor-arg name="salary" value="1500000" />
+        </bean>
 
-	<bean id="emp2" class="sample8.Emp">
-		<constructor-arg name="name" value="이순신" />
-		<constructor-arg name="salary" value="2500000" />
-	</bean>
-</beans>
-~~~
+        <bean id="emp2" class="sample8.Emp">
+            <constructor-arg name="name" value="이순신" />
+            <constructor-arg name="salary" value="2500000" />
+        </bean>
+    </beans>
+    ~~~
 
 - EmpMain.java
 
-~~~ java
-package sample8;
+    ~~~ java
+    package sample8;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+    import org.springframework.context.ApplicationContext;
+    import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-public class EmpMain {
-	public static void main(String[] args) {
-		ApplicationContext factory = new ClassPathXmlApplicationContext("sample8/beans.xml");
+    public class EmpMain {
+        public static void main(String[] args) {
+            ApplicationContext factory = new ClassPathXmlApplicationContext("sample8/beans.xml");
 
-		Developer res = (Developer) factory.getBean("developer");
-		System.out.println(res.toString());
+            Developer res = (Developer) factory.getBean("developer");
+            System.out.println(res.toString());
 
-		Engineer res2 = (Engineer) factory.getBean("engineer");
-		System.out.println(res2.toString());
+            Engineer res2 = (Engineer) factory.getBean("engineer");
+            System.out.println(res2.toString());
 
-		((ClassPathXmlApplicationContext) factory).close();
-	}
-}
-~~~
+            ((ClassPathXmlApplicationContext) factory).close();
+        }
+    }
+    ~~~
+
+	![image](https://user-images.githubusercontent.com/52989294/87295307-f4451100-c53f-11ea-981b-1bb7e2225c77.png)
 
 ***
 
@@ -1338,138 +1353,141 @@ public class EmpMain {
 
 - Emp.java
 
-~~~ java
-package sample9;
+    ~~~ java
+    package sample9;
 
-public class Emp {
-	private String name;
-	private int salary;
+    public class Emp {
+        private String name;
+        private int salary;
 
-	public Emp() {
-		super();
-	}
+        public Emp() {
+            super();
+        }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+        public void setName(String name) {
+            this.name = name;
+        }
 
-	public void setSalary(int salary) {
-		this.salary = salary;
-	}
+        public void setSalary(int salary) {
+            this.salary = salary;
+        }
 
-	@Override
-	public String toString() {
-		return "이름 : " + name + " / 급여 : " + salary;
-	}
-}
-~~~
+        @Override
+        public String toString() {
+            return "이름 : " + name + " / 급여 : " + salary;
+        }
+    }
+    ~~~
 
 - Developer.java
 
-~~~ java
-package sample9;
+    ~~~ java
+    package sample9;
 
-public class Developer {
-	private Emp emp;
-	private String dept;
+    public class Developer {
+        private Emp emp;
+        private String dept;
 
-	public Developer() {
-		super();
-	}
+        public Developer() {
+            super();
+        }
 
-	public Developer(Emp emp) {
-		this.emp = emp;
-	}
+        public Developer(Emp emp) {
+            this.emp = emp;
+        }
 
-	public void setDept(String dept) {
-		this.dept = dept;
-	}
+        public void setDept(String dept) {
+            this.dept = dept;
+        }
 
-	@Override
-	public String toString() {
-		return emp.toString() + " / 부서 : " + dept + "(개발부)";
-	}
-}
-~~~
+        @Override
+        public String toString() {
+            return emp.toString() + " / 부서 : " + dept + "(개발부)";
+        }
+    }
+    ~~~
 
 - Engineer.java
 
-~~~ java
-package sample9;
+    ~~~ java
+    package sample9;
 
-public class Engineer {
-	private Emp emp;
-	private String dept;
+    public class Engineer {
+        private Emp emp;
+        private String dept;
 
-	public Engineer() {
-		super();
-	}
+        public Engineer() {
+            super();
+        }
 
-	public void setEmp(Emp emp) {
-		this.emp = emp;
-	}
+        public void setEmp(Emp emp) {
+            this.emp = emp;
+        }
 
-	public void setDept(String dept) {
-		this.dept = dept;
-	}
+        public void setDept(String dept) {
+            this.dept = dept;
+        }
 
-	@Override
-	public String toString() {
-		return emp.toString() + " / 부서 : " + dept + "(기술부)";
-	}
-}
-~~~
+        @Override
+        public String toString() {
+            return emp.toString() + " / 부서 : " + dept + "(기술부)";
+        }
+    }
+    ~~~
 
 - beans.xml
 
-~~~ xml
-<?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    ~~~ xml
+    <?xml version="1.0" encoding="UTF-8"?>
+    <beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<!-- 매개인자가 class일 때는 ref로 처리한다. -->
-	<bean id="developer" class="sample9.Developer">
-		<constructor-arg name="emp" ref="emp1" />
-		<property name="dept" value="개발1팀" />
-	</bean>
-	<bean id="engineer" class="sample9.Engineer">
-		<property name="emp" ref="emp2" />
-		<property name="dept" value="기술1팀" />
-	</bean>
-	<bean id="emp1" class="sample9.Emp">
-		<property name="name" value="강호동" />
-		<property name="salary" value="1500000" />
-	</bean>
-	<bean id="emp2" class="sample9.Emp">
-		<property name="name" value="이순신" />
-		<property name="salary" value="2500000" />
-	</bean>
-</beans>
-~~~
+        <!-- 매개인자가 class일 때는 ref로 처리한다. -->
+        <bean id="developer" class="sample9.Developer">
+            <constructor-arg name="emp" ref="emp1" />
+            <property name="dept" value="개발1팀" />
+        </bean>
+        <bean id="engineer" class="sample9.Engineer">
+            <property name="emp" ref="emp2" />
+            <property name="dept" value="기술1팀" />
+        </bean>
+        <bean id="emp1" class="sample9.Emp">
+            <property name="name" value="강호동" />
+            <property name="salary" value="1500000" />
+        </bean>
+        <bean id="emp2" class="sample9.Emp">
+            <property name="name" value="이순신" />
+            <property name="salary" value="2500000" />
+        </bean>
+    </beans>
+    ~~~
 
 - EmpMain.java
 
-~~~ java
-package sample9;
+    ~~~ java
+    package sample9;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+    import org.springframework.context.ApplicationContext;
+    import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-public class EmpMain {
-	public static void main(String[] args) {
-		ApplicationContext factory = new ClassPathXmlApplicationContext("sample9/beans.xml");
+    public class EmpMain {
+        public static void main(String[] args) {
+            ApplicationContext factory = new ClassPathXmlApplicationContext("sample9/beans.xml");
 
-		Developer res = (Developer) factory.getBean("developer");
-		System.out.println(res.toString());
+            Developer res = (Developer) factory.getBean("developer");
+            System.out.println(res.toString());
 
-		Engineer res2 = (Engineer) factory.getBean("engineer");
-		System.out.println(res2.toString());
+            Engineer res2 = (Engineer) factory.getBean("engineer");
+            System.out.println(res2.toString());
 
-		((ClassPathXmlApplicationContext) factory).close();
-	}
-}
-~~~
+            ((ClassPathXmlApplicationContext) factory).close();
+        }
+    }
+    ~~~
+
+	![image](https://user-images.githubusercontent.com/52989294/87295421-1b9bde00-c540-11ea-8874-eacbfa0563b5.png)
+
 
 
 

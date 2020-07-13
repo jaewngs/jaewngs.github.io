@@ -33,6 +33,10 @@ layout: post
         - 싱글톤 레지스토리
         	- 스프링에서 직접 싱글톤 형태의 오브젝트를 만들고 관리하는 기능을 제공하는 것을 말함
         	- 스프링 빈 오브젝트는 내부적으로 싱글톤 레지스트리를 만들어서 연동함
+	- sample5 : setter injection 으로 의존성 주입
+	- sample6 : 다형성을 이용하여 생성자로 is ~ a 관계의 객체 값을 이용하여 의존성 주입
+	- sample7 : xml 설정 파일 import하여 나열하고 호출한 결과를 확인
+	- sample8,9 : 상속관계가 아닌 단일 클래스 값을 이용하여 의존성 주입
 
 ***
 
@@ -249,14 +253,69 @@ layout: post
 - 다양한 유형의 빈을 생성하고 분배하는 책임을 짐
 - 클래스를 객체화 할 때 협업하는 객체 간의 연관관계를 생성함
 - 스프링에서는 다양한 BeanFactory 구현 클래스가 있음
-- 사진있음 내용 추가 할것!
+- 가장 유용한 것은 XmlBeanFactory로서 xml파일에 기술되어 있는 정의를 바탕으로 빈을 로딩함
+
+	~~~ java
+    BeanFactoy factory = new XmlBeanFactory(new FileSystemResource("beans.xml"));
+    MyBean myBean = (MyBean)factory.getBean("myBean");
+	~~~
+
+- 스프링은 org.springframework.core.io.Resource 인터페이스를 사용해서 다양한 종류의 자원을 동일한 방식으로 표현할 수 있도록 하며, Resource를 이용하여 XmlBeanFactory에 설정 정보를 전달한다.
 
 ***
 
-### 
+- Resource 구현 클래스
+	- FileSystemResource(파일로부터)
+	- InputStreamResource(스트림으로부터)
+	- ClassPathResource(클래스 패스로부터)
+	- UrlResource(url로부터)
+	- ServletContextResource(ServletContext로부터)
+	- PortletContextResource(포틀릿으로부터)
 
+	- 포틀릿이란?
+		- 포틀릿은 복합페이지의 컨텍스트 내에 결집되기 위해 특별히 고안된 웹컴포넌트이다.
+		- 통상 많은 포틀릿들은 포탈페이지의 단일 요청(request)로 호출된다.
+		- 각 포틀릿은 마크업 조각을 생성한다.
+		- 그것은 다른 포틀릿의 마크업과 결합되어 전체 포탈페이지 마크업이 된다.
+
+	-  포탈이란?
+		- 포틀릿 스펙에 따르면 " 포탈은 개인화, 싱글사인온, 다른 소스와 호스트의 정보시스템 프레젠테이션층 정보를 집적하는 등의 기능을 공통적으로 제공하는 웹 어플리케이션이다. 집적(aggregation)은 웹페이지에서 다른소스로부터 콘텐츠를 통합하는 행위를 말한다." 라고 정의하고 있다.
 
 ***
+
+### ApplicationContext
+- BeanFactory보다 좀 더 진보된 컨테이너(BeanFactory 인터페이스를 확장함)
+- 빈을 로딩하고, 빈들을 Wiring 하며, 요청에 따라 빈을 분배함
+- 국제화 지원을 위해 텍스트 메시지를 해석함
+- 이미지 등의 자원을 로딩하는 범용적인 방법을 제공함
+- 리스너로 등록되어 있는 빈에게 이벤트를 발행할 수 있음
+
+- ApplicationContext의 구현 클래스
+	- ClassPathXmlApplicationContext
+    	- 클래스 경로에 있는 xml파일로부터 context정의를 로딩하면, context정의를 클래스 경로에 있는 자원으로 취급함
+	- FileSystemXmlApplicationContext
+		- 파일 시스템에 있는 xml파일로부터 context정의를 로딩함
+	- XmlWebApplicationContext
+		- 웹 어플리케이션에 포함되어 있는 xml파일로부터 context 정의를 로딩함
+
+***
+
+### BeanFactory Life Cycle(순서)
+- 인스턴스화
+- 프로퍼티 채우기
+- BeanNameAware의 setBeanName()
+- BeanFactoryAware의 setBeanFactory()
+- BeanPostProcessor의 전처리
+- InitializingBean의 afterPropertiesSet( )
+- 커스텀 init-method 호출
+- BeanPostProcessor의 후처리
+- 즉시 사용 가능한 상태의 빈
+- 컨테이너 종료
+- DisposableBean의 destroy( )
+- 커스텀 destroy-method 호출
+
+***
+
 ## src/sample1
 - MessageBean.java
 
@@ -555,24 +614,867 @@ public class MTest {
 ***
 
 ## src/sample3
-- UserVo.java
-
-- UserServiceImpl.java
 
 - UserService.java
 
+~~~ java
+package sample3;
+
+public interface UserService {
+	public void addUser(UserVo vo);
+}
+~~~
+
+- UserServiceImpl.java
+
+~~~ java
+package sample3;
+
+public class UserServiceImpl implements UserService {
+
+	public UserServiceImpl() {
+		super();
+		System.out.println("UserService 생성자 호출");
+	}
+
+	@Override
+	public void addUser(UserVo vo) {
+		System.out.println("UserService : addUser() 메소드 호출");
+		System.out.println("이름 : " + vo.getUserName());
+	}
+}
+~~~
+
+- UserVo.java
+
+~~~ java
+package sample3;
+
+import java.util.Date;
+import java.util.Properties;
+
+public class UserVo {
+	private String userName;
+	private Properties per;
+	private Date my_date = new Date();
+
+	public UserVo() {
+		super();
+	}
+
+	public UserVo(String userName) {
+		super();
+		this.userName = userName;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public Properties getPer() {
+		return per;
+	}
+
+	public void setPer(Properties per) {
+		this.per = per;
+	}
+
+	public Date getMy_date() {
+		return my_date;
+	}
+
+	public void setMy_date(Date my_date) {
+		this.my_date = my_date;
+	}
+
+	@Override
+	public String toString() {
+		return "UserVo [userName=" + userName + ", per=" + per + ", my_date=" + my_date + "]";
+	}
+}
+~~~
+
 - applicationContext.xml
 
+~~~ xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="userService" class="sample3.UserServiceImpl" />
+
+	<bean id="mdate" class="java.util.Date">
+		<constructor-arg value="2020" />
+		<constructor-arg value="12" />
+		<constructor-arg value="23" />
+	</bean>
+
+	<bean id="mvo" class="sample3.UserVo">
+		<property name="my_date" ref="mdate" />
+		<property name="per">
+			<value>
+				a=1, b=2, c=3
+			</value>
+		</property>
+	</bean>
+</beans>
+~~~
+
 - MTest.java
+
+~~~ java
+package sample3;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import sample2.Address;
+
+public class MTest {
+	public static void main(String[] args) {
+		ApplicationContext factory =
+				new ClassPathXmlApplicationContext("sample3/applicationContext.xml");
+
+		UserVo res = (UserVo) factory.getBean("mvo");
+		System.out.println(res.getMy_date());
+		System.out.println(res.getPer());
+	}
+}
+~~~
+
+***
 
 ## src/sample4
 - AbstractTest.java
 
+~~~ java
+package sample4;
+
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
+public abstract class AbstractTest { // 싱글톤 패턴을 구현
+	public abstract String dayInfo(); // 추상 메소드
+
+	public static AbstractTest getInstance() {
+		// 싱글톤 : 현재 클래스를 객체를 생성한 다음 static으로 리턴한다.
+
+		GregorianCalendar cal = new GregorianCalendar();
+		int day = cal.get(Calendar.DAY_OF_WEEK);
+		switch(day) {
+
+		case 1: return new Sunday();
+		case 2: return new Monday();
+		case 3: return new Tuesday();
+		case 4: return new Wednesday();
+		case 5: return new Thursday();
+		case 6: return new Friday();
+		case 7: return new Saturday();
+		}
+		return null;
+	}
+
+	public AbstractTest() {
+		super();
+	}
+}
+~~~
+
 - Monday.java ~ Sunday.java
+	- 월~일 양식 똑같음
+
+~~~ java
+package sample4;
+
+public class Monday extends AbstractTest {
+
+	@Override
+	public String dayInfo() {
+		return "월요일입니다";
+	}
+}
+~~~
 
 - app.xml
 
+~~~ xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="test" class="sample4.AbstractTest"
+		factory-method="getInstance" />
+</beans>
+~~~
+
 - TestApp.java
+
+~~~ java
+package sample4;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class TestApp {
+
+	public static void main(String[] args) {
+		ApplicationContext factory = new ClassPathXmlApplicationContext("sample4/app.xml");
+
+		AbstractTest bean = (AbstractTest) factory.getBean("test");
+
+		System.out.println("오늘은 " + bean.dayInfo());
+
+		// beans 객체를 소멸하는 메소드
+		((ClassPathXmlApplicationContext) factory).close();
+	}
+}
+~~~
+
+***
+
+## src/sample5
+
+- DataVo.java
+
+~~~ java
+package sample5;
+
+// xml에 <constructor-arg>가 없어서 get필요 없음
+public class DateVo {
+	private String name;
+	private String birth;
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setBirth(String birth) {
+		this.birth = birth;
+	}
+
+	@Override
+	public String toString() {
+		return name + "의 생일은 " + birth + " 입니다.";
+	}
+
+}
+~~~
+
+- data.xml
+
+~~~ xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="hong" class="sample5.DateVo">
+		<property name="name" value="홍길동" />
+		<property name="birth" value="1991-10-21" />
+	</bean>
+
+	<bean id="lee" class="sample5.DateVo">
+		<property name="name" value="이길동" />
+		<property name="birth" value="1992-05-15" />
+	</bean>
+
+</beans>
+~~~
+
+- Sample5Main.java
+
+~~~ java
+package sample5;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class Sample5Main {
+	public static void main(String[] args) {
+		ApplicationContext factory = new ClassPathXmlApplicationContext("sample5/data.xml");
+
+		DateVo res = (DateVo) factory.getBean("hong");
+		System.out.println(res.toString());
+
+		DateVo res2 = factory.getBean("lee", DateVo.class);
+		System.out.println(res2.toString());
+
+		((ClassPathXmlApplicationContext) factory).close();
+	}
+}
+~~~
+
+***
+
+## src/sample6
+- Emp.java
+
+~~~ java
+package sample6;
+
+public class Emp {
+	private String name;
+	private int salary;
+
+	public Emp() {
+		super();
+	}
+
+	public Emp(String name, int salary) {
+		super();
+		this.name = name;
+		this.salary = salary;
+	}
+
+	@Override
+	public String toString() {
+		return "이름 : " + name + ", 급여 : " + salary;
+	}
+}
+~~~
+
+- Developer.java
+
+~~~ java
+package sample6;
+
+public class Developer extends Emp {
+	private String dept;
+
+	public Developer() {
+		super();
+	}
+
+	public Developer(String name, int salary) {
+		super(name, salary);
+	}
+
+	public void setDept(String dept) {
+		this.dept = dept;
+	}
+
+	@Override
+	public String toString() {
+		return super.toString() + " 부서 : " + dept + "(개발부)";
+	}
+}
+~~~
+
+- Engineer.java
+
+~~~ java
+package sample6;
+
+public class Engineer extends Emp {
+
+	private String dept;
+
+	public Engineer() {
+		super();
+	}
+
+	public Engineer(String name, int salary) {
+		super(name, salary);
+	}
+
+	public void setDept(String dept) {
+		this.dept = dept;
+	}
+
+	@Override
+	public String toString() {
+		return super.toString() + " 부서 : " + dept + "(기술부)";
+	}
+}
+~~~
+
+- beans.xml
+
+~~~ xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="developer" class="sample6.Developer">
+		<constructor-arg index ="0" value="강호동" />
+		<constructor-arg  index ="1" value="1500000" />
+		<property name = "dept" value = "개발1팀"/>
+	</bean>
+
+	<bean id="engineer" class="sample6.Engineer">
+		<constructor-arg index ="0" value="이순신" />
+		<constructor-arg  index ="1" value="2500000" />
+		<property name = "dept" value = "기술1팀"/>
+	</bean>
+</beans>
+~~~
+
+- EmpMain.java
+
+~~~ java
+package sample6;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class EmpMain {
+	public static void main(String[] args) {
+		ApplicationContext factory = new ClassPathXmlApplicationContext("sample6/beans.xml");
+
+		Emp res = (Emp) factory.getBean("developer");
+		System.out.println(res.toString());
+
+		Engineer res2 = factory.getBean("engineer", Engineer.class);
+		System.out.println(res2.toString());
+
+		((ClassPathXmlApplicationContext) factory).close();
+	}
+}
+~~~
+
+***
+
+## src/sample7(파일 생성하기)
+
+- Outputter.java(interface)
+
+~~~ java
+package sample7;
+
+import java.io.IOException;
+
+// 인터페이스, 추상클래스, 선조클래스를
+// 상속 받는 후손 클래스는 메소드 재정의시 선조의 접근제한자와 같거나
+// 영역이 더 넓어야 한다.
+public interface Outputter {
+	// public abstract void output(String message) throws IOException;
+	void output(String message) throws IOException;
+}
+~~~
+
+- FileOutput.java
+
+~~~ java
+package sample7;
+
+import java.io.FileWriter;
+import java.io.IOException;
+
+public class FileOutput implements Outputter {
+	private String filePath; // 출력파일에 대한 경로와 파일 이름을 저장할 필드
+
+	private FileOutput() {
+		System.out.println("기본 생성자야~~");
+	}
+
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+		System.out.println("2. 파일 경로와 파일 이름 설정");
+	}
+
+	@Override
+	public void output(String message) throws IOException {
+		FileWriter out = new FileWriter(filePath);
+		out.write(message);
+		out.close();
+		System.out.println("5.파일 전송 성공");
+	}
+}
+~~~
+
+- MessageBean.java(interface)
+
+~~~ java
+package sample7;
+
+public interface MessageBean {
+	public void helloCall();
+}
+~~~
+
+- MessageBeanImpl.java
+
+~~~ java
+package sample7;
+
+import java.io.IOException;
+
+public class MessageBeanImpl implements MessageBean {
+	private String name;
+	private String phone;
+	private Outputter outputter; // has ~ a
+
+	// 생성자로 name을 입력받음
+	public MessageBeanImpl(String name) {
+		super();
+		this.name = name;
+		System.out.println("1. Bean의 생성자 호출");
+	}
+
+	// setter를 통해서 phone과 outputter를 입력받음
+	public void setPhone(String phone) {
+		this.phone = phone;
+		System.out.println("3. phone 입력받음");
+	}
+
+	public void setOutputter(Outputter outputter) {
+		this.outputter = outputter;
+		System.out.println("4. outputter를 입력 받음");
+	}
+
+	@Override
+	public void helloCall() {
+		String message = name + " : " + phone;
+		System.out.println(message);
+		try {
+			outputter.output(message);
+			System.out.println("6.작업 끝");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+}
+~~~
+
+- applicationContext.xml
+~~~ xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- xml파일이 여러개일 때 방법1) import하기 -->
+	<import resource="app.xml" />
+	<bean id="messageBean" class="sample7.MessageBeanImpl">
+		<constructor-arg value="이순신" />
+		<property name="phone" value="123-4567" />
+		<property name="outputter" ref="outputRef" />
+	</bean>
+</beans>
+~~~
+
+- app.xml
+~~~ xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="outputRef02" class="sample7.FileOutput" />
+
+	<bean id="outputRef" class="sample7.FileOutput">
+		<property name="filePath">
+			<value>data.txt</value>
+		</property>
+	</bean>
+
+</beans>
+~~~
+
+- HelloSpring.java
+~~~ java
+package sample7;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class HelloSpring {
+	public static void main(String[] args) {
+		ApplicationContext factory
+		= new ClassPathXmlApplicationContext("sample7/applicationContext.xml");
+
+		// xml파일이 여러개일 때 방법2) , 로 나열하기
+		//ApplicationContext factory
+		//= new ClassPathXmlApplicationContext("sample7/app.xml","sample7/applicationContext.xml");
+
+		System.out.println("*** End ***");
+
+		MessageBean bean = (MessageBean) factory.getBean("messageBean");
+		bean.helloCall();
+
+		((ClassPathXmlApplicationContext) factory).close();
+	}
+}
+~~~
+***
+
+## src/sample8
+
+- Emp.java
+
+~~~ java
+package sample8;
+
+public class Emp {
+	private String name;
+	private int salary;
+
+	public Emp() {
+		super();
+	}
+
+	public Emp(String name, int salary) {
+		super();
+		this.name = name;
+		this.salary = salary;
+	}
+
+	@Override
+	public String toString() {
+		return "이름 : " + name + " / 급여 : " + salary;
+	}
+}
+~~~
+
+- Developer.java
+
+~~~ java
+package sample8;
+
+public class Developer {
+	private Emp emp;
+	private String dept;
+
+	public Developer() {
+		super();
+	}
+
+	public Developer(Emp emp, String dept) {
+		this.emp = emp;
+		this.dept = dept;
+	}
+
+	@Override
+	public String toString() {
+		return emp.toString() + " / 부서 : " + dept + "(개발부)";
+	}
+}
+~~~
+
+- Engineer.java
+
+~~~ java
+package sample8;
+
+public class Engineer {
+	private Emp emp;
+	private String dept;
+
+	public Engineer() {
+		super();
+	}
+
+	public Engineer(Emp emp, String dept) {
+		this.emp = emp;
+		this.dept = dept;
+	}
+
+	@Override
+	public String toString() {
+		return emp.toString() + " / 부서 : " + dept + "(기술부)";
+	}
+}
+~~~
+
+- beans.xml
+
+~~~ xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="developer" class="sample8.Developer">
+		<constructor-arg name="emp" ref="emp1" />
+		<constructor-arg name="dept" value="개발1팀" />
+	</bean>
+
+	<bean id="engineer" class="sample8.Engineer">
+		<constructor-arg name="emp" ref="emp2" />
+		<constructor-arg name="dept" value="기술1팀" />
+	</bean>
+
+	<bean id="emp1" class="sample8.Emp">
+		<constructor-arg name="name" value="강호동" />
+		<constructor-arg name="salary" value="1500000" />
+	</bean>
+
+	<bean id="emp2" class="sample8.Emp">
+		<constructor-arg name="name" value="이순신" />
+		<constructor-arg name="salary" value="2500000" />
+	</bean>
+</beans>
+~~~
+
+- EmpMain.java
+
+~~~ java
+package sample8;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class EmpMain {
+	public static void main(String[] args) {
+		ApplicationContext factory = new ClassPathXmlApplicationContext("sample8/beans.xml");
+
+		Developer res = (Developer) factory.getBean("developer");
+		System.out.println(res.toString());
+
+		Engineer res2 = (Engineer) factory.getBean("engineer");
+		System.out.println(res2.toString());
+
+		((ClassPathXmlApplicationContext) factory).close();
+	}
+}
+~~~
+
+***
+
+## src/sample9
+
+- Emp.java
+
+~~~ java
+package sample9;
+
+public class Emp {
+	private String name;
+	private int salary;
+
+	public Emp() {
+		super();
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setSalary(int salary) {
+		this.salary = salary;
+	}
+
+	@Override
+	public String toString() {
+		return "이름 : " + name + " / 급여 : " + salary;
+	}
+}
+~~~
+
+- Developer.java
+
+~~~ java
+package sample9;
+
+public class Developer {
+	private Emp emp;
+	private String dept;
+
+	public Developer() {
+		super();
+	}
+
+	public Developer(Emp emp) {
+		this.emp = emp;
+	}
+
+	public void setDept(String dept) {
+		this.dept = dept;
+	}
+
+	@Override
+	public String toString() {
+		return emp.toString() + " / 부서 : " + dept + "(개발부)";
+	}
+}
+~~~
+
+- Engineer.java
+
+~~~ java
+package sample9;
+
+public class Engineer {
+	private Emp emp;
+	private String dept;
+
+	public Engineer() {
+		super();
+	}
+
+	public void setEmp(Emp emp) {
+		this.emp = emp;
+	}
+
+	public void setDept(String dept) {
+		this.dept = dept;
+	}
+
+	@Override
+	public String toString() {
+		return emp.toString() + " / 부서 : " + dept + "(기술부)";
+	}
+}
+~~~
+
+- beans.xml
+
+~~~ xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 매개인자가 class일 때는 ref로 처리한다. -->
+	<bean id="developer" class="sample9.Developer">
+		<constructor-arg name="emp" ref="emp1" />
+		<property name="dept" value="개발1팀" />
+	</bean>
+	<bean id="engineer" class="sample9.Engineer">
+		<property name="emp" ref="emp2" />
+		<property name="dept" value="기술1팀" />
+	</bean>
+	<bean id="emp1" class="sample9.Emp">
+		<property name="name" value="강호동" />
+		<property name="salary" value="1500000" />
+	</bean>
+	<bean id="emp2" class="sample9.Emp">
+		<property name="name" value="이순신" />
+		<property name="salary" value="2500000" />
+	</bean>
+</beans>
+~~~
+
+- EmpMain.java
+
+~~~ java
+package sample9;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class EmpMain {
+	public static void main(String[] args) {
+		ApplicationContext factory = new ClassPathXmlApplicationContext("sample9/beans.xml");
+
+		Developer res = (Developer) factory.getBean("developer");
+		System.out.println(res.toString());
+
+		Engineer res2 = (Engineer) factory.getBean("engineer");
+		System.out.println(res2.toString());
+
+		((ClassPathXmlApplicationContext) factory).close();
+	}
+}
+~~~
+
+
+
+
+
 
 
 

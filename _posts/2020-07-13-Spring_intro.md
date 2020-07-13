@@ -15,7 +15,8 @@ layout: post
 
 ## [오늘 할 내용]
 1. 이클립스에 Spring 환경 구축하기
-2. SpringDI
+2. Spring이란?
+3. SpringDI
 	- sample1 : DI 개념. is-a 관계를 이용한 구도 학습
 	- sample2 : has-a 관계를 이용하여 DI를 이용할 수 있음
 	- sample3 : setter, constructor injection의 이해도를 구현한다.
@@ -102,6 +103,124 @@ layout: post
 
 ***
 
+## Spring이란?
+- 오픈 소스 프레임워크
+	- 엔터프라이즈 어플리케이션 개발의 복잡성을 줄여주기 위한 목적
+	- EJB 사용으로 수행되었던 모든 기능을 일반 POJO(Plain Old Java Object)를 사용해서 가능하게 함
+		- 경량 컨테이너(light weight container)
+- 주요 개념
+	- 의존성 주입(lightweight dependency injection)
+	- 관점 지향 컨테이너(aspect-oriented container)
+
+***
+
+### POJO란?
+- Plain Old Java Object 약자
+- Plain : component interface를 상속받지 않는 특징(특정 프레임워크에 종속되지 않는)
+- Old : EJB 이전의 자바 클래스를 의미
+
+***
+
+### Spring 장점
+- 경량 컨테이너 - 객체의 라이프 사이클 관리, J2EE 구현을 위한 다양한 API 제공
+- DI(Dependency Injection) 지원
+- AOP(Aspect Oriented Programming) 지원
+- POJO(Plain Old Java Object) 지원
+- JDBC를 위한 다양한 API 지원
+- Transaction 처리를 위한 일괄된 방법 제공
+- 다양한 API와의 연동 지원
+
+***
+
+### 스프링 프레임워크의 취지
+- 기술 자체보다 좋은 설계가 중요함
+- 인터페이스를 통한 느슨한 결합은 자바 빈의 훌륭한 모델임
+	- 느슨한 결합이란?
+		- 두 객체가 느슨하게 결합되어 있다는 것이란, 그 둘이 상호작용을 하긴 하지만, 서로에 대해 서로 잘 모른다는 뜻
+		- 느슨하게 결합되는 디자인을 사용하면 변경사항이 생겨도 무난히 처리할 수 있는 유연한 객체지향 시스템을 구축 할 수 있다.
+- 코드는 테스트하기 쉽고 편해야 함
+- EJB의 복잡도에서 벗어나야 함
+
+***
+
+### 의존성 주입(Dependency Injection, DI)
+- 의존 관계 주입(dependency injection)
+	- 객체 간의 의존관계를 객체 자신이 아닌 외부의 조립기가 수행함
+	- 제어의 역행(inversion of control, IoC)이라는 의미로 사용되었음
+	- DI를 통해 시스템에 있는 각 객체를 조정하는 외부 개체가 객체들에게 생성시에 의존관계를 주어짐
+		- 즉, 의존이 객체로 주입됨
+		- 객체가 협업하는 객체의 참조를 어떻게 얻어낼 것인가라는 관점에서 책임성의 역행(inversion of responsibility)임
+	- 느슨한 결합(loose coupling)이 주요 강점
+		- 객체는 인터페이스에 의한 의존관계만을 알고 있으며, 이 의존관계는 구현 클래스에 대한 차이를 모르는채 서로 다른 구현으로 대체가 가능
+
+***
+
+### 스프링 프레임워크와 DI(Dependency Injection)
+- 의존성이 높은 결합
+	- 자신이 사용할 DAO 객체를 직접 new 라는 키워드를 사용하여 생성하여 사용할 경우 의존성이 높음
+	- 프로젝트 스펙이 바뀌거나 다른 DAO를 참조해야 할 때 코드의 수정이 불가피함
+	- ex)
+
+    ~~~ java
+    class UserServiceImpl{
+        UserDaoJDBCImpl dao;
+        public void register(User user){ }
+        public User findUser(String name){
+        dao = new UserDaoJDBCImpl ( );
+        User r = dao.select(name);
+        return r;
+        }
+    }
+    ~~~
+
+    ~~~ java
+    class UserDaoJDBCImpl{
+        public User select(String name){
+            // 이름을 받아서 "select * from user where name = ?"
+        }
+    }
+    ~~~
+
+    ~~~ java
+    User res = new UserServiceImpl().findUser("홍길동");
+    ~~~
+
+- 인터페이스를 사용함
+	- 인터페이스를 사용하여 의존성은 조금 낮아졌으나 여전히 의존성이 높음
+
+- Factory 패턴을 이용하여 의존성을 낮춤
+	- DAO와 의존성은 낮아졌으나 Factory 클래스와의 의존성은 여전히 높음
+
+- 조립기(Assembler)를 통해 의존성 주입
+	- 객체 외부의 조립기가 각 객체의 의존관계를 설정해 줌
+	- 이를 DI패턴이라 함
+
+***
+
+### 스프링 프레임워크의 DI 방법
+- 특정 interface를 통한 의존성 설정
+	- 거의 사용하지 X
+
+- Setter를 통한 의존성 설정
+	- 클래스
+	- xml
+
+- Constructor를 통한 의존성 설정
+
+- IoC(Inversion of Control)란?
+	- 제어 역행화는 말 그대로 제어가 일반적인 흐름을 따르지 않고, 반대로 흘러간다는 뜻으로 각각의 프로그램이 가지고 있던 구현 객체에 대한 정보가 이젠 프레임워크에서 관리되는 것임.
+	- 현재는 DI라는 용어를 더 많이 사용함
+
+- 의존성이란?
+	- 보통 비즈니스 로직을 수행하기 위해 둘 이상의 클래스를 사용한다.
+	- 전통적으로 각 객체는 협업할 객체의 참조를 취득해야 하는 책임이 있다.
+	- 이것이 의존성이다. 객체 간의 결합도가 높으면 테스트하기 어려운 코드를 만들어 낸다.
+
+***
+
+***
+
+***
 ## src/sample1
 - MessageBean.java
 
@@ -168,6 +287,7 @@ public class MTest {
 	![image](https://user-images.githubusercontent.com/52989294/87262273-46f8db80-c4f4-11ea-911d-c335d51a305c.png)
 
 - beans, context 선언
+
 	![image](https://user-images.githubusercontent.com/52989294/87262330-8b847700-c4f4-11ea-8b5b-bdf6e34e2b5b.png)
 
 ***
@@ -401,12 +521,22 @@ public class MTest {
 ## src/sample3
 - UserVo.java
 
-- 
+- UserServiceImpl.java
 
+- UserService.java
 
+- applicationContext.xml
 
+- MTest.java
 
+## src/sample4
+- AbstractTest.java
 
+- Monday.java ~ Sunday.java
+
+- app.xml
+
+- TestApp.java
 
 
 

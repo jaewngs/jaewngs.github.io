@@ -218,7 +218,43 @@ layout: post
 
 ***
 
+### 스프링 프레임워크 컨테이너의 종류
+- BeanFactory
+	- org.springframework.beans.factory.BeanFactory
+	- 기본적인 의존성 주입을 지원하는 가장 간단한 형태의 컨테이너
+	- AOP를 지원하지 않음
+
+- ApplicationContext
+	- org.springframework.context.ApplicationContext
+	- 프로퍼티 파일의 메시지 해석, 이벤트 발행들의 서비스 제공
+
+- WebApplicationContext
+	- org.springframework.web.context.WebApplicationContext
+	- 웹 어플리케이션을 위한 ApplicationContext
+
+- BeanFactory와 ApplicationContext의 차이
+	- BeanFactory는 getBean( ) 메소드가 호출될 때까지 빈의 생성을 미룬다.
+	- 즉, BeanFactory는 모든 빈을 LazyLoading 한다.
+	- ApplicationContext는 시작할 때 모든 싱글턴 빈을 미리 로딩한다.
+	- 따라서, 빈이 필요할 때 즉시 사용될 수 있도록 보장해준다.(여러 개의 객체를 만들 수 있게 설정 가능함)
+
+- Lazy Loading이란?
+	- 객체를 실제로 사용할 때 initialize와 loading하자는 것이다.
+	- 그 객체를 실제로 사용할 때까지 최대한 initialize와 loading을 늦춰서 memory운용의 효율성을 꾀하는 방법임
+
 ***
+
+### BeanFactory
+- 가장 단순한 컨테이너
+- 다양한 유형의 빈을 생성하고 분배하는 책임을 짐
+- 클래스를 객체화 할 때 협업하는 객체 간의 연관관계를 생성함
+- 스프링에서는 다양한 BeanFactory 구현 클래스가 있음
+- 사진있음 내용 추가 할것!
+
+***
+
+### 
+
 
 ***
 ## src/sample1
@@ -410,7 +446,7 @@ public class ListAddress {
 
 	public ListAddress() {
 		super();
-		addr = new Address("111", "111", "111");
+		// addr = new Address("111", "111", "111"); 결합도 높다.
 	}
 
 	public ListAddress(Address addr) {
@@ -419,7 +455,7 @@ public class ListAddress {
 	}
 
 	public Address getAddr() {
-		return addr;  // addr.toString();
+		return addr; // addr.toString();
 	}
 
 	public void setAddr(Address addr) {

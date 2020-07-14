@@ -37,6 +37,23 @@ layout: post
 	- sample6 : 다형성을 이용하여 생성자로 is ~ a 관계의 객체 값을 이용하여 의존성 주입
 	- sample7 : xml 설정 파일 import하여 나열하고 호출한 결과를 확인
 	- sample8,9 : 상속관계가 아닌 단일 클래스 값을 이용하여 의존성 주입
+	- sample10 : 다형성 객체를 선언하고 자바코드로 빈 팩토리를 생성해서 각각의 동적 바인딩을 구현
+	- sample11 : lazy-init, depends-on = "참조되는 객체의 id"(sample2/applicationContext2.xml 참고)
+		- lazy-init
+            - 빈 팩토리를 이용해서 스프링에서 설정을 하고 난 후 객체를 id로 getBean()로 호출을 하게 되면 메모리에 올려진 객체들이 선언된 순서대로 생성된 것을 확인 할 수 있다.
+            - 기본적으로 스프링 컨테이너가 시작할 때 싱글톤에 의해 bean에 대해 모든 인스턴스화 된다.
+            - 만일 특정 싱글톤 유형에 대한 bean을 컨테이너가 시작할 때 인스턴스화 시키지 않고 해당 bean을 사용하고자 하는 시점에 인스턴스화 하고 싶을 때 사용하는 속성 키워드가 lazy-init이다.
+
+		- depends-on
+			- bean이 초기화 되기 전에 먼저 초기화 되는 키워드
+				- 특정 bean이 초기화 되기 전에 초기화 되어야 하는 bean을 명시적으로 선언
+				- 생성자와 setter 메소드로 값을 전달하기 이전에 메모리에 생성되는 객체가 정의 되어 메모리 체크를 할 때 많이 사용되는 키워드
+				- 미리 서버를 구동시켜 놓고 특정 리소스에 대한 작업을 체크할 때 사용됨
+	- sample12 : java.util의 컬렉션[list, set, map ... ]값을 inject 할 수 있다.
+	- sample13
+		- abstract = "true"  --->>> 일반 클래스를 추상 클래스로 선언하는 기능
+		- Merge = true --->>> collections 병합하는 키워드
+
 
 ***
 
@@ -1487,6 +1504,136 @@ layout: post
     ~~~
 
 	![image](https://user-images.githubusercontent.com/52989294/87295421-1b9bde00-c540-11ea-8874-eacbfa0563b5.png)
+
+***
+
+## src/sample10
+
+- TV.java
+
+~~~ java
+package sample10;
+
+public interface TV {
+	public void powerOn();
+	public void powerOff();
+	public void volumnDown();
+	public void volumnUp();
+}
+~~~
+
+- LgTV.java
+
+~~~ java
+package sample10;
+
+public class LgTV implements TV{
+
+	@Override
+	public void powerOn() {
+		System.out.println("LgTV --- 전원 켠다.");
+	}
+
+	@Override
+	public void powerOff() {
+		System.out.println("LgTV --- 전원 끈다.");
+	}
+
+	@Override
+	public void volumnDown() {
+		System.out.println("LgTV --- 소리 낮춘다.");
+	}
+
+	@Override
+	public void volumnUp() {
+		System.out.println("LgTV --- 소리 높인다.");
+	}
+}
+~~~
+
+- SamsungTV.java
+
+~~~ java
+package sample10;
+
+public class SamsungTV implements TV {
+
+	@Override
+	public void powerOn() {
+		System.out.println("SamsungTV --- 전원 켠다.");
+	}
+
+	@Override
+	public void powerOff() {
+		System.out.println("SamsungTV --- 전원 끈다.");
+	}
+
+	@Override
+	public void volumnDown() {
+		System.out.println("SamsungTV --- 소리 낮춘다.");
+	}
+
+	@Override
+	public void volumnUp() {
+		System.out.println("SamsungTV --- 소리 높인다.");
+	}
+}
+~~~
+
+- BeanFactory.java
+
+- MTest.java
+
+## src/sample11
+
+- TV.java ... sample10과 동일
+- LgTV.java
+- SamsungTV.java
+- BeanFactory.java ... sample10과 동일
+
+- applicationContext.xml
+- - MTest.java
+
+## src/sample12
+
+- Bar.java
+- Foo.java
+- applicationContext.xml
+- FooTestApp.java
+
+
+## src.sample13
+- Parent.java
+- applicationContext.xml
+- MTest.java
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

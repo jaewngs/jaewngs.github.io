@@ -23,12 +23,12 @@ layout: post
 
     - AOP의 장점 : 기존의 코드를 수정하지 않고도 필요한 공통 기능 모듈 적용 가능
     - AOP의 툴 4가지
-    	1. 자바언어를 확장한 언어를 사용하는 툴 : AspectJ
+    	- 자바언어를 확장한 언어를 사용하는 툴 : AspectJ
 			- 제록스 연구소 개발 -> Eclipse에 기증 -> 현재 IBM에서 지원 받아 개발중
 			- Aspect, PoingCut, Advice를 만들 수 있다.
-    	2. 기존의 자바 언어만으로 AOP 구현 가능 : AspectWerkZ
+    	- 기존의 자바 언어만으로 AOP 구현 가능 : AspectWerkZ
     		- Eclipse 프로젝트(PointCut, Advice)에서 XML로 정의할 수 있다.
-    	3. 대표적인 인터셉터 체인 방식의 구현 AOP 방식 : SpringAOP, JBossAOP
+    	- 대표적인 인터셉터 체인 방식의 구현 AOP 방식 : SpringAOP, JBossAOP
     		- 최근에 등장한 프레임워크, 어노테이션으로 정의할 수 있다.
     		- SpringDI패턴에서 동작하는 인터페이스이다.
     		- 기존 클래스에서 byte 코드를 수정하지 않고 JDK의 XML에서 지정한 bean의 객체를 통해 제어한다.
@@ -51,15 +51,15 @@ layout: post
                 - org.com.test..* : org.com.test 내의 서브 패키지에 속한 모든 하위요소
                 - Number+ : Number 또는 Number 서브타입의 모든 타입
                 - !(Number+) : Number 또는 Number 서브타입의 모든 타입이 아닌 것
-                - int || Integer : ing형 또는 Integer형
+                - int **||** Integer : ing형 또는 Integer형
                 - org.com.test..* && !Serializable+ : org.com.test 패키지 또는 하위서브 패키지 내에 존재하면서 Serializable의 타입이 아닌 모든 요소
 
             - 접근 지정에 따른 형식
                 - public static void main(..)
-                - !private * * (..) : 리턴 타입이 모든 타입이고, 0개 이상의 매개인자를 가진 메소드 중 접근 제한자가 private가 아닌 메소드
-                - *main(..) : 접근 지정자 명시하지 않으면 public 접근 제한자
-                - *main(*, ..) : 리턴 타입이 모든 타입이고 최소 1개의 모든 타입을 가진 메소드
-                - *main(*, .., String, *) : 리턴타입이 모든 타입이고 최소 3개의 매개인자를 가지며 끝에서 두번째 반드시 String 타입이어야 한다.
+                - !private ** * ** ** * ** (..) : 리턴 타입이 모든 타입이고, 0개 이상의 매개인자를 가진 메소드 중 접근 제한자가 private가 아닌 메소드
+                - ** *main(..) ** : 접근 지정자 명시하지 않으면 public 접근 제한자
+                - ** *main **(** * **, ..)  : 리턴 타입이 모든 타입이고 최소 1개의 모든 타입을 가진 메소드
+                - ** *main ** (** * **, .., String, ** * **) : 리턴타입이 모든 타입이고 최소 3개의 매개인자를 가지며 끝에서 두번째 반드시 String 타입이어야 한다.
 
             - 생성자 형식
                 - new(..) : 0개 이상의 모든 타입을 가진 생성자
@@ -75,7 +75,7 @@ layout: post
                 - withincode : 특정 메소드 또는 생성자 내에 정의된 코드를 정의하는 시점
                 - this : 해당 joinPoint를 정의하는 시점
                 - target : 대상 객체의 타입을 정의하는 시점
-                    - ex) call (* * (..)) && target(MyTest)
+                    - ex) call (** * ** ** * ** (..)) && target(MyTest)
                         - MyTest라는 클래스 내의 모든 메소드를 호출
 
 		3. advice : 각 joinpoint에 삽입되어 동작할 수 있는 코드

@@ -23,7 +23,8 @@ layout: post
 
     - AOP의 장점 : 기존의 코드를 수정하지 않고도 필요한 공통 기능 모듈 적용 가능
     - AOP의 툴 4가지
-    	- 자바언어를 확장한 언어를 사용하는 툴 : AspectJ
+
+		- 자바언어를 확장한 언어를 사용하는 툴 : AspectJ
 			- 제록스 연구소 개발 -> Eclipse에 기증 -> 현재 IBM에서 지원 받아 개발중
 			- Aspect, PoingCut, Advice를 만들 수 있다.
     	- 기존의 자바 언어만으로 AOP 구현 가능 : AspectWerkZ
@@ -40,7 +41,7 @@ layout: post
 			- 각각의 joinpoint들을 전후로 Crosscutting Concerns의 기능이 AOP에 의해 자동으로 추가되어 동작되는 후보 지점이다.
 
 		2. pointcut : AOP를 선별하는 것
-			- value = "execution(public * *(..))" => pointcut를 정의한 것
+			- value = "execution(public \* \*(..))" => pointcut를 정의한 것
 			- AOP의 전체 코드에서 실행되어지는 메소드 유형을 정의한다.
 
             - 기본표현식
@@ -48,25 +49,25 @@ layout: post
                 - *main(..) : 메소드 명이 main이고 return type이 any type(모든 타입)이고 0개 이상의 매개인자를 가진 메소드
 
             - 타입 매핑 형식 - java.io.*
-                - org.com.test..* : org.com.test 내의 서브 패키지에 속한 모든 하위요소
+                - org.com.test..\* : org.com.test 내의 서브 패키지에 속한 모든 하위요소
                 - Number+ : Number 또는 Number 서브타입의 모든 타입
                 - !(Number+) : Number 또는 Number 서브타입의 모든 타입이 아닌 것
-                - int **||** Integer : ing형 또는 Integer형
+                - int or Integer : ing형 또는 Integer형
                 - org.com.test..* && !Serializable+ : org.com.test 패키지 또는 하위서브 패키지 내에 존재하면서 Serializable의 타입이 아닌 모든 요소
 
             - 접근 지정에 따른 형식
                 - public static void main(..)
-                - !private ** * ** ** * ** (..) : 리턴 타입이 모든 타입이고, 0개 이상의 매개인자를 가진 메소드 중 접근 제한자가 private가 아닌 메소드
-                - ** * ** main(..): 접근 지정자 명시하지 않으면 public 접근 제한자
-                - ** * ** main(** * **, ..)  : 리턴 타입이 모든 타입이고 최소 1개의 모든 타입을 가진 메소드
-                - ** * ** main (** * **, .., String, ** * **) : 리턴타입이 모든 타입이고 최소 3개의 매개인자를 가지며 끝에서 두번째 반드시 String 타입이어야 한다.
+                - !private \*  \*  (..) : 리턴 타입이 모든 타입이고, 0개 이상의 매개인자를 가진 메소드 중 접근 제한자가 private가 아닌 메소드
+                - \*main(..): 접근 지정자 명시하지 않으면 public 접근 제한자
+                - \*main(\*, ..)  : 리턴 타입이 모든 타입이고 최소 1개의 모든 타입을 가진 메소드
+                - \*main (\*, .., String,  \*) : 리턴타입이 모든 타입이고 최소 3개의 매개인자를 가지며 끝에서 두번째 반드시 String 타입이어야 한다.
 
             - 생성자 형식
                 - new(..) : 0개 이상의 모든 타입을 가진 생성자
                 - Account.new(..) : 0개 이상의 모든 타입을 가진 Account 클래스의 생성자
                 - execution 또는 call : 특정 메소드나 생성자 실행 시점을 정의한다.
-                    - execution( * main(..))
-                    - call( * main(..))
+                    - execution( \*main(..))
+                    - call( \*main(..))
                     - get(Collection+ ) : 멤버변수에 선언
                     - set(Collection+ ) : 멤버변수에 선언
                 - Exception 처리 : handler(RuntimeException+)
@@ -75,7 +76,7 @@ layout: post
                 - withincode : 특정 메소드 또는 생성자 내에 정의된 코드를 정의하는 시점
                 - this : 해당 joinPoint를 정의하는 시점
                 - target : 대상 객체의 타입을 정의하는 시점
-                    - ex) call (** * ** ** * ** (..)) && target(MyTest)
+                    - ex) call (\* \* (..)) && target(MyTest)
                         - MyTest라는 클래스 내의 모든 메소드를 호출
 
 		3. advice : 각 joinpoint에 삽입되어 동작할 수 있는 코드
@@ -104,7 +105,15 @@ layout: post
 - beans.xml
 - MTest.java
 
+***
 
+## sample03
+- Person.java
+- Man.java
+- Woman.java
+- MyAspect.java
+- beans.xml
+- MTest.java
 
 
 

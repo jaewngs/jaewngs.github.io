@@ -23,7 +23,6 @@ layout: post
 
     - AOP의 장점 : 기존의 코드를 수정하지 않고도 필요한 공통 기능 모듈 적용 가능
     - AOP의 툴 4가지
-
     	1. 자바언어를 확장한 언어를 사용하는 툴 : AspectJ
 			- 제록스 연구소 개발 -> Eclipse에 기증 -> 현재 IBM에서 지원 받아 개발중
 			- Aspect, PoingCut, Advice를 만들 수 있다.

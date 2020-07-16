@@ -27,7 +27,7 @@ layout: post
 		- 자바언어를 확장한 언어를 사용하는 툴 : AspectJ
 			- 제록스 연구소 개발 -> Eclipse에 기증 -> 현재 IBM에서 지원 받아 개발중
 			- Aspect, PoingCut, Advice를 만들 수 있다.
-    	- 기존의 자바 언어만으로 AOP 구현 가능 : AspectWerkZ
+		- 기존의 자바 언어만으로 AOP 구현 가능 : AspectWerkZ
     		- Eclipse 프로젝트(PointCut, Advice)에서 XML로 정의할 수 있다.
     	- 대표적인 인터셉터 체인 방식의 구현 AOP 방식 : SpringAOP, JBossAOP
     		- 최근에 등장한 프레임워크, 어노테이션으로 정의할 수 있다.
@@ -51,7 +51,7 @@ layout: post
             - 타입 매핑 형식 - java.io.*
                 - org.com.test..\* : org.com.test 내의 서브 패키지에 속한 모든 하위요소
                 - Number+ : Number 또는 Number 서브타입의 모든 타입
-                - !(Number+) : Number 또는 Number 서브타입의 모든 타입이 아닌 것
+                - !(Number+) \|| Number 또는 Number 서브타입의 모든 타입이 아닌 것
                 - int or Integer : ing형 또는 Integer형
                 - org.com.test..* && !Serializable+ : org.com.test 패키지 또는 하위서브 패키지 내에 존재하면서 Serializable의 타입이 아닌 모든 요소
 
@@ -81,13 +81,14 @@ layout: post
 
 		3. advice : 각 joinpoint에 삽입되어 동작할 수 있는 코드
 		4. Weaving : Core concerns랑 Crosscutting Concerns를 엮어서 동작하도록 수행한다는 의미
-			- target객체에 aspect를 적용해서 새로운 프록시 개체를 생성하는 절차
+			- target객체에 aspect를 적용해서 새로운 프록시 객체를 생성하는 절차
 		5. aspect : 다수의 클래스에서 공통적으로 구현하는 것으로 모듈화를 말한다.
 			- 어디서(pointcut)에서 무엇을 할지(Advice)를 합쳐 놓은 것
 			- aspect = pointcut + advice
 			- Advice는 각 joinpoint에 삽입되어서 동작할 수 있는 코드이다.
 		6. 프록시 : 어드바이스를 target객체에 적용하면 생성되는 객체
 
+4. sample03 : @AspectJ <https://www.eclipse.org/aspectj/doc/released/runtime-api/index.html> 
 ***
 
 ## sample01

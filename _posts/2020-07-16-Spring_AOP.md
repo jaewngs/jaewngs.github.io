@@ -27,8 +27,10 @@ layout: post
 		- 자바언어를 확장한 언어를 사용하는 툴 : AspectJ
 			- 제록스 연구소 개발 -> Eclipse에 기증 -> 현재 IBM에서 지원 받아 개발중
 			- Aspect, PoingCut, Advice를 만들 수 있다.
+
 		- 기존의 자바 언어만으로 AOP 구현 가능 : AspectWerkZ
     		- Eclipse 프로젝트(PointCut, Advice)에서 XML로 정의할 수 있다.
+
     	- 대표적인 인터셉터 체인 방식의 구현 AOP 방식 : SpringAOP, JBossAOP
     		- 최근에 등장한 프레임워크, 어노테이션으로 정의할 수 있다.
     		- SpringDI패턴에서 동작하는 인터페이스이다.
@@ -51,7 +53,7 @@ layout: post
             - 타입 매핑 형식 - java.io.*
                 - org.com.test..\* : org.com.test 내의 서브 패키지에 속한 모든 하위요소
                 - Number+ : Number 또는 Number 서브타입의 모든 타입
-                - !(Number+) \|| Number 또는 Number 서브타입의 모든 타입이 아닌 것
+                - !(Number+) : Number 또는 Number 서브타입의 모든 타입이 아닌 것
                 - int or Integer : ing형 또는 Integer형
                 - org.com.test..* && !Serializable+ : org.com.test 패키지 또는 하위서브 패키지 내에 존재하면서 Serializable의 타입이 아닌 모든 요소
 
@@ -88,7 +90,9 @@ layout: post
 			- Advice는 각 joinpoint에 삽입되어서 동작할 수 있는 코드이다.
 		6. 프록시 : 어드바이스를 target객체에 적용하면 생성되는 객체
 
-4. sample03 : @AspectJ <https://www.eclipse.org/aspectj/doc/released/runtime-api/index.html> 
+4. sample03 : @AspectJ <https://www.eclipse.org/aspectj/doc/released/runtime-api/index.html>
+
+
 ***
 
 ## sample01
@@ -109,6 +113,36 @@ layout: post
 ***
 
 ## sample03
+- Person.java
+- Man.java
+- Woman.java
+- MyAspect.java
+- beans.xml
+- MTest.java
+
+***
+
+## sample04
+- Person.java
+- Man.java
+- Woman.java
+- MyAspect.java
+- beans.xml
+- MTest.java
+
+***
+
+## sample05
+- Person.java
+- Man.java
+- Woman.java
+- MyAspect.java
+- beans.xml
+- MTest.java
+
+***
+
+## sample06
 - Person.java
 - Man.java
 - Woman.java

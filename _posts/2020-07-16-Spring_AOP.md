@@ -17,7 +17,8 @@ layout: post
 1. SpringAOP
 2. sample01 : 자바 코드 작성을 위한 처리 흐름
 3. sample02 : sample01을 AOP로 적용
-	- AOP(Aspect Oriented Programming)란? OOP의 문제를 개선하기 위해 적용된 것
+	- AOP(Aspect Oriented Programming)란?
+		- OOP의 문제를 개선하기 위해 적용된 것
 		- Core concerns : 해당 시스템의 핵심 가치와 고유의 목적이 그대로 들어난 관심 영역
 		- Crosscutting Concerns : 로깅, 보안, 트랜잭션 관리 등과 같이 여러 모듈간의 공통적으로 적용되는 공통 관심 영역
 
@@ -31,14 +32,15 @@ layout: post
 		- 기존의 자바 언어만으로 AOP 구현 가능 : AspectWerkZ
     		- Eclipse 프로젝트(PointCut, Advice)에서 XML로 정의할 수 있다.
 
-    	- 대표적인 인터셉터 체인 방식의 구현 AOP 방식 : SpringAOP, JBossAOP
+		- 대표적인 인터셉터 체인 방식의 구현 AOP 방식 : SpringAOP, JBossAOP
     		- 최근에 등장한 프레임워크, 어노테이션으로 정의할 수 있다.
     		- SpringDI패턴에서 동작하는 인터페이스이다.
     		- 기존 클래스에서 byte 코드를 수정하지 않고 JDK의 XML에서 지정한 bean의 객체를 통해 제어한다.
+
 	- Advisor = AOP advice (action to take at a joinpoint) + advice(such as a pointcut);
 	- PointCut = A pointcut is composed of a ClassFilter and a MethodMatcher.
 	- AOP의 주요 구성요소[sec.11]
-		1. joinpoint : 프로그램의 제어 프름 중 한 시점을 의미
+		1. joinpoint : 프로그램의 제어 흐름 중 한 시점을 의미
 			- 메소드 호출시점, 메소드 호출결과가 리턴되는 시점, 예외 던져지는 시점
 			- 각각의 joinpoint들을 전후로 Crosscutting Concerns의 기능이 AOP에 의해 자동으로 추가되어 동작되는 후보 지점이다.
 
@@ -90,7 +92,9 @@ layout: post
 			- Advice는 각 joinpoint에 삽입되어서 동작할 수 있는 코드이다.
 		6. 프록시 : 어드바이스를 target객체에 적용하면 생성되는 객체
 
-4. sample03 : @AspectJ <https://www.eclipse.org/aspectj/doc/released/runtime-api/index.html>
+4. sample03 : @AspectJ
+	 - <https://www.eclipse.org/aspectj/doc/released/runtime-api/index.html>
+
 5. sample04~09
 
 6. sample10(springAOP가 제공하는 lib interface를 활용)
@@ -100,7 +104,6 @@ layout: post
 		- proxyInterfaces : 문자열 인터페이스 이름의 배열
 		- interceptorNames : 적용할 Advisor나 인터셉터, 다른 어드바이스 이름의 문자열 배열
 		- singleton : getObject() 메소드를 얼마나 많이 호출했는지 상관없이 팩토리가 하나의 객체를 반환해야 하는지를 결정함
-
 
 ***
 

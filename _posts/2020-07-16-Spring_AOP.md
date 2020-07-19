@@ -30,7 +30,7 @@ layout: post
 			- Aspect, PoingCut, Advice를 만들 수 있다.
 
 		- 기존의 자바 언어만으로 AOP 구현 가능 : AspectWerkZ
-    		- Eclipse 프로젝트(PointCut, Advice)에서 XML로 정의할 수 있다.
+			- Eclipse 프로젝트(PointCutm, Advice)에서 XML로 정의할 수 있다.
 
 		- 대표적인 인터셉터 체인 방식의 구현 AOP 방식 : SpringAOP, JBossAOP
 			- 최근에 등장한 프레임워크, 어노테이션으로 정의할 수 있다.

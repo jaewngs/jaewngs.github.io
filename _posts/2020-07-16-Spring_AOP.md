@@ -33,9 +33,9 @@ layout: post
     		- Eclipse 프로젝트(PointCut, Advice)에서 XML로 정의할 수 있다.
 
 		- 대표적인 인터셉터 체인 방식의 구현 AOP 방식 : SpringAOP, JBossAOP
-    		- 최근에 등장한 프레임워크, 어노테이션으로 정의할 수 있다.
-    		- SpringDI패턴에서 동작하는 인터페이스이다.
-    		- 기존 클래스에서 byte 코드를 수정하지 않고 JDK의 XML에서 지정한 bean의 객체를 통해 제어한다.
+			- 최근에 등장한 프레임워크, 어노테이션으로 정의할 수 있다.
+			- SpringDI패턴에서 동작하는 인터페이스이다.
+			- 기존 클래스에서 byte 코드를 수정하지 않고 JDK의 XML에서 지정한 bean의 객체를 통해 제어한다.
 
 	- Advisor = AOP advice (action to take at a joinpoint) + advice(such as a pointcut);
 	- PointCut = A pointcut is composed of a ClassFilter and a MethodMatcher.
@@ -98,8 +98,7 @@ layout: post
 5. sample04~09
 
 6. sample10(springAOP가 제공하는 lib interface를 활용)
-	- ThrowsAdvice : 예외가 발생했을 때
-	- try{ ... } catch{  ...  } 를 따로 구현하지 않고 org.springframework.aop.ThrowsAdvice 구현체에서 처리한다.
+	- ThrowsAdvice : 예외가 발생했을 때 try{ ... } catch{  ...  } 를 따로 구현하지 않고org.springframework.aop.ThrowsAdvice 구현체에서 처리한다.
 	- org.springframework.aop.framework.ProxyFactoryBean[AOP의 bean자체를 말함]
 		- proxyInterfaces : 문자열 인터페이스 이름의 배열
 		- interceptorNames : 적용할 Advisor나 인터셉터, 다른 어드바이스 이름의 문자열 배열
@@ -282,6 +281,8 @@ layout: post
         }
     }
     ~~~
+
+	![image](https://user-images.githubusercontent.com/52989294/87870090-e2e88280-c9df-11ea-936d-e91eeecd6075.png)
 
 ***
 

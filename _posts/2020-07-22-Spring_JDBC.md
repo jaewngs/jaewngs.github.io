@@ -934,6 +934,361 @@ layout: post
 ***
 
 ## src/test04
+- jdbc.properties
+
+    ~~~ properties
+    driver = oracle.jdbc.driver.OracleDriver
+    url = jdbc:oracle:thin:@127.0.0.1:1521:xe
+    username = big5
+    password = admin1234
+    ~~~
+
+- mybatis-config.xml
+
+    ~~~ xml
+    <?xml version="1.0" encoding="UTF-8" ?>
+    <!DOCTYPE configuration
+      PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+      "http://mybatis.org/dtd/mybatis-3-config.dtd">
+    <configuration>
+        <!-- 데이터베이스 접속 -->
+        <properties resource="test04/jdbc.properties" />
+        <environments default="development">
+            <environment id="development">
+                <transactionManager type="JDBC" /> <!-- JDBC : 커밋과 롤백 처리 수동 / MANAGED :자동커밋 -->
+                <dataSource type="POOLED"> <!-- UNPOOLED : 매번 커넥션을 열고 닫음, POOLED : 한번만 열고 닫음, JNDI -->
+                    <property name="driver" value="${driver}" />
+                    <property name="url" value="${url}" />
+                    <property name="username" value="${username}" />
+                    <property name="password" value="${password}" />
+                </dataSource>
+            </environment>
+        </environments>
+        <!-- SQL 쿼리문 -->
+        <mappers>
+            <mapper class="test04.GoodsMapper" />
+        </mappers>
+    </configuration>
+    ~~~
+
+- GoodsEntity.java
+
+    ~~~ java
+    package test04;
+
+    public class GoodsEntity {
+        private String code;
+        private String name;
+        private int price;
+        private String maker;
+
+        public GoodsEntity() {
+            super();
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+        public void setCode(String code) {
+            this.code = code;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public int getPrice() {
+            return price;
+        }
+
+        public void setPrice(int price) {
+            this.price = price;
+        }
+
+        public String getMaker() {
+            return maker;
+        }
+
+        public void setMaker(String maker) {
+            this.maker = maker;
+        }
+
+        @Override
+        public String toString() {
+            return "GoodsEntity [code=" + code + ", name=" + name + ", price=" + price + ", maker=" + maker + "]";
+        }
+    }
+    ~~~
+
+- GoodsMapper.java
+
+    ~~~ java
+    package test04;
+
+    import java.util.List;
+
+    import org.apache.ibatis.annotations.*;
+    import org.apache.ibatis.jdbc.SQL;
+
+    public interface GoodsMapper {
+        @Select("SELECT * FROM GOODSINFO WHERE CODE = #{code}")
+        GoodsEntity selectGoods(String code);
+
+        @Select("SELECT * FROM GOODSINFO")
+        List<GoodsEntity> listGoods();
+
+        @Update("UPDATE GOODSINFO SET NAME=#{name},PRICE=#{price},MAKER=#{maker} WHERE CODE=#{code}")
+        int updateGoods(GoodsEntity goods);
+
+        @Delete("DELETE FROM GOODSINFO WHERE NAME = #{name}")
+        int deleteGoods(String name);
+
+        @Insert("INSERT INTO GOODSINFO(CODE, NAME, PRICE, MAKER) " + "VALUES(#{code}, #{name}, #{price}, #{maker})")
+        int insertGoods(GoodsEntity goods);
+
+        @SelectProvider(type = GoodsSelect.class, method = "select")
+        List<GoodsEntity> listGoods02();
+
+        class GoodsSelect {
+            public static String select() {
+                return new SQL() {
+                    {
+                        SELECT("*");
+                        FROM("GOODSINFO");
+                        ORDER_BY("name"); // 책이름으로 정렬
+                    }
+                }.toString();
+            }
+        }
+    }
+    ~~~
+
+- SqlMapClientFactory.java
+
+    ~~~ java
+    package test04;
+
+    import java.io.IOException;
+    import java.io.Reader;
+    import java.util.List;
+
+    import org.apache.ibatis.io.Resources;
+    import org.apache.ibatis.session.SqlSession;
+    import org.apache.ibatis.session.SqlSessionFactory;
+    import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+
+    // 매퍼를 포함한 환경설정 파일을 로드하는 코드 작성한 후 객체를 리턴
+    // DAO CRUD 메소드 구현
+    public class SqlMapClientFactory {
+        private static SqlSessionFactory factory = null;
+        static {
+            try {
+                String resource = "test04/mybatis-config.xml";
+                Reader reader = Resources.getResourceAsReader(resource);
+                factory = new SqlSessionFactoryBuilder().build(reader);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        // ------------------------------------------------
+
+        public GoodsEntity FindGoods(String code) {
+            try (SqlSession session = factory.openSession()) {
+                GoodsMapper mapper = session.getMapper(GoodsMapper.class);
+                return mapper.selectGoods(code);
+            }
+        }
+
+        public List<GoodsEntity> SelectAll() {
+            try (SqlSession session = factory.openSession()) {
+                GoodsMapper mapper = session.getMapper(GoodsMapper.class);
+                return mapper.listGoods();
+            }
+        }
+
+        // providerAnnotation 으로 selectAll 해보기
+        public List<GoodsEntity> SelectAll02() {
+            try (SqlSession session = factory.openSession()) {
+                GoodsMapper mapper = session.getMapper(GoodsMapper.class);
+                return mapper.listGoods02();
+            }
+        }
+
+        public int UpdateGoods(GoodsEntity entity) {
+            try (SqlSession session = factory.openSession()) {
+                GoodsMapper mapper = session.getMapper(GoodsMapper.class);
+                int res = mapper.updateGoods(entity);
+                if (res > 0) {
+                    session.commit();
+                    System.out.println("update 완료");
+                } else {
+                    session.rollback();
+                    System.out.println("update 실패");
+                }
+                return res;
+            }
+        }
+
+        public int DeleteGoods(String name) {
+            try (SqlSession session = factory.openSession()) {
+                GoodsMapper mapper = session.getMapper(GoodsMapper.class);
+                int res = mapper.deleteGoods(name);
+                if (res > 0) {
+                    session.commit();
+                    System.out.println("delete 완료");
+                } else {
+                    session.rollback();
+                    System.out.println("delete 실패");
+                }
+                return res;
+            }
+        }
+
+        public int InsertGoods(GoodsEntity entity) {
+            try (SqlSession session = factory.openSession()) {
+                GoodsMapper mapper = session.getMapper(GoodsMapper.class);
+                int res = mapper.insertGoods(entity);
+                if (res > 0) {
+                    session.commit();
+                    System.out.println("insert 완료");
+                } else {
+                    session.rollback();
+                    System.out.println("insert 실패");
+                }
+                return res;
+            }
+        }
+    }
+    ~~~
+
+***
+
+- MTest.java
+
+    ~~~ java
+    package test04;
+
+    // code가 "p0001"인 상품 출력
+    public class MTest {
+        public static void main(String[] args) {
+            GoodsEntity entity = new SqlMapClientFactory().FindGoods("p0001");
+
+            System.out.println("  상품코드   \t 상품명 \t\t 가격 \t\t 제조사");
+            System.out.println("============================================================");
+
+            System.out.print("코드 : " + entity.getCode() + "\t");
+            System.out.print("책이름 : " + entity.getName() + "\t");
+            System.out.print("가격 : " + entity.getPrice() + "\t");
+            System.out.print("출판사 : " + entity.getMaker() + "\n");
+        }
+    }
+    ~~~
+
+- MTest02.java
+
+    ~~~ java
+    package test04;
+
+    import java.util.List;
+
+    // select all
+    public class MTest02 {
+        public static void main(String[] args) {
+            List<GoodsEntity> list = new SqlMapClientFactory().SelectAll();
+
+            System.out.println("  상품코드   \t 상품명 \t\t 가격 \t\t 제조사");
+            System.out.println("============================================================");
+            for (GoodsEntity entity : list) {
+                System.out.print("코드 : " + entity.getCode() + "\t");
+                System.out.print("책이름 : " + entity.getName() + "\t");
+                System.out.print("가격 : " + entity.getPrice() + "\t");
+                System.out.print("출판사 : " + entity.getMaker() + "\n");
+            }
+        }
+    }
+    ~~~
+
+- MTest02_provider_ver.java
+
+    ~~~ java
+    package test04;
+
+    import java.util.List;
+
+    // select all
+    //SelectAll1() providerAnnotation ver
+    public class MTest02_provider_ver {
+        public static void main(String[] args) {
+            List<GoodsEntity> list = new SqlMapClientFactory().SelectAll02();
+
+            System.out.println("  상품코드   \t 상품명 \t\t 가격 \t\t 제조사");
+            System.out.println("============================================================");
+            for (GoodsEntity entity : list) {
+                System.out.print("코드 : " + entity.getCode() + "\t");
+                System.out.print("책이름 : " + entity.getName() + "\t");
+                System.out.print("가격 : " + entity.getPrice() + "\t");
+                System.out.print("출판사 : " + entity.getMaker() + "\n");
+            }
+        }
+    }
+    ~~~
+
+- MTest03.java
+
+    ~~~ java
+    package test04;
+
+    // update
+    public class MTest03 {
+        public static void main(String[] args) {
+            GoodsEntity entity = new GoodsEntity();
+            entity.setCode("p0007"); // code가 p0007인 상품을
+            entity.setName("C++"); // 로 바꿔라
+            entity.setPrice(18000); // 로 바꿔라
+            entity.setMaker("LG"); // 로 바꿔라
+
+            new SqlMapClientFactory().UpdateGoods(entity);
+        }
+    }
+    ~~~
+
+- MTest04.java
+
+    ~~~ java
+    package test04;
+
+    // delete
+    public class MTest04 {
+        public static void main(String[] args) {
+            // 상품이름이 "Spring"인 상품을 삭제하라
+            new SqlMapClientFactory().DeleteGoods("Spring");
+        }
+    }
+    ~~~
+
+- MTest05.java
+
+    ~~~ java
+    package test04;
+
+    // insert
+    public class MTest05 {
+        public static void main(String[] args) {
+            GoodsEntity entity = new GoodsEntity();
+            entity.setCode("p0010");
+            entity.setName("Spring");
+            entity.setPrice(15000);
+            entity.setMaker("en");
+
+            new SqlMapClientFactory().InsertGoods(entity);
+        }
+    }
+    ~~~
 
 
 

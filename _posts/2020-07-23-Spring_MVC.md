@@ -247,7 +247,8 @@ layout: post
             class="org.springframework.web.servlet.view.InternalResourceViewResolver">
             <!--<property name="viewClass"
                 value="org.springframework.web.servlet.view.JstlView" />-->
-             <property name="prefix" value="/WEB-INF/view/" /> 
+            <!-- a,b,c,d.jsp 이동하려면 아래 두개 주석하고 실행하기 -->
+            <property name="prefix" value="/WEB-INF/view/" />
             <property name="suffix" value=".jsp" />
         </bean>
     </beans>
